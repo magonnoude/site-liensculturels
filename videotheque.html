@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vidéothèque - Association Liens Culturels</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .video-thumbnail { cursor: pointer; position: relative; }
+        .video-thumbnail::before {
+            content: '\f144'; /* Icône "play" de Font Awesome */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 50px;
+            color: white;
+            opacity: 0.8;
+            transition: all 0.3s;
+        }
+        .video-thumbnail:hover::before {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        </header>
+
+    <main class="container" style="padding-top: 2rem;">
+        <h1>Notre Vidéothèque</h1>
+        <p>Retrouvez nos interviews et reportages. Cliquez sur une miniature pour lancer la vidéo.</p>
+        
+        <div class="gallery-grid">
+            <div class="gallery-item">
+                <a href="#" class="video-thumbnail" data-video-src="https://www.youtube.com/embed/dQw4w9WgXcQ">
+                    <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/hqdefault.jpg" alt="Miniature de la vidéo 1">
+                </a>
+                <p>Interview du Président Judicaël BONI</p>
+            </div>
+            
+            <div class="gallery-item">
+                <a href="#" class="video-thumbnail" data-video-src="https://www.youtube.com/embed/L_LUpnjgPso">
+                     <img src="https://img.youtube.com/vi/L_LUpnjgPso/hqdefault.jpg" alt="Miniature de la vidéo 2">
+                </a>
+                <p>Présentation du projet de jumelage</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h4>Liens Culturels</h4>
+                <p>Association loi 1901 pour la promotion des échanges culturels entre la France, les Antilles et l'Afrique.</p>
+                <p><i class="fas fa-map-marker-alt"></i> CHEMIN DE L'ERMITAGE<br>02310 NOGENT-L'ARTAUD</p>
+                <p><i class="fas fa-envelope"></i> <a href="mailto:contact@liensculturels.org">contact@liensculturels.org</a></p>
+            </div>
+
+            <div class="footer-column">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="a-propos.html">Qui sommes-nous ?</a></li>
+                    <li><a href="projets.html">Nos Projets</a></li>
+                    <li><a href="agenda.html">Agenda</a></li>
+                    <li><a href="mentions-legales.html">Mentions Légales</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <div class="newsletter-box">
+                    <h4>Rejoignez notre communauté</h4>
+                    <p style="font-size: 0.9rem; color: #bdc3c7;">Recevez nos actualités et invitations directement dans votre boîte mail.</p>
+                    
+                   <!-- DÉBUT DU FORMULAIRE NEWSLETTER FINAL -->
+     <form action="https://82d8e083.sibforms.com/serve/MUIFAKdKQb8kz3qGlrzdrfszGWACRrb_OLoajdN9HclH-7vULUW35X2uZwCikeQ9wxj2tJ1scN5pcn0Xk3kzywDU3qEVp3mq0YViPI5v4cBUQ3Ce1AOJPHBtiMkanTWpG-bfZm-AUKspxLMQLJWN7COR_kmyP9xT4vxdSDwxLxeMGec9LPbS64MBtAD6cvDyLBZKibRPpCrlohQi" 
+                        method="POST" 
+                        target="_blank" 
+                        class="newsletter-form">
+
+                        <input type="email" name="EMAIL" placeholder="Votre adresse email" required>
+
+                        <button type="submit" aria-label="S'inscrire">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+    
+                        <input type="hidden" name="locale" value="fr">
+                    </form>
+<!-- FIN DU FORMULAIRE NEWSLETTER FINAL -->
+
+                </div>
+
+                <h4 style="margin-top:20px;">Suivez-nous</h4>
+                <div class="social-links">
+                    <a href="https://web.facebook.com/profile.php?id=61579109620455" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/liensculturels/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/liens-culturels" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://twitter.com/LCulturels" target="_blank" title="X (Twitter)"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.youtube.com/@LiensCulturels" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p><strong>&copy; 2025 Liens Culturels.</strong> Tous droits réservés - Site conçu et développé par <strong>RMS International Group.</strong></p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

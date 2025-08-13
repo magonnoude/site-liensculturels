@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adhérer - Association Liens Culturels</title>
+    <link rel="icon" href="assets/img/logo.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html"><img src="assets/img/logo.png" alt="Logo Liens Culturels" class="logo"></a>
+            <nav>
+                <ul>
+                    <li class="dropdown"><a href="#">L'Association ▼</a><ul class="dropdown-menu"><li><a href="a-propos.html">Qui sommes-nous ?</a></li><li><a href="bureau.html">Le Bureau</a></li><li><a href="mot-des-dirigeants.html">Mot des Dirigeants</a></li></ul></li>
+                    <li><a href="projets.html">Nos Projets</a></li>
+                    <li><a href="bourse-scolaire.html">Bourse Scolaire</a></li>
+                    <li><a href="agenda.html">Agenda</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li class="dropdown"><a href="#">Médiathèque ▼</a><ul class="dropdown-menu"><li><a href="phototheque.html">Photothèque</a></li><li><a href="videotheque.html">Vidéothèque</a></li></ul></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="adhesion.html" class="btn">Devenir Membre</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container" style="padding-top: 2rem;">
+        <div class="form-container">
+            <h2>Devenir Membre</h2>
+            <p>Rejoignez-nous pour participer à nos projets et à nos échanges ! La cotisation annuelle est fixée à <strong>30 €</strong> par personne et <strong>50 €</strong> pour un pack famille. Remplissez le formulaire ci-dessous pour faire votre demande.</p>
+            <form id="adhesionForm">
+                <div class="form-group">
+                    <label for="fullName">Nom et Prénom</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="address">Adresse Postale Complète</label>
+                    <input type="text" id="address" name="address" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Adresse Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Numéro de Téléphone</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <button type="submit" class="btn">Envoyer ma demande d'adhésion</button>
+                <div class="form-feedback"></div>
+            </form>
+            <p style="text-align: center; margin-top: 1rem;">Après validation, notre trésorier vous enverra le RIB de l'association pour finaliser votre inscription.</p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-column">
+                <h4>Liens Culturels</h4>
+                <p>Association loi 1901 pour la promotion des échanges culturels entre la France, les Antilles et l'Afrique.</p>
+                <p><i class="fas fa-map-marker-alt"></i> CHEMIN DE L'ERMITAGE<br>02310 NOGENT-L'ARTAUD</p>
+                <p><i class="fas fa-envelope"></i> <a href="mailto:contact@liensculturels.org">contact@liensculturels.org</a></p>
+            </div>
+
+            <div class="footer-column">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="a-propos.html">Qui sommes-nous ?</a></li>
+                    <li><a href="projets.html">Nos Projets</a></li>
+                    <li><a href="agenda.html">Agenda</a></li>
+                    <li><a href="mentions-legales.html">Mentions Légales</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-column">
+                <div class="newsletter-box">
+                    <h4>Rejoignez notre communauté</h4>
+                    <p style="font-size: 0.9rem; color: #bdc3c7;">Recevez nos actualités et invitations directement dans votre boîte mail.</p>
+                    
+                    <!-- DÉBUT DU FORMULAIRE NEWSLETTER FINAL -->
+<form id="newsletterForm" 
+      class="newsletter-form" 
+      action="https://82d8e083.sibforms.com/serve/MUIFAGxfjjjcQfUzaYyKbOLrYs9wf6GFSmX1nEi2UvuYP-At7FkCS2WZRCPDwywWE_M00v8eqCXSRfPy6agN-v0MdzS6Ay2LwrzJrkE1kn6fUEjeaA_Z3eAPPWcumQ6hBlrtn6JAczVtGSFfBwN5urDHHMu-yahSfOcI7zJ8rBwIy1GnJSeDlsolxKt53bbIFVXTZO0pYAvwmNhe" 
+      method="POST" 
+      target="_blank">
+    
+    <input type="email" name="EMAIL" placeholder="Votre adresse email" required>
+    
+    <!-- Champs cachés importants de Brevo -->
+    <input type="text" name="email_address_check" value="" style="display:none;">
+    <input type="hidden" name="locale" value="fr">
+    
+    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+</form>
+<!-- FIN DU FORMULAIRE NEWSLETTER FINAL -->
+>
+                </div>
+
+                <h4 style="margin-top:20px;">Suivez-nous</h4>
+                <div class="social-links">
+                    <a href="https://web.facebook.com/profile.php?id=61579109620455" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/liensculturels/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/liens-culturels" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://twitter.com/LCulturels" target="_blank" title="X (Twitter)"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.youtube.com/@LiensCulturels" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p><strong>&copy; 2025 Liens Culturels.</strong> Tous droits réservés - Site conçu et développé par <strong>RMS International Group.</strong></p>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

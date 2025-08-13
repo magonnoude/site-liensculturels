@@ -1,0 +1,6 @@
+# Indiquer aux robots qu'ils peuvent explorer tout le site.
+User-agent: *
+Allow: /
+
+# Emplacement du sitemap
+Sitemap: https://www.liensculturels.org/sitemap.xml
