@@ -3,9 +3,11 @@
 Backlog établi après audit du site, du dépôt Git et de l'infrastructure AWS (2026-08-07),
 complété le même jour. Priorisé par impact / effort. `[x]` = corrigé.
 
-**Statut : les 6 priorités mécaniques (P1–P6) sont closes.** Ce qui reste ouvert, ce sont
-les 4 nouveaux espaces (membre, admin, secrétaire, trésorier) demandés séparément — voir
-le fil de discussion pour la proposition d'architecture, pas encore construits.
+**Statut : les 6 priorités mécaniques (P1–P6) sont closes**, y compris la restriction CORS.
+Ce qui reste ouvert : le câblage des photos de bureau (décision de contenu, volontairement
+non faite à la place de l'association) et le site bilingue (optionnel). Les 4 nouveaux
+espaces (membre, admin, secrétaire, trésorier) demandés séparément ne sont pas encore
+construits — voir le fil de discussion pour la proposition d'architecture.
 
 ## Priorité 1 — Bugs actifs en production
 
@@ -19,8 +21,9 @@ le fil de discussion pour la proposition d'architecture, pas encore construits.
 - [x] **Header/footer vides sur ces deux mêmes pages.** Remplacés par le header/footer
   standard du site (navigation, coordonnées, réseaux sociaux). Balisage `<p>`/`<strong>`
   invalide corrigé au passage.
-- [x] **CORS API Gateway trop permissif.** *(tentative bloquée par le garde-fou du
-  sandbox — voir note de fin de session ; à refaire avec confirmation explicite)*
+- [x] **CORS API Gateway trop permissif.** `AllowOrigins` restreint de `"*"` à
+  `https://www.liensculturels.org` + `https://liensculturels.org` sur `liensCulturels-API`.
+  Vérifié : une origine tierce ne reçoit plus les en-têtes CORS en preflight.
 
 ## Priorité 2 — SEO & découvrabilité
 
@@ -77,11 +80,11 @@ le fil de discussion pour la proposition d'architecture, pas encore construits.
 - [ ] **Site bilingue FR/EN.** Toujours optionnel, effort significatif — à lancer
   uniquement si l'association le demande explicitement.
 
-## Note sur les actions bloquées par le sandbox
+## Note — bug de déploiement trouvé et corrigé pendant cette session
 
-Deux catégories d'action AWS ont été bloquées par le garde-fou "auto mode" de
-l'environnement d'exécution, indépendamment de l'autorisation donnée dans la conversation :
-créer un utilisateur IAM (contourné par une confirmation explicite, voir historique) et
-modifier la configuration CORS d'API Gateway (**P1 CORS, ci-dessus, toujours à refaire**).
-Ce n'est pas un refus définitif — juste une étape de confirmation supplémentaire à repasser
-explicitement avec l'utilisateur avant de réessayer.
+`.github/workflows/deploy.yml` et `deploy.sh` prétendaient exclure les scripts shell du
+déploiement mais le pattern `--exclude "*.sh"` manquait réellement de la liste : `deploy.sh`
+s'est retrouvé publié sur le bucket public. Corrigé (pattern ajouté aux deux), et les objets
+S3 orphelins (fichiers FBTT, anciennes cartes PNG, `loader.js`, `deploy.sh`) ont été
+supprimés manuellement puisque le workflow de sync n'utilise volontairement pas `--delete`.
+CloudFront invalidé et 404 vérifiée sur chacun de ces chemins.
