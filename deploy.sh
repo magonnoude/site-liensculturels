@@ -49,6 +49,7 @@ aws s3 sync . "s3://$BUCKET" \
   --exclude "*.md" \
   --exclude ".gitignore" \
   --exclude "*.docx" \
+  --exclude "*.sh" \
   --exclude "*:Zone.Identifier" \
   --exclude "*.Zone.Identifier" \
   --region "$REGION"
