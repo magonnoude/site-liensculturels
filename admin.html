@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Admin - Association Liens Culturels</title>
+    <meta name="description" content="Espace d'administration du site de l'association Liens Culturels.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="assets/img/favicon.ico" sizes="any">
+    <link rel="icon" href="assets/img/favicon-16x16.png" type="image/png" sizes="16x16">
+    <link rel="icon" href="assets/img/favicon-32x32.png" type="image/png" sizes="32x32">
+    <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+    <link rel="manifest" href="assets/img/site.webmanifest">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/solid.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .admin-wrap { max-width: 960px; margin: 2.5rem auto; padding: 0 1rem; }
+        .admin-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1.5rem; border-bottom: 2px solid #eee; }
+        .admin-tab { padding: 0.6rem 1rem; cursor: pointer; border: none; background: none; font-size: 0.95rem; color: #555; border-bottom: 3px solid transparent; }
+        .admin-tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); font-weight: 600; }
+        .admin-panel { display: none; }
+        .admin-panel.active { display: block; }
+        .admin-card { background: var(--white); border-radius: 8px; padding: 1.2rem 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 1.2rem; }
+        table.admin-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        table.admin-table th, table.admin-table td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid #eee; vertical-align: middle; }
+        table.admin-table select, table.admin-table input { padding: 0.3rem; font-size: 0.85rem; }
+        .admin-form-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.6rem; align-items: center; }
+        .admin-form-row input, .admin-form-row select, .admin-form-row textarea { padding: 0.5rem; border: 1px solid #ccc; border-radius: 5px; font-size: 0.9rem; }
+        .admin-btn { background: var(--primary-color); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; font-size: 0.9rem; }
+        .admin-btn.danger { background: #c0392b; }
+        .admin-btn.small { padding: 0.3rem 0.6rem; font-size: 0.8rem; }
+        .admin-msg { padding: 0.6rem 0.9rem; border-radius: 6px; margin: 0.6rem 0; display: none; font-size: 0.9rem; }
+        .admin-msg.success { background: #d4edda; color: #155724; display: block; }
+        .admin-msg.error { background: #f8d7da; color: #721c24; display: block; }
+        #admin-denied, #admin-loading { text-align: center; padding: 4rem 0; }
+        .gallery-admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 0.8rem; }
+        .gallery-admin-item { position: relative; }
+        .gallery-admin-item img, .gallery-admin-item .video-placeholder { width: 100%; height: 100px; object-fit: cover; border-radius: 6px; background: #eee; display:flex; align-items:center; justify-content:center; color:#999; }
+        .gallery-admin-item .del-btn { position: absolute; top: 4px; right: 4px; background: rgba(192,57,43,0.9); color: #fff; border: none; border-radius: 4px; width: 22px; height: 22px; cursor: pointer; font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="index.html"><img src="assets/img/logo.png" alt="Logo Liens Culturels" class="logo"></a>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Accueil</a></li>
+                    <li><a href="espace-membre.html"><i class="fas fa-user"></i> Espace Membre</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="admin-wrap">
+        <div id="admin-loading" style="text-align:center; padding:4rem 0; color:#888;">Chargement…</div>
+
+        <div id="admin-denied" style="display:none;">
+            <i class="fas fa-lock" style="font-size:2.5rem; color:#c0392b;"></i>
+            <h1>Accès refusé</h1>
+            <p>Cette section est réservée aux administrateurs. <a href="espace-membre.html">Retour à l'espace membre</a>.</p>
+        </div>
+
+        <div id="admin-content" style="display:none;">
+            <h1>Espace Admin</h1>
+
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-tab="membres">Membres</button>
+                <button class="admin-tab" data-tab="documents">Documents</button>
+                <button class="admin-tab" data-tab="agenda">Agenda</button>
+                <button class="admin-tab" data-tab="galerie">Photothèque / Vidéothèque</button>
+                <button class="admin-tab" data-tab="newsletter">Newsletter</button>
+            </div>
+
+            <div class="admin-msg" id="admin-msg"></div>
+
+            <!-- MEMBRES -->
+            <div class="admin-panel active" id="panel-membres">
+                <div class="admin-card">
+                    <h3>Inviter un nouveau membre</h3>
+                    <div class="admin-form-row">
+                        <input type="text" id="invite-nom" placeholder="Nom complet">
+                        <input type="email" id="invite-email" placeholder="Adresse e-mail">
+                        <select id="invite-groups" multiple size="4" title="Ctrl/Cmd+clic pour sélectionner plusieurs rôles">
+                            <option value="membre" selected>Membre</option>
+                            <option value="secretaire">Secrétaire</option>
+                            <option value="tresorier">Trésorier</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        <button class="admin-btn" id="invite-btn">Envoyer l'invitation</button>
+                    </div>
+                </div>
+                <div class="admin-card">
+                    <h3>Membres</h3>
+                    <table class="admin-table" id="members-table">
+                        <thead><tr><th>Nom</th><th>E-mail</th><th>Téléphone</th><th>Cotisation</th><th></th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- DOCUMENTS -->
+            <div class="admin-panel" id="panel-documents">
+                <div class="admin-card">
+                    <h3>Ajouter un document (PDF)</h3>
+                    <div class="admin-form-row">
+                        <input type="file" id="doc-file" accept="application/pdf">
+                        <button class="admin-btn" id="doc-upload-btn">Téléverser</button>
+                    </div>
+                </div>
+                <div class="admin-card">
+                    <h3>Documents en ligne</h3>
+                    <table class="admin-table" id="documents-table">
+                        <thead><tr><th>Fichier</th><th>Taille</th><th></th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- AGENDA -->
+            <div class="admin-panel" id="panel-agenda">
+                <div class="admin-card">
+                    <h3>Ajouter un événement</h3>
+                    <div class="admin-form-row">
+                        <input type="text" id="event-title" placeholder="Titre">
+                        <input type="date" id="event-start" title="Date de début">
+                        <input type="date" id="event-end" title="Date de fin (optionnel)">
+                        <input type="text" id="event-time" placeholder="Heure (ex: 18:30)">
+                        <input type="text" id="event-location" placeholder="Lieu">
+                    </div>
+                    <div class="admin-form-row">
+                        <textarea id="event-description" placeholder="Description" style="flex:1; min-height:60px;"></textarea>
+                    </div>
+                    <button class="admin-btn" id="event-add-btn">Ajouter l'événement</button>
+                </div>
+                <div class="admin-card">
+                    <h3>Événements à venir et passés</h3>
+                    <table class="admin-table" id="agenda-table">
+                        <thead><tr><th>Date</th><th>Titre</th><th>Lieu</th><th></th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- GALERIE -->
+            <div class="admin-panel" id="panel-galerie">
+                <div class="admin-card">
+                    <h3>Ajouter une photo</h3>
+                    <div class="admin-form-row">
+                        <input type="text" id="photo-title" placeholder="Légende">
+                        <input type="file" id="photo-file" accept="image/jpeg,image/png,image/webp">
+                        <button class="admin-btn" id="photo-add-btn">Ajouter</button>
+                    </div>
+                </div>
+                <div class="admin-card">
+                    <h3>Ajouter une vidéo (lien YouTube)</h3>
+                    <div class="admin-form-row">
+                        <input type="text" id="video-title" placeholder="Titre">
+                        <input type="text" id="video-url" placeholder="https://www.youtube.com/embed/...">
+                        <button class="admin-btn" id="video-add-btn">Ajouter</button>
+                    </div>
+                </div>
+                <div class="admin-card">
+                    <h3>Galerie</h3>
+                    <div class="gallery-admin-grid" id="gallery-admin-grid"></div>
+                </div>
+            </div>
+
+            <!-- NEWSLETTER -->
+            <div class="admin-panel" id="panel-newsletter">
+                <div class="admin-card">
+                    <h3>Newsletter</h3>
+                    <p>La gestion des abonnés et l'envoi de campagnes se fait directement dans Brevo (Sendinblue), déjà connecté au formulaire du site.</p>
+                    <a class="admin-btn" href="https://app.brevo.com/" target="_blank" rel="noopener">Ouvrir le tableau de bord Brevo <i class="fas fa-arrow-up-right-from-square"></i></a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-bottom">
+            <p><strong>&copy; 2025 Liens Culturels (LC).</strong> Espace d'administration.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>

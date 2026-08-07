@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
     const calendarEl = document.getElementById('calendar');
     if (!calendarEl) return; // Ne rien faire si l'élément #calendar n'existe pas sur la page
 
@@ -10,17 +10,27 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalDescription = document.getElementById('modalDescription');
     const closeModal = document.querySelector('.modal-close');
 
-    const events = [
-        { title: 'Assemblée Générale Constitutive', start: '2025-02-27', description: "Moment fondateur de l'association. Adoption des statuts et élection du premier bureau.", time: '16:00', location: 'Domaine de l\'Hermitage, Nogent l\'Artaud', classNames: ['event-past'] },
-        { title: 'Voyage de Jumelage (Phase 1)', start: '2025-03-15', end: '2025-03-22', description: "Premier voyage de découverte et de préparation du jumelage entre Nogent l'Artaud et Savè.", location: 'Savè, Bénin', classNames: ['event-past'] },
-        { title: 'Déclaration en préfecture', start: '2025-05-31', description: "Dépôt officiel des statuts à la sous-préfecture de Château-Thierry.", location: 'Sous-préfecture', classNames: ['event-past'] },
-        { title: 'Publication au Journal Officiel', start: '2025-06-10', description: "Naissance officielle de l'association avec sa publication au JOAFE.", location: 'Journal Officiel', classNames: ['event-past'] },
-        { title: 'Réunion du C.A.', start: '2025-07-07', description: "Réunion du Conseil d'Administration pour la correction du nom de l'association.", time: '16:30', location: 'Nogent-L\'Artaud', classNames: ['event-past'] },
-        { title: 'Soirée Béninoise', start: '2025-08-09', description: "Soirée de présentation de la culture béninoise, avec dégustation, musique et danse.", time: '19:00', location: 'Salle des fêtes, Nogent l\'Artaud' },
-        { title: 'Réunion du bureau', start: '2025-09-02', description: "Réunion mensuelle du bureau, ouverte aux membres.", time: '18:30', location: 'Siège de l\'association' },
-        { title: 'Vente pour le jumelage', start: '2025-09-28', description: "Stand au marché local pour vendre gâteaux et artisanat afin de financer nos projets.", time: '10:00 - 17:00', location: 'Place du marché, Nogent l\'Artaud' },
-        { title: 'Atelier Cuisine', start: '2025-10-18', description: "Atelier de cuisine Franco-Béninoise. Inscription obligatoire.", time: '14:00', location: 'À définir' }
-    ];
+    const API_BASE = 'https://8igk1o6vw4.execute-api.eu-west-3.amazonaws.com';
+    const today = new Date().toISOString().slice(0, 10);
+
+    let events = [];
+    try {
+        const resp = await fetch(`${API_BASE}/agenda`);
+        if (!resp.ok) throw new Error('Erreur réseau');
+        const raw = await resp.json();
+        events = raw.map((e) => ({
+            title: e.title,
+            start: e.start,
+            end: e.end,
+            description: e.description,
+            time: e.time,
+            location: e.location,
+            classNames: e.start < today ? ['event-past'] : [],
+        }));
+    } catch (err) {
+        console.error('Impossible de charger l\'agenda :', err);
+        calendarEl.insertAdjacentHTML('beforebegin', '<p style="text-align:center;color:#c0392b;">Impossible de charger l\'agenda pour le moment.</p>');
+    }
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
