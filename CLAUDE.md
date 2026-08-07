@@ -22,12 +22,13 @@ Repo: https://github.com/magonnoude/site-liensculturels (public, default branch 
   ACM certificates, Lambda, API Gateway) — this site's forms backend is **live** and used by
   real members/donors.
 
-Known live-infra caveat: the apex domain `liensculturels.org` (no `www`) is currently
-**broken** (TLS handshake failure / 403 from CloudFront — it's not in the ACM cert SANs or
-the distribution aliases). Fixing this requires an ACM cert update + CloudFront alias change
-+ a DNS validation CNAME at Gandi (DNS is NOT in Route53 — this AWS account has no hosted
-zone for this domain). Do not attempt this without the user present to add the Gandi DNS
-record and confirm the change window.
+Note: the apex domain `liensculturels.org` (no `www`) was broken (TLS handshake failure /
+403 from CloudFront) until 2026-08-07 — fixed by requesting a new ACM cert with the apex as
+primary domain + `*.liensculturels.org` as SAN, validated via a CNAME the user added at
+**Gandi** (DNS is NOT in Route53 — this AWS account has no hosted zone for this domain), then
+adding `liensculturels.org` to the CloudFront distribution's aliases and switching to the new
+cert. Any future ACM/DNS work on this domain still needs the user present for the Gandi step
+— we have no Gandi API access from this environment.
 
 ## 3. Subagent Strategy
 

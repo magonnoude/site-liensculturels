@@ -81,20 +81,21 @@ changement d'infrastructure.
 |---|---|
 | S3 (site statique) | `www.liensculturels.org` (eu-west-3) — privé, accès via CloudFront OAC uniquement |
 | CloudFront | `E27Z3FWSMEYT5U` → `d3egnxbq47opx9.cloudfront.net` |
-| Alias CloudFront | `www.liensculturels.org`, `*.liensculturels.org` |
-| CloudFront Function | `redirect-root-to-www` (301 `liensculturels.org` → `www.liensculturels.org`) |
-| Certificat ACM | `*.liensculturels.org` (us-east-1, wildcard sous-domaines uniquement — **pas** de SAN pour le domaine nu) |
+| Alias CloudFront | `www.liensculturels.org`, `*.liensculturels.org`, `liensculturels.org` |
+| CloudFront Function | `redirect-root-to-www` (301 `liensculturels.org` → `www.liensculturels.org`) — actif, atteignable |
+| Certificat ACM | `liensculturels.org` + SAN `*.liensculturels.org` (us-east-1, `6586fe54-c9cb-468b-bcc3-a1e38b173315`) — couvre domaine nu et sous-domaines |
 | DNS | Géré chez **Gandi** (hors Route53 — ce compte AWS n'a pas de zone hébergée pour ce domaine) |
+| IAM déploiement | `github-actions-liensculturels` — policy `liensculturels-deploy-policy` (S3 + invalidation CloudFront scopées) |
 | API Gateway | `liensCulturels-API` (HTTP API, id `8igk1o6vw4`) — routes `POST /contact`, `POST /adhesion` |
 | Lambda contact | `liensCulturels-contact-form` (Python 3.11) |
 | Lambda adhésion | `liensCulturels-adhesion-form` (Python 3.11) — **déjà en production**, malgré la mention historique "endpoint à créer" dans `assets/js/main.js` |
 | Newsletter | Formulaire Brevo (Sendinblue) intégré dans `footer` de chaque page |
 
-⚠️ **Bug connu (priorité 1 — voir `ROADMAP.md`) :** le domaine nu `liensculturels.org`
-(sans `www`) échoue en HTTPS (handshake TLS refusé, le domaine n'est ni dans les SAN du
-certificat ACM ni dans les alias CloudFront) et renvoie une 403 CloudFront en HTTP. La
-fonction `redirect-root-to-www` existe déjà côté CloudFront mais n'est jamais atteinte tant
-que ce point n'est pas corrigé.
+✅ **Domaine nu corrigé (2026-08-07) :** `https://liensculturels.org` et
+`http://liensculturels.org` redirigent désormais en 301 vers `https://www.liensculturels.org`
+via `redirect-root-to-www`. Correctif : nouveau certificat ACM avec SAN sur le domaine nu,
+validé par CNAME chez Gandi, puis alias + certificat mis à jour sur la distribution
+CloudFront. L'ancien certificat (`ee2a2253-...`, wildcard uniquement) a été supprimé.
 
 Le backend serverless (Lambda, API Gateway, SES) n'est pas versionné dans ce dépôt.
 

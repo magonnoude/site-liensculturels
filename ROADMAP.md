@@ -6,16 +6,16 @@ pendant la session de scaffolding qui a produit cette roadmap.
 
 ## Priorité 1 — Bugs actifs en production
 
-- [ ] **Domaine nu cassé.** `https://liensculturels.org` (sans `www`) échoue en TLS
-  (handshake refusé) et renvoie une 403 CloudFront en HTTP. Cause : le domaine n'est ni
-  dans les SAN du certificat ACM (`*.liensculturels.org` uniquement) ni dans les alias de
-  la distribution CloudFront `E27Z3FWSMEYT5U`. La CloudFront Function
-  `redirect-root-to-www` existe déjà et contient la bonne logique de redirection, mais
-  n'est jamais exécutée. **Correctif :** redemander/étendre le certificat ACM (us-east-1)
-  avec le SAN `liensculturels.org`, valider par CNAME chez **Gandi** (DNS externe, hors
-  Route53), puis ajouter `liensculturels.org` aux alias CloudFront. Impact : toute
-  personne qui tape le domaine sans `www` (cartes de visite, bouche-à-oreille, recherche
-  Google sans www) tombe sur une erreur.
+- [x] **Domaine nu cassé — corrigé le 2026-08-07.** `https://liensculturels.org` (sans
+  `www`) échouait en TLS (handshake refusé) et renvoyait une 403 CloudFront en HTTP. Cause :
+  le domaine n'était ni dans les SAN du certificat ACM (`*.liensculturels.org` uniquement)
+  ni dans les alias de la distribution CloudFront `E27Z3FWSMEYT5U`. **Correctif appliqué :**
+  nouveau certificat ACM (us-east-1, `6586fe54-c9cb-468b-bcc3-a1e38b173315`) avec SAN
+  `liensculturels.org` + `*.liensculturels.org`, validé par CNAME chez **Gandi**, puis
+  alias `liensculturels.org` et certificat mis à jour sur la distribution CloudFront.
+  L'ancien certificat a été supprimé. Vérifié : `liensculturels.org` et
+  `http://liensculturels.org` redirigent en 301 vers `www.liensculturels.org` via la
+  CloudFront Function `redirect-root-to-www`, désormais atteignable.
 - [x] **CSS/JS cassés sur les pages de confirmation newsletter.** `merci-newsletter.html`
   et `validation-newsletter.html` chargeaient `css/style.css` et `js/main.js` (chemins
   relatifs faux — le vrai chemin est `assets/css/...` et `assets/js/...`). Corrigé dans
