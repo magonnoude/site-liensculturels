@@ -51,15 +51,52 @@ Ce site repose sur une architecture moderne, performante et économique, combina
 
 ## 🚀 Installation et Déploiement
 
-Le site étant statique, il peut être hébergé sur n'importe quel service d'hébergement moderne (AWS S3, Netlify, Vercel, hébergeur classique).
+Le site est hébergé en production sur **AWS S3 + CloudFront** (voir infra ci-dessous).
 
 1.  Clonez ce dépôt :
     ```bash
-    git clone [https://github.com/magonnoude/site-liens-culturels.git](https://github.com/magonnoude/site-liens-culturels.git)
+    git clone https://github.com/magonnoude/site-liensculturels.git
     ```
-2.  Ouvrez le fichier `index.html` dans votre navigateur pour visualiser le site en local.
+2.  Ouvrez le fichier `index.html` dans votre navigateur (ou `python3 -m http.server`
+    depuis la racine) pour visualiser le site en local.
 
-Les endpoints des formulaires dans `assets/js/main.js` et les liens de la newsletter sont configurés pour la production et ne nécessitent pas de modification sauf en cas de changement d'infrastructure.
+**Déploiement (voie normale) :** tout push sur `main` déclenche
+`.github/workflows/deploy.yml` — sync S3 + invalidation CloudFront automatiques.
+
+**Déploiement manuel :**
+```bash
+cd ~/RMS_Projects/www.liensculturels.org
+./deploy.sh "message de commit"
+```
+
+Les endpoints des formulaires dans `assets/js/main.js` et les liens de la newsletter sont
+configurés pour la production et ne nécessitent pas de modification sauf en cas de
+changement d'infrastructure.
+
+---
+
+## ☁️ Infrastructure AWS (compte `928883700132`, région `eu-west-3`)
+
+| Ressource | Valeur |
+|---|---|
+| S3 (site statique) | `www.liensculturels.org` (eu-west-3) — privé, accès via CloudFront OAC uniquement |
+| CloudFront | `E27Z3FWSMEYT5U` → `d3egnxbq47opx9.cloudfront.net` |
+| Alias CloudFront | `www.liensculturels.org`, `*.liensculturels.org` |
+| CloudFront Function | `redirect-root-to-www` (301 `liensculturels.org` → `www.liensculturels.org`) |
+| Certificat ACM | `*.liensculturels.org` (us-east-1, wildcard sous-domaines uniquement — **pas** de SAN pour le domaine nu) |
+| DNS | Géré chez **Gandi** (hors Route53 — ce compte AWS n'a pas de zone hébergée pour ce domaine) |
+| API Gateway | `liensCulturels-API` (HTTP API, id `8igk1o6vw4`) — routes `POST /contact`, `POST /adhesion` |
+| Lambda contact | `liensCulturels-contact-form` (Python 3.11) |
+| Lambda adhésion | `liensCulturels-adhesion-form` (Python 3.11) — **déjà en production**, malgré la mention historique "endpoint à créer" dans `assets/js/main.js` |
+| Newsletter | Formulaire Brevo (Sendinblue) intégré dans `footer` de chaque page |
+
+⚠️ **Bug connu (priorité 1 — voir `ROADMAP.md`) :** le domaine nu `liensculturels.org`
+(sans `www`) échoue en HTTPS (handshake TLS refusé, le domaine n'est ni dans les SAN du
+certificat ACM ni dans les alias CloudFront) et renvoie une 403 CloudFront en HTTP. La
+fonction `redirect-root-to-www` existe déjà côté CloudFront mais n'est jamais atteinte tant
+que ce point n'est pas corrigé.
+
+Le backend serverless (Lambda, API Gateway, SES) n'est pas versionné dans ce dépôt.
 
 ---
 
@@ -67,18 +104,27 @@ Les endpoints des formulaires dans `assets/js/main.js` et les liens de la newsle
 
 ```
 .
+├── .github/workflows/deploy.yml  # Déploiement auto (push main → S3 + CloudFront)
 ├── assets/
 │   ├── css/
 │   │   └── style.css       # Feuille de style principale
 │   ├── img/                # Toutes les images (logos, photos, etc.)
 │   └── js/
-│       └── main.js         # Logique des formulaires et autres scripts
-├── index.html              # Page d'accueil
+│       ├── main.js         # Formulaires contact/adhésion + vidéothèque
+│       ├── loader.js        # Chargeur de composants (non utilisé actuellement, voir ROADMAP)
+│       └── agenda-script.js
+├── documents/               # PDFs publics (statuts, règlement intérieur, PV d'AG)
+├── tasks/                   # todo.md / lessons.md — suivi de travail Claude Code
+├── index.html               # Page d'accueil
 ├── a-propos.html
 ├── bureau.html
 ├── contact.html
 ├── ... (toutes les autres pages HTML)
-└── README.md               # Ce fichier
+├── sitemap.xml / robots.txt # SEO
+├── deploy.sh                 # Déploiement manuel (miroir du workflow GitHub Actions)
+├── CLAUDE.md                 # Règles de travail pour Claude Code sur ce dépôt
+├── ROADMAP.md                 # Backlog priorisé d'améliorations
+└── README.md                 # Ce fichier
 ```
 
 ---

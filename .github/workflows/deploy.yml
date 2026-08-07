@@ -1,0 +1,102 @@
+name: Deploy to AWS S3 & Invalidate CloudFront
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy to S3 + CloudFront
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Verify AWS identity
+        run: aws sts get-caller-identity
+
+      # ⚠️ Tout ce qui n'est PAS exclu ici devient publiquement téléchargeable sur
+      # https://www.liensculturels.org/. Il n'y a pas de --delete : un objet déjà en
+      # ligne n'est jamais retiré, et ajouter un --exclude ne le retire pas non plus.
+      # Après toute modification de cette liste, auditer le bucket (aws s3 ls) puis
+      # supprimer les vestiges à la main + invalider CloudFront.
+      - name: Sync entire site to S3
+        run: |
+          aws s3 sync . s3://${{ secrets.S3_BUCKET_NAME }} \
+            --exclude ".git/*" \
+            --exclude ".github/*" \
+            --exclude ".claude/*" \
+            --exclude "tasks/*" \
+            --exclude "*.md" \
+            --exclude ".gitignore" \
+            --exclude "*.docx" \
+            --exclude "*:Zone.Identifier" \
+            --exclude "*.Zone.Identifier" \
+            --region ${{ secrets.AWS_REGION }}
+
+      # Cache court sur le HTML pour que les mises à jour de contenu soient visibles vite
+      - name: Set no-cache on HTML files
+        run: |
+          for f in $(find . -name "*.html" -not -path "./.git/*" -not -path "./.github/*"); do
+            key="${f#./}"
+            aws s3 cp "$f" "s3://${{ secrets.S3_BUCKET_NAME }}/$key" \
+              --cache-control "no-cache, no-store, must-revalidate" \
+              --content-type "text/html; charset=utf-8" \
+              --region ${{ secrets.AWS_REGION }}
+          done
+
+      - name: Set revalidate cache on CSS
+        run: |
+          aws s3 cp assets/css/style.css \
+            s3://${{ secrets.S3_BUCKET_NAME }}/assets/css/style.css \
+            --cache-control "no-cache, must-revalidate" \
+            --content-type "text/css" \
+            --region ${{ secrets.AWS_REGION }}
+
+      - name: Set revalidate cache on JS files
+        run: |
+          for f in assets/js/*.js; do
+            aws s3 cp "$f" \
+              "s3://${{ secrets.S3_BUCKET_NAME }}/$f" \
+              --cache-control "no-cache, must-revalidate" \
+              --content-type "application/javascript" \
+              --region ${{ secrets.AWS_REGION }}
+          done
+
+      - name: Set short cache on SEO files
+        run: |
+          for file in sitemap.xml robots.txt; do
+            if [ -f "$file" ]; then
+              aws s3 cp "$file" \
+                "s3://${{ secrets.S3_BUCKET_NAME }}/$file" \
+                --cache-control "public, max-age=3600" \
+                --region ${{ secrets.AWS_REGION }}
+            fi
+          done
+
+      - name: Invalidate CloudFront
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
+
+      - name: Deployment summary
+        run: |
+          echo "✅ Deployment complete"
+          echo "🌐 https://www.liensculturels.org"
+          echo "📅 $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          echo "📦 Commit: ${{ github.sha }}"
+          echo "👤 Actor:  ${{ github.actor }}"

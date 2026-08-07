@@ -1,0 +1,36 @@
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# WSL metadata artifacts — never upload to S3
+*.Zone.Identifier
+*:Zone.Identifier
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+*.swp
+*.swo
+
+# Logs & temp
+*.log
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Stray editor/OS duplicate files (e.g. "index - Copie.html", "Untitled 2.html")
+* - Copie.*
+* - Copy.*
+*[ ][0-9].html
