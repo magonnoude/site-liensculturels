@@ -1,0 +1,46 @@
+name: HTML lint & link check
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Validate HTML + internal links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java (required by html5validator's vnu checker)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Install html5validator
+        run: pip install html5validator
+
+      - name: Validate HTML files
+        run: html5validator --root . --match "*.html" --ignore-re "Attribute .loading. not allowed"
+
+      - name: Check internal links (no build step — static file check)
+        run: |
+          set -e
+          fail=0
+          for f in $(find . -maxdepth 1 -name "*.html"); do
+            for href in $(grep -oE '(href|src)="[a-zA-Z0-9_./-]+\.(html|css|js|png|jpg|jpeg|webp|gif|pdf)"' "$f" | sed -E 's/^(href|src)="//; s/"$//'); do
+              case "$href" in
+                http*|//*|mailto:*|tel:*) continue ;;
+              esac
+              if [ ! -f "$href" ]; then
+                echo "BROKEN LINK in $f: $href"
+                fail=1
+              fi
+            done
+          done
+          exit $fail

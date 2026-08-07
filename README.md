@@ -90,6 +90,9 @@ changement d'infrastructure.
 | Lambda contact | `liensCulturels-contact-form` (Python 3.11) |
 | Lambda adhésion | `liensCulturels-adhesion-form` (Python 3.11) — **déjà en production**, malgré la mention historique "endpoint à créer" dans `assets/js/main.js` |
 | Newsletter | Formulaire Brevo (Sendinblue) intégré dans `footer` de chaque page |
+| Logs CloudFront | Bucket dédié `www-liensculturels-org-logs` (chiffré, privé, expiration 30j) via CloudWatch Logs vended-logs delivery (`liensculturels-cf-access-logs`) |
+| En-têtes de sécurité | Response Headers Policy `liensculturels-security-headers` (CSP, HSTS, X-Frame-Options, Referrer-Policy, X-Content-Type-Options) |
+| Page d'erreur | 403/404 CloudFront → `/404.html` (statut HTTP 404) |
 
 ✅ **Domaine nu corrigé (2026-08-07) :** `https://liensculturels.org` et
 `http://liensculturels.org` redirigent désormais en 301 vers `https://www.liensculturels.org`
@@ -106,13 +109,14 @@ Le backend serverless (Lambda, API Gateway, SES) n'est pas versionné dans ce d�
 ```
 .
 ├── .github/workflows/deploy.yml  # Déploiement auto (push main → S3 + CloudFront)
+├── .github/workflows/lint.yml    # Validation HTML + liens morts sur chaque PR
+├── 404.html                       # Page d'erreur (mappée depuis CloudFront)
 ├── assets/
 │   ├── css/
 │   │   └── style.css       # Feuille de style principale
 │   ├── img/                # Toutes les images (logos, photos, etc.)
 │   └── js/
 │       ├── main.js         # Formulaires contact/adhésion + vidéothèque
-│       ├── loader.js        # Chargeur de composants (non utilisé actuellement, voir ROADMAP)
 │       └── agenda-script.js
 ├── documents/               # PDFs publics (statuts, règlement intérieur, PV d'AG)
 ├── tasks/                   # todo.md / lessons.md — suivi de travail Claude Code

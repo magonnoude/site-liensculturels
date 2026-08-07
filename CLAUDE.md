@@ -60,6 +60,27 @@ cert. Any future ACM/DNS work on this domain still needs the user present for th
 - This repo is **public** on GitHub — never commit anything containing member/donor PII,
   API keys, or internal financial documents (PV, statuts are fine — already public-facing
   legal docs; but exports of membership lists, emails, etc. must never be committed).
+- Deploy IAM user: `github-actions-liensculturels` (least-privilege: S3 sync on the site
+  bucket + CloudFront invalidation on `E27Z3FWSMEYT5U` only). CloudFront access logs go to
+  `www-liensculturels-org-logs` (private, encrypted, 30-day expiry) via CloudWatch Logs
+  vended-logs delivery. Security headers come from the Response Headers Policy
+  `liensculturels-security-headers` attached to the default cache behavior.
+
+## 8. On the member/admin/secretary/treasurer portals (requested, not yet built)
+
+This site was a pure static brochure with two Lambda contact forms until 2026-08-07, when
+the association asked for four new areas: a member space, an admin space (documents, photo
+library, video library, agenda, member management, newsletter), a secretary space (meeting
+planning, minutes, decisions), and a treasurer space. **Do not build any of this by
+improvising an architecture inline.** It requires real authentication, a member database,
+and — for the treasurer space — actual financial/accounting data, on a repo that is
+currently **public**. Get explicit answers on auth approach (Cognito is the natural AWS-native
+fit), where sensitive backend code/data lives (likely needs to NOT be in this public repo, or
+the repo's visibility needs to change first), and data model/security review before writing
+any code. This is exactly the kind of task this file's Plan Mode criteria (AWS infra, PII,
+financial data) were written for — treat it accordingly even under an "auto commit and go"
+instruction; that instruction covers execution speed once the plan is agreed, not skipping
+the plan.
 
 ## 7. Content & File Hygiene
 
