@@ -65,19 +65,20 @@
 
     <main class="container" style="padding-top: 2rem;">
         <div style="text-align:center;">
-            <h1>Agenda des Événements</h1>
-            <p>Naviguez dans notre calendrier pour découvrir nos prochains rendez-vous. Cliquez sur un événement pour plus de détails.</p>
+            <h1><span class="lang-fr">Agenda des Événements</span><span class="lang-en">Events Calendar</span></h1>
+            <p><span class="lang-fr">Naviguez dans notre calendrier pour découvrir nos prochains rendez-vous. Cliquez sur un événement pour plus de détails.</span><span class="lang-en">Browse our calendar to discover our upcoming events. Click on an event for more details.</span></p>
+            <p class="lang-en" style="font-size:0.85rem; color:#999;">Event titles and descriptions are currently only available in French.</p>
         </div>
         <div id='calendar'></div>
     </main>
-    
+
     <div id="eventModal" class="modal">
         <div class="modal-content">
             <span class="modal-close">&times;</span>
             <h2 id="modalTitle">Titre de l'événement</h2>
-            <p><strong>Date :</strong> <span id="modalDate"></span></p>
-            <p><strong>Heure :</strong> <span id="modalTime"></span></p>
-            <p><strong>Lieu :</strong> <span id="modalLocation"></span></p>
+            <p><strong><span class="lang-fr">Date :</span><span class="lang-en">Date:</span></strong> <span id="modalDate"></span></p>
+            <p><strong><span class="lang-fr">Heure :</span><span class="lang-en">Time:</span></strong> <span id="modalTime"></span></p>
+            <p><strong><span class="lang-fr">Lieu :</span><span class="lang-en">Location:</span></strong> <span id="modalLocation"></span></p>
             <hr>
             <p id="modalDescription">Description détaillée de l'événement.</p>
         </div>
