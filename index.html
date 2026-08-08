@@ -53,15 +53,25 @@
         "https://www.youtube.com/@LiensCulturels"
       ]
     }
-    </script>    <div class="header-utility">
+    </script>    <div class="site-header">
+    <div class="header-utility">
         <div class="container">
-            <a href="espace-membre.html"><i class="fas fa-user-lock"></i> Accès Membre</a>
+            <a href="espace-membre.html" class="utility-link"><i class="fas fa-user-lock"></i> <span class="lang-fr">Accès Membre</span><span class="lang-en">Member Access</span></a>
+            <span class="utility-divider" aria-hidden="true"></span>
+            <a href="adhesion.html" class="cta-pill"><i class="fas fa-user-plus"></i> <span class="lang-fr">Devenir Membre / Nous Rejoindre</span><span class="lang-en">Join Us</span></a>
+            <span class="utility-divider" aria-hidden="true"></span>
+            <div class="lang-toggle">
+                <button type="button" data-lang="fr" class="active">FR</button>
+                <span style="color:rgba(255,255,255,0.3)">|</span>
+                <button type="button" data-lang="en">EN</button>
+            </div>
         </div>
     </div>
 
     <header>
         <div class="container">
             <a href="index.html"><img src="assets/img/logo.png" alt="Logo Liens Culturels" class="logo"></a>
+            <button type="button" class="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false"><i class="fas fa-bars"></i></button>
             <nav>
                 <ul>
                     <li class="dropdown"><a href="#">L'Association ▼</a><ul class="dropdown-menu"><li><a href="a-propos.html">Qui sommes-nous ?</a></li><li><a href="bureau.html">Le Bureau</a></li><li><a href="mot-des-dirigeants.html">Mot des Dirigeants</a></li></ul></li>
@@ -71,11 +81,11 @@
                     <li><a href="blog.html">Blog</a></li>
                     <li class="dropdown"><a href="#">Médiathèque ▼</a><ul class="dropdown-menu"><li><a href="phototheque.html">Photothèque</a></li><li><a href="videotheque.html">Vidéothèque</a></li></ul></li>
                     <li><a href="contact.html">Contact</a></li>
-                    <li><a href="adhesion.html" class="btn">Devenir Membre</a></li>
                 </ul>
             </nav>
         </div>
     </header>
+    </div>
 
  
     <main>
@@ -155,5 +165,6 @@
         </div>
     </footer>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/header.js"></script>
 </body>
 </html>

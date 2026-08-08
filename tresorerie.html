@@ -42,15 +42,25 @@
         .summary-tile.solde .n { color: var(--secondary-color); }
     </style>
 </head>
-<body>    <div class="header-utility">
+<body>    <div class="site-header">
+    <div class="header-utility">
         <div class="container">
-            <a href="espace-membre.html"><i class="fas fa-user-lock"></i> Accès Membre</a>
+            <a href="espace-membre.html" class="utility-link"><i class="fas fa-user-lock"></i> <span class="lang-fr">Accès Membre</span><span class="lang-en">Member Access</span></a>
+            <span class="utility-divider" aria-hidden="true"></span>
+            <a href="adhesion.html" class="cta-pill"><i class="fas fa-user-plus"></i> <span class="lang-fr">Devenir Membre / Nous Rejoindre</span><span class="lang-en">Join Us</span></a>
+            <span class="utility-divider" aria-hidden="true"></span>
+            <div class="lang-toggle">
+                <button type="button" data-lang="fr" class="active">FR</button>
+                <span style="color:rgba(255,255,255,0.3)">|</span>
+                <button type="button" data-lang="en">EN</button>
+            </div>
         </div>
     </div>
 
     <header>
         <div class="container">
             <a href="index.html"><img src="assets/img/logo.png" alt="Logo Liens Culturels" class="logo"></a>
+            <button type="button" class="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false"><i class="fas fa-bars"></i></button>
             <nav>
                 <ul>
                     <li><a href="index.html">Accueil</a></li>
@@ -59,6 +69,7 @@
             </nav>
         </div>
     </header>
+    </div>
 
     <main class="admin-wrap">
         <div id="tres-loading" style="text-align:center; padding:4rem 0; color:#888;">Chargement…</div>
@@ -159,5 +170,6 @@
 
     <script src="assets/js/auth.js"></script>
     <script src="assets/js/tresorerie.js"></script>
+    <script src="assets/js/header.js"></script>
 </body>
 </html>

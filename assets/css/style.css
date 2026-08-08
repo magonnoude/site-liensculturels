@@ -35,10 +35,18 @@ a:hover {
     text-decoration: underline;
 }
 
-/* ---- Barre utilitaire (accès réservés) ----
-   Volontairement non sticky : seule la barre principale (logo + nav) reste
-   épinglée au défilement, pour ne pas avoir à faire coïncider en pixels la
-   hauteur de deux bandeaux sticky empilés. */
+/* ---- En-tête : bandeau utilitaire + barre principale, un seul bloc épinglé
+   (structure reprise de kesho.grouperms.com/en-tete.tsx : ce qui n'est pas
+   pour le visiteur ordinaire — accès réservés, action d'adhésion, langue —
+   va dans le bandeau du haut ; la barre principale ne porte que l'identité
+   et la navigation éditoriale). ---- */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+}
+
 .header-utility {
     background: var(--primary-color);
 }
@@ -46,11 +54,11 @@ a:hover {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 1.4rem;
-    padding-top: 0.4rem;
-    padding-bottom: 0.4rem;
+    gap: 0.9rem;
+    padding-top: 0.45rem;
+    padding-bottom: 0.45rem;
 }
-.header-utility a {
+.header-utility .utility-link {
     color: rgba(255, 255, 255, 0.85);
     font-size: 0.82rem;
     font-weight: 600;
@@ -58,19 +66,57 @@ a:hover {
     align-items: center;
     gap: 0.4rem;
 }
-.header-utility a:hover {
+.header-utility .utility-link:hover {
     color: var(--accent-color);
     text-decoration: none;
 }
+.header-utility .utility-divider {
+    width: 1px;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.25);
+}
+.header-utility .cta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    padding: 0.3rem 0.9rem;
+    border-radius: 100px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    transition: background .2s ease, color .2s ease;
+}
+.header-utility .cta-pill:hover {
+    background: var(--accent-color);
+    color: var(--primary-color);
+    text-decoration: none;
+}
+.lang-toggle {
+    display: flex;
+    gap: 0.15rem;
+    align-items: center;
+}
+.lang-toggle button {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0.15rem 0.3rem;
+    font-family: inherit;
+}
+.lang-toggle button.active {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
 
-/* ---- Header & Navigation ---- */
+/* ---- Barre principale ---- */
 header {
-    background: var(--white);
-    padding: 1rem 0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    background: linear-gradient(to bottom, #ffffff, #fafafa);
+    padding: 0.85rem 0;
 }
 header .container {
     display: flex;
@@ -78,7 +124,7 @@ header .container {
     align-items: center;
 }
 header .logo {
-    height: 60px;
+    height: 56px;
     width: auto;
 }
 header nav ul {
@@ -87,13 +133,33 @@ header nav ul {
     list-style: none;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
 }
 header nav ul li {
-    margin-left: 20px;
+    margin-left: 0;
 }
-header nav a {
+header nav > ul > li > a {
+    display: block;
+    border: 1px solid rgba(255, 193, 7, 0.5);
+    background: linear-gradient(to bottom, #ffffff, #f9f9f9);
+    padding: 8px 14px;
+    border-radius: 5px;
+    font-size: 0.88rem;
+    font-weight: 700;
     color: var(--primary-color);
-    font-weight: bold;
+    box-shadow: 0 2px 0 0 var(--accent-color);
+    transition: box-shadow .15s ease, transform .15s ease, border-color .15s ease;
+}
+header nav > ul > li > a:hover {
+    border-color: var(--secondary-color);
+    box-shadow: 0 3px 0 0 var(--secondary-color);
+    transform: translateY(-1px);
+    text-decoration: none;
+}
+header nav > ul > li > a:active {
+    box-shadow: none;
+    transform: translateY(2px);
 }
 header nav ul li.dropdown {
     position: relative;
@@ -114,6 +180,62 @@ header nav ul li.dropdown .dropdown-menu {
 }
 header nav ul li.dropdown:hover .dropdown-menu {
     display: block;
+}
+header nav ul li.dropdown .dropdown-menu a {
+    border: none;
+    background: none;
+    box-shadow: none;
+    border-radius: 0;
+    font-weight: normal;
+}
+
+/* ---- Bouton menu mobile ---- */
+.nav-toggle {
+    display: none;
+    background: none;
+    border: 1px solid var(--primary-color);
+    border-radius: 5px;
+    padding: 8px 10px;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+@media (max-width: 900px) {
+    .nav-toggle {
+        display: inline-flex;
+    }
+    header nav {
+        display: none;
+        width: 100%;
+        margin-top: 0.8rem;
+    }
+    header nav.nav-open {
+        display: block;
+    }
+    header .container {
+        flex-wrap: wrap;
+    }
+    header nav ul {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+    header nav > ul > li > a {
+        text-align: center;
+    }
+    header nav ul li.dropdown .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        display: block;
+        margin-top: 0.3rem;
+        padding-left: 1rem;
+    }
+    .header-utility .container {
+        justify-content: center;
+        flex-wrap: wrap;
+        text-align: center;
+    }
 }
 header nav ul li.dropdown .dropdown-menu a {
     display: block;
