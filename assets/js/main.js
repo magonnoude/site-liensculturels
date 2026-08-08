@@ -73,11 +73,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const feedbackEl = adhesionForm.querySelector('.form-feedback');
         adhesionForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            const membershipTypeEl = document.getElementById('membershipType');
             const formData = {
                 fullName: document.getElementById('fullName').value,
                 address: document.getElementById('address').value,
                 email: document.getElementById('email').value,
                 phone: document.getElementById('phone').value,
+                membershipType: membershipTypeEl ? membershipTypeEl.value : undefined,
             };
 
             fetch(`${API_BASE_URL}/adhesion`, { // Endpoint à créer

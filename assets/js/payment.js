@@ -10,6 +10,22 @@
  * cette UI s'active automatiquement, sans rien changer côté front.
  */
 document.addEventListener("DOMContentLoaded", async () => {
+    // Le sélecteur de type de cotisation existe en double (un par langue,
+    // convention du site : jamais masquer des <option> individuelles).
+    // #membershipType (FR) reste la seule source de vérité pour la
+    // soumission du formulaire et le paiement ; on y recopie la valeur dès
+    // que la version EN change.
+    const membershipTypeFr = document.getElementById("membershipType");
+    const membershipTypeEn = document.getElementById("membershipTypeEn");
+    if (membershipTypeFr && membershipTypeEn) {
+        membershipTypeEn.addEventListener("change", () => {
+            membershipTypeFr.value = membershipTypeEn.value;
+        });
+        membershipTypeFr.addEventListener("change", () => {
+            membershipTypeEn.value = membershipTypeFr.value;
+        });
+    }
+
     const paymentSection = document.getElementById("payment-section");
     const paymentOptions = document.getElementById("payment-options");
     const ribFallback = document.getElementById("rib-fallback");
