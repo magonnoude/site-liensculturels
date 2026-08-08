@@ -7,7 +7,28 @@ complété le même jour. Priorisé par impact / effort. `[x]` = corrigé.
 **Les 4 espaces authentifiés (membre / admin / secrétariat / trésorerie) demandés
 séparément sont également construits, déployés et vérifiés en production** (2026-08-08) —
 voir la section dédiée ci-dessous. Ce qui reste ouvert : le câblage des photos de bureau
-(bloqué en attente d'une info de l'association, voir P5) et le site bilingue (optionnel).
+(bloqué en attente d'une info de l'association, voir P5) et la traduction du contenu de 13
+pages restantes (l'infrastructure bilingue et 5 pages sont déjà en ligne, voir tableau).
+
+## Tableau de suivi — demandes du 7–8 août 2026
+
+Toutes les demandes reçues par message, dans l'ordre, avec leur statut réel au 8 août.
+`✅` fait et vérifié en production · `🟡` fait partiellement · `⛔` bloqué (dépend d'une
+action externe, pas de moi) · `💬` répondu comme conseil, pas une action à faire.
+
+| # | Demande | Statut | Détail |
+|---|---|---|---|
+| 1 | Infos d'immatriculation (RNA, SIREN, dates JOAFE) dans le site + footer | ✅ | Déjà correctes dans `mentions-legales.html` et `post-creation.html` avant même cette session ; seul le téléphone manquait, ajouté partout. |
+| 2 | Newsletter avec les outils AWS, abandonner Brevo | ✅ | DynamoDB + Lambda + SES, double opt-in, `admin.html` affiche les vrais abonnés. |
+| 3a | Header façon kesho.grouperms.com | ✅ | Reconstruit une 2ᵉ fois le 8 août après un premier essai incomplet : bandeau utilitaire + barre principale en un seul bloc épinglé, CTA en pilule distincte, nav en tuiles, menu mobile. |
+| 3b | Cognito vs Keycloak — logique d'utiliser le Keycloak RMS avec un realm séparé pour un client comme GARA ? | 💬 | Conseil donné : garder Cognito dédié (déjà construit, testé) plutôt que coupler la disponibilité d'un client à l'infra partagée de RMS. Reconsidérer seulement si RMS industrialise ce pattern sur plusieurs clients. |
+| 4 | Invitations via SES + vérifier le domaine `liensculturels.org` dans AWS | 🟡 | Domaine bien déclaré dans AWS mais vérification DNS expirée (DKIM manquant chez Gandi) — enregistrements transmis, **en attente que vous les ajoutiez**. L'envoi fonctionne déjà via l'identité e-mail `contact@liensculturels.org`, vérifiée séparément. |
+| 5 | Stripe + FedaPay pour les cotisations, fiche d'adhésion avec paiement direct détaillé, sur le modèle d'academy | 🟡 | Codé, déployé, **volontairement pas actif** — comptes marchands à ouvrir au nom de l'association (confirmé avec vous), voir `PAYMENTS-SETUP.md`. |
+| 6 | Footer avec Mentions Légales / CGU / Confidentialité façon academy | ✅ | `cgu.html` et `confidentialite.html` créées (contenu propre à l'association, pas copié), footer refait sur les 25 pages. |
+| 7 | Email officiel `contact@liensculturels.com` + téléphone `+33674437609` | ✅ | `.com` confirmé être une coquille pour `.org` (déjà l'email utilisé partout) ; téléphone ajouté. |
+| 8 | Boutons séparés « Devenir Membre / Nous Rejoindre » (1ʳᵉ inscription + paiement) et « Accès Membre » | ✅ | Les deux existaient déjà dans des zones différentes mais avec des libellés trop proches ; nommage clarifié, puis le header entier reconstruit le 8 août pour vraiment séparer les deux visuellement (pilule CTA vs lien discret). |
+| 9 | Site multilingue EN/FR | 🟡 | Infrastructure en ligne sur les 25 pages (bascule FR/EN dans le header, persistée) + navigation et pied de page entièrement bilingues partout + contenu traduit sur 5 pages clés (accueil, qui sommes-nous, contact, adhésion, bourse scolaire). **13 pages avec chrome bilingue mais contenu encore en français uniquement** : `projets.html`, `agenda.html`, `blog.html` + les 3 articles `post-*.html`, `bureau.html`, `mot-des-dirigeants.html`, `phototheque.html`, `videotheque.html`, `mentions-legales.html`, `cgu.html`, `confidentialite.html`. |
+| 10 | Tableau de suivi + mise à jour de la roadmap .md et web | ✅ | Ce tableau, et l'artefact web republié (voir lien dans le fil de discussion). |
 
 ## Espaces authentifiés (membre / admin / secrétariat / trésorerie)
 
@@ -23,7 +44,7 @@ statiques classiques, aucune donnée sensible commitée dans ce dépôt public.
   cotisation, invitation), documents publics (`documents/`), agenda (alimente désormais
   `agenda.html` dynamiquement, les 9 événements historiques ont été migrés), photothèque/
   vidéothèque (section dynamique ajoutée sous la grille existante, laissée intacte),
-  newsletter (lien vers le tableau de bord Brevo).
+  newsletter (liste des vrais abonnés depuis le 8 août, Brevo abandonné).
 - [x] **[secretariat.html](https://www.liensculturels.org/secretariat.html)** — réunions,
   comptes-rendus (PDF stockés dans un bucket S3 **privé** dédié, jamais le bucket public du
   site), décisions.
@@ -119,8 +140,9 @@ prochaine session.
 
 - [x] **CI légère.** `.github/workflows/lint.yml` : validation HTML (Nu Html Checker) +
   vérification des liens internes cassés, sur chaque pull request.
-- [ ] **Site bilingue FR/EN.** Toujours optionnel, effort significatif — à lancer
-  uniquement si l'association le demande explicitement.
+- [🟡] **Site bilingue FR/EN.** Demandé explicitement le 8 août — n'est plus optionnel.
+  Infrastructure + chrome (nav, footer) en ligne sur les 25 pages ; contenu traduit sur 5
+  pages, 13 restantes. Voir point 9 du tableau de suivi ci-dessus pour le détail exact.
 
 ## Note — bug de déploiement trouvé et corrigé pendant cette session
 
