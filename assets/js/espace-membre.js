@@ -29,15 +29,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("portal-name").textContent = (claims && claims.name) || "";
 
     const groups = (claims && claims["cognito:groups"]) || [];
-    const groupLinks = {
-        admin: { href: "admin.html", label: "Espace Admin" },
-        secretaire: { href: "secretariat.html", label: "Espace Secrétariat" },
-        tresorier: { href: "tresorerie.html", label: "Espace Trésorerie" },
-    };
+    const isAdmin = groups.includes("admin");
+    // Mirrors each Lambda's own authorization check (secretaire OR admin,
+    // tresorier OR admin) — an admin can reach every space via direct URL
+    // regardless of this list, so the nav has to reflect that or the link
+    // is just invisible to them even though it works.
+    const spaceLinks = [
+        { visible: isAdmin, href: "admin.html", label: "Espace Admin" },
+        { visible: isAdmin || groups.includes("secretaire"), href: "secretariat.html", label: "Espace Secrétariat" },
+        { visible: isAdmin || groups.includes("tresorier"), href: "tresorerie.html", label: "Espace Trésorerie" },
+    ];
     const groupsEl = document.getElementById("portal-groups");
-    groups.forEach((g) => {
-        const link = groupLinks[g];
-        if (link) {
+    spaceLinks.forEach((link) => {
+        if (link.visible) {
             const a = document.createElement("a");
             a.href = link.href;
             a.className = "btn";
