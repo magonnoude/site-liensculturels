@@ -307,6 +307,34 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    document.getElementById("newsletter-send-btn").addEventListener("click", async () => {
+        const subject = document.getElementById("newsletter-subject").value.trim();
+        const message = document.getElementById("newsletter-message").value.trim();
+        const statusEl = document.getElementById("newsletter-send-status");
+        if (!subject || !message) {
+            showMessage("Objet et message sont requis.", "error");
+            return;
+        }
+        const countText = document.getElementById("newsletter-count").textContent || "";
+        if (!confirm(`Envoyer cette newsletter aux abonnés confirmés ? (${countText})`)) return;
+        const btn = document.getElementById("newsletter-send-btn");
+        btn.disabled = true;
+        statusEl.textContent = "Envoi en cours…";
+        try {
+            const result = await api("/admin/newsletter/send", {
+                method: "POST", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ subject, message }),
+            });
+            statusEl.textContent = `Envoyé à ${result.sent}/${result.total} abonné(s) confirmé(s)${result.failed.length ? `, ${result.failed.length} échec(s)` : ""}.`;
+            showMessage("Newsletter envoyée.", "success");
+        } catch (e) {
+            statusEl.textContent = "";
+            showMessage(e.message, "error");
+        } finally {
+            btn.disabled = false;
+        }
+    });
+
     try {
         await Promise.all([loadMembers(), loadDocuments(), loadAgenda(), loadGallery(), loadNewsletter()]);
     } catch (e) {

@@ -70,10 +70,67 @@ document.addEventListener("DOMContentLoaded", async () => {
         telEl.value = profile.telephone || "";
         addrEl.value = profile.adresse || "";
         const statut = profile.statutCotisation || "inconnu";
-        badgeEl.textContent = statut === "a_jour" ? "À jour" : statut === "impaye" ? "Impayée" : "Non renseigné";
+        const icon = statut === "a_jour" ? '<i class="fas fa-circle-check"></i> ' : '<i class="fas fa-triangle-exclamation"></i> ';
+        badgeEl.innerHTML = icon + (statut === "a_jour" ? "À jour de cotisation" : statut === "impaye" ? "Cotisation impayée" : "Statut non renseigné");
         badgeEl.className = `portal-badge ${statut === "a_jour" ? "a-jour" : statut === "impaye" ? "impaye" : "inconnu"}`;
     } catch (e) {
         showMessage("Erreur lors du chargement de votre profil.", "error");
+    }
+
+    // ---- Prochains événements (réutilise le GET /agenda public, sans auth) ----
+    (async () => {
+        const listEl = document.getElementById("portal-agenda-list");
+        const emptyEl = document.getElementById("portal-agenda-empty");
+        try {
+            const resp = await fetch("https://8igk1o6vw4.execute-api.eu-west-3.amazonaws.com/agenda");
+            const items = await resp.json();
+            const today = new Date().toISOString().slice(0, 10);
+            const upcoming = (Array.isArray(items) ? items : [])
+                .filter((e) => (e.start || "") >= today)
+                .sort((a, b) => (a.start || "").localeCompare(b.start || ""))
+                .slice(0, 5);
+            if (!upcoming.length) {
+                emptyEl.style.display = "block";
+                return;
+            }
+            upcoming.forEach((e) => {
+                const li = document.createElement("li");
+                const date = (e.start || "").slice(0, 10);
+                li.innerHTML = `<span class="agenda-date">${date}</span>${e.title || ""}${e.location ? " — " + e.location : ""}`;
+                listEl.appendChild(li);
+            });
+        } catch (e) {
+            emptyEl.style.display = "block";
+        }
+    })();
+
+    // ---- Historique des paiements ----
+    (async () => {
+        const tableEl = document.getElementById("portal-history-table");
+        const emptyEl = document.getElementById("portal-history-empty");
+        try {
+            const resp = await window.LCAuth.apiFetch("/me/cotisations");
+            if (!resp.ok) throw new Error("Erreur");
+            const items = await resp.json();
+            if (!Array.isArray(items) || !items.length) return;
+            emptyEl.style.display = "none";
+            tableEl.style.display = "table";
+            const tbody = tableEl.querySelector("tbody");
+            items.forEach((c) => {
+                const tr = document.createElement("tr");
+                const type = c.type === "don" ? "Don" : "Cotisation";
+                const montant = typeof c.montant === "number" ? c.montant : parseFloat(c.montant) || 0;
+                tr.innerHTML = `<td>${c.date || ""}</td><td>${type}</td><td>${montant} €</td><td>${c.methode || ""}</td>`;
+                tbody.appendChild(tr);
+            });
+        } catch (e) {
+            // reste sur l'état "aucun paiement" par défaut
+        }
+    })();
+
+    // ---- Paiement (cotisation / don) — après résolution de l'état de connexion ----
+    if (window.LCPayment) {
+        window.LCPayment.initMemberPayment();
     }
 
     document.getElementById("portal-form").addEventListener("submit", async (e) => {

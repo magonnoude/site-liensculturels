@@ -22,15 +22,31 @@
         .portal-field label { display: block; font-size: 0.85rem; color: #666; margin-bottom: 0.25rem; }
         .portal-field input { width: 100%; padding: 0.55rem 0.7rem; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; box-sizing: border-box; }
         .portal-field input[disabled] { background: #f2f2f2; color: #888; }
-        .portal-badge { display: inline-block; padding: 0.2rem 0.7rem; border-radius: 100px; font-size: 0.8rem; font-weight: 600; }
-        .portal-badge.a-jour { background: #d4edda; color: #155724; }
-        .portal-badge.inconnu, .portal-badge.impaye { background: #fff3cd; color: #856404; }
+        .portal-badge { display: inline-flex; align-items:center; gap:0.4rem; padding: 0.3rem 0.9rem; border-radius: 100px; font-size: 0.85rem; font-weight: 700; }
+        .portal-badge.a-jour { background: linear-gradient(135deg,#d4edda,#b7e4c7); color: #155724; }
+        .portal-badge.inconnu, .portal-badge.impaye { background: linear-gradient(135deg,#fff3cd,#ffe8a1); color: #856404; }
         .portal-msg { margin-top: 1rem; padding: 0.7rem 1rem; border-radius: 6px; display: none; }
         .portal-msg.success { background: #d4edda; color: #155724; }
         .portal-msg.error { background: #f8d7da; color: #721c24; }
         .portal-groups { margin: 1rem 0 1.5rem; }
         .portal-groups a { display: inline-block; margin: 0.25rem 0.5rem 0.25rem 0; }
         #portal-loading { text-align: center; padding: 3rem 0; color: #888; }
+        .portal-box.wide { max-width: 780px; }
+        .portal-card { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #eee; }
+        .portal-card h2 { font-size: 1.1rem; margin: 0 0 0.9rem; }
+        .portal-agenda-list { list-style: none; padding: 0; margin: 0; }
+        .portal-agenda-list li { padding: 0.5rem 0; border-bottom: 1px solid #f2f2f2; font-size: 0.9rem; }
+        .portal-agenda-list li:last-child { border-bottom: none; }
+        .portal-agenda-list .agenda-date { color: var(--primary-color); font-weight: 700; margin-right: 0.6rem; }
+        .portal-agenda-empty { color: #888; font-size: 0.9rem; }
+        .portal-payment-block { margin-bottom: 1.3rem; }
+        .portal-payment-block h3 { font-size: 0.95rem; margin: 0 0 0.5rem; }
+        .portal-payment-row { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-bottom: 0.7rem; }
+        .portal-payment-row select, .portal-payment-row input { padding: 0.5rem 0.6rem; border: 1px solid #ccc; border-radius: 6px; font-size: 0.9rem; }
+        .portal-payment-row input[type="number"] { width: 130px; }
+        .portal-history-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .portal-history-table th, .portal-history-table td { text-align: left; padding: 0.45rem 0.5rem; border-bottom: 1px solid #eee; }
+        .portal-history-empty { color: #888; font-size: 0.9rem; }
     </style>
 </head>
 <body>    <div class="site-header">
@@ -55,7 +71,7 @@
             <nav>
                 <ul>
                     <li><a href="index.html"><span class="lang-fr">Accueil</span><span class="lang-en">Home</span></a></li>
-                    <li class="dropdown"><a href="#"><span class="lang-fr">L'Association ▼</span><span class="lang-en">The Association ▼</span></a><ul class="dropdown-menu"><li><a href="a-propos.html"><span class="lang-fr">Qui sommes-nous ?</span><span class="lang-en">About Us</span></a></li><li><a href="bureau.html"><span class="lang-fr">Le Bureau</span><span class="lang-en">The Board</span></a></li><li><a href="mot-des-dirigeants.html"><span class="lang-fr">Mot des Dirigeants</span><span class="lang-en">Word from the Leaders</span></a></li></ul></li>
+                    <li class="dropdown"><a href="#"><span class="lang-fr">L'Association ▼</span><span class="lang-en">The Association ▼</span></a><ul class="dropdown-menu"><li><a href="a-propos.html"><span class="lang-fr">Qui sommes-nous ?</span><span class="lang-en">About Us</span></a></li><li><a href="bureau.html"><span class="lang-fr">Le Bureau</span><span class="lang-en">The Board</span></a></li><li><a href="mot-des-dirigeants.html"><span class="lang-fr">Mot des Dirigeants</span><span class="lang-en">Word from the Leaders</span></a></li><li><a href="vie-associative.html"><span class="lang-fr">Vie Associative</span><span class="lang-en">Association Life</span></a></li></ul></li>
                     <li><a href="projets.html"><span class="lang-fr">Nos Projets</span><span class="lang-en">Our Projects</span></a></li>
                     <li><a href="bourse-scolaire.html"><span class="lang-fr">Bourse Scolaire</span><span class="lang-en">School Scholarship</span></a></li>
                     <li><a href="agenda.html"><span class="lang-fr">Agenda</span><span class="lang-en">Events</span></a></li>
@@ -78,28 +94,81 @@
             <button id="portal-login-btn" class="btn" style="border:none; cursor:pointer; font-size:1rem;">Se connecter</button>
         </div>
 
-        <div class="portal-box" id="portal-dashboard" style="display:none;">
+        <div class="portal-box wide" id="portal-dashboard" style="display:none;">
             <h1>Bonjour <span id="portal-name"></span></h1>
-            <p>Statut de cotisation : <span class="portal-badge" id="portal-cotisation-badge"></span></p>
+            <p><span class="lang-fr">Statut de cotisation :</span><span class="lang-en">Membership status:</span> <span class="portal-badge" id="portal-cotisation-badge"></span></p>
 
             <div class="portal-groups" id="portal-groups"></div>
 
-            <form id="portal-form">
-                <div class="portal-field">
-                    <label for="portal-email">E-mail</label>
-                    <input type="email" id="portal-email" disabled>
+            <!-- Agenda -->
+            <div class="portal-card">
+                <h2><i class="fas fa-calendar-days"></i> <span class="lang-fr">Prochains événements</span><span class="lang-en">Upcoming events</span></h2>
+                <ul class="portal-agenda-list" id="portal-agenda-list"></ul>
+                <p class="portal-agenda-empty" id="portal-agenda-empty" style="display:none;"><span class="lang-fr">Aucun événement à venir pour le moment.</span><span class="lang-en">No upcoming events for now.</span></p>
+                <p style="margin-top:0.6rem;"><a href="agenda.html"><span class="lang-fr">Voir tout l'agenda</span><span class="lang-en">See full calendar</span> →</a></p>
+            </div>
+
+            <!-- Paiement -->
+            <div class="portal-card" id="member-payment-section" style="display:none;">
+                <h2><i class="fas fa-credit-card"></i> <span class="lang-fr">Cotisation &amp; dons</span><span class="lang-en">Dues &amp; donations</span></h2>
+
+                <div class="portal-payment-block">
+                    <h3><span class="lang-fr">Payer ma cotisation</span><span class="lang-en">Pay my membership dues</span></h3>
+                    <div class="portal-payment-row">
+                        <select id="member-cotisation-type">
+                            <option value="individuel"><span class="lang-fr">Individuelle — 30 €</span></option>
+                            <option value="famille">Pack famille — 50 €</option>
+                        </select>
+                    </div>
+                    <div class="portal-payment-row" id="member-cotisation-buttons"></div>
                 </div>
-                <div class="portal-field">
-                    <label for="portal-telephone">Téléphone</label>
-                    <input type="tel" id="portal-telephone" placeholder="06 12 34 56 78">
+
+                <div class="portal-payment-block">
+                    <h3><span class="lang-fr">Faire un don</span><span class="lang-en">Make a donation</span></h3>
+                    <div class="portal-payment-row">
+                        <input type="number" id="member-don-montant" min="1" max="5000" step="1" placeholder="Montant (€)">
+                    </div>
+                    <div class="portal-payment-row" id="member-don-buttons"></div>
                 </div>
-                <div class="portal-field">
-                    <label for="portal-adresse">Adresse</label>
-                    <input type="text" id="portal-adresse" placeholder="Votre adresse postale">
-                </div>
-                <button type="submit" class="btn" style="border:none; cursor:pointer; font-size:1rem;">Enregistrer</button>
-            </form>
-            <div class="portal-msg" id="portal-msg"></div>
+
+                <div class="form-feedback" id="member-payment-feedback"></div>
+            </div>
+
+            <!-- Historique -->
+            <div class="portal-card">
+                <h2><i class="fas fa-clock-rotate-left"></i> <span class="lang-fr">Historique de mes paiements</span><span class="lang-en">My payment history</span></h2>
+                <table class="portal-history-table" id="portal-history-table" style="display:none;">
+                    <thead><tr>
+                        <th><span class="lang-fr">Date</span><span class="lang-en">Date</span></th>
+                        <th><span class="lang-fr">Type</span><span class="lang-en">Type</span></th>
+                        <th><span class="lang-fr">Montant</span><span class="lang-en">Amount</span></th>
+                        <th><span class="lang-fr">Méthode</span><span class="lang-en">Method</span></th>
+                    </tr></thead>
+                    <tbody></tbody>
+                </table>
+                <p class="portal-history-empty" id="portal-history-empty"><span class="lang-fr">Aucun paiement enregistré pour le moment.</span><span class="lang-en">No payments recorded yet.</span></p>
+            </div>
+
+            <!-- Profil -->
+            <div class="portal-card">
+                <h2><i class="fas fa-id-card"></i> <span class="lang-fr">Mon profil</span><span class="lang-en">My profile</span></h2>
+                <form id="portal-form">
+                    <div class="portal-field">
+                        <label for="portal-email">E-mail</label>
+                        <input type="email" id="portal-email" disabled>
+                    </div>
+                    <div class="portal-field">
+                        <label for="portal-telephone">Téléphone</label>
+                        <input type="tel" id="portal-telephone" placeholder="06 12 34 56 78">
+                    </div>
+                    <div class="portal-field">
+                        <label for="portal-adresse">Adresse</label>
+                        <input type="text" id="portal-adresse" placeholder="Votre adresse postale">
+                    </div>
+                    <button type="submit" class="btn" style="border:none; cursor:pointer; font-size:1rem;">Enregistrer</button>
+                </form>
+                <div class="portal-msg" id="portal-msg"></div>
+            </div>
 
             <p style="margin-top: 2rem;"><a href="#" id="portal-logout-btn"><i class="fas fa-right-from-bracket"></i> Se déconnecter</a></p>
         </div>
@@ -149,21 +218,24 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p><strong>&copy; 2025–2026 Liens Culturels (LC).</strong> <span class="lang-fr">Tous droits réservés.</span><span class="lang-en">All rights reserved.</span></p>
-        <p class="footer-legal-links">
+            <div class="footer-bottom-row">
+                <p><strong>&copy; 2025–2026 Liens Culturels (LC).</strong> <span class="lang-fr">Tous droits réservés.</span><span class="lang-en">All rights reserved.</span></p>
+                <p class="footer-legal-links">
             <a href="mentions-legales.html"><span class="lang-fr">Mentions Légales</span><span class="lang-en">Legal Notice</span></a>
             <span aria-hidden="true"> · </span>
             <a href="cgu.html"><span class="lang-fr">CGU</span><span class="lang-en">Terms of Use</span></a>
             <span aria-hidden="true"> · </span>
             <a href="confidentialite.html"><span class="lang-fr">Confidentialité</span><span class="lang-en">Privacy Policy</span></a>
         </p>
-        <p class="footer-credit"><span class="lang-fr">Site conçu, développé et maintenu par</span><span class="lang-en">Site designed, developed and maintained by</span> <strong>® RMS International Group</strong></p>
+            </div>
+            <p class="footer-credit"><span class="lang-fr">Site conçu, développé et maintenu par</span><span class="lang-en">Site designed, developed and maintained by</span> <strong>® RMS International Group</strong></p>
         </div>
     </footer>
 
     <script src="assets/js/auth.js"></script>
     <script src="assets/js/espace-membre.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/payment.js"></script>
     <script src="assets/js/header.js"></script>
 </body>
 </html>

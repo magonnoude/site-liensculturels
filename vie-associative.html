@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - Association Liens Culturels</title>
-    <meta name="description" content="Contactez l'association Liens Culturels pour toute question sur nos projets, notre bourse scolaire ou pour nous rejoindre.">
-    <link rel="canonical" href="https://www.liensculturels.org/contact.html">
+    <title>Vie Associative - Association Liens Culturels</title>
+    <meta name="description" content="Transparence sur la vie de l'association Liens Culturels : réunions, ordre du jour, comptes-rendus et décisions du bureau.">
+    <link rel="canonical" href="https://www.liensculturels.org/vie-associative.html">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Contact - Association Liens Culturels">
-    <meta property="og:description" content="Contactez l'association Liens Culturels pour toute question sur nos projets, notre bourse scolaire ou pour nous rejoindre.">
-    <meta property="og:url" content="https://www.liensculturels.org/contact.html">
+    <meta property="og:title" content="Vie Associative - Association Liens Culturels">
+    <meta property="og:description" content="Transparence sur la vie de l'association Liens Culturels : réunions, ordre du jour, comptes-rendus et décisions du bureau.">
+    <meta property="og:url" content="https://www.liensculturels.org/vie-associative.html">
     <meta property="og:image" content="https://www.liensculturels.org/assets/img/logo.png">
     <meta property="og:locale" content="fr_FR">
     <meta property="og:site_name" content="Liens Culturels">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Contact - Association Liens Culturels">
-    <meta name="twitter:description" content="Contactez l'association Liens Culturels pour toute question sur nos projets, notre bourse scolaire ou pour nous rejoindre.">
+    <meta name="twitter:title" content="Vie Associative - Association Liens Culturels">
+    <meta name="twitter:description" content="Transparence sur la vie de l'association Liens Culturels : réunions, ordre du jour, comptes-rendus et décisions du bureau.">
     <meta name="twitter:image" content="https://www.liensculturels.org/assets/img/logo.png">
     <link rel="icon" href="assets/img/favicon.ico" sizes="any">
     <link rel="icon" href="assets/img/favicon-16x16.png" type="image/png" sizes="16x16">
@@ -26,6 +26,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/solid.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/brands.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .va-section { max-width: 820px; margin: 0 auto 3rem; }
+        .va-section h2 { font-size: 1.3rem; margin-bottom: 1rem; }
+        .va-card { background: var(--white); border-radius: 8px; padding: 1.1rem 1.4rem; box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 1rem; }
+        .va-card .va-date { color: var(--primary-color); font-weight: 700; font-size: 0.85rem; }
+        .va-card h3 { margin: 0.3rem 0 0.5rem; font-size: 1.05rem; }
+        .va-card p { margin: 0.3rem 0; font-size: 0.92rem; color: #444; }
+        .va-status { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 100px; font-size: 0.78rem; font-weight: 600; margin-left: 0.5rem; }
+        .va-status.planifiee, .va-status.en_cours { background: #fff3cd; color: #856404; }
+        .va-status.terminee, .va-status.appliquee { background: #d4edda; color: #155724; }
+        .va-status.annulee, .va-status.abandonnee { background: #f8d7da; color: #721c24; }
+        .va-empty { color: #888; font-size: 0.9rem; }
+    </style>
 </head>
 <body>    <div class="site-header">
     <div class="header-utility">
@@ -62,26 +75,29 @@
     </div>
 
     <main class="container" style="padding-top: 2rem;">
-        <div class="form-container">
-            <h2><span class="lang-fr">Nous Contacter</span><span class="lang-en">Contact Us</span></h2>
-            <p><span class="lang-fr">Pour toute question, n'hésitez pas à nous laisser un message. Notre email :</span><span class="lang-en">For any question, feel free to leave us a message. Our email:</span> <strong>contact@liensculturels.org</strong></p>
-            <form id="contactForm">
-                <div class="form-group">
-                    <label for="name"><span class="lang-fr">Votre Nom</span><span class="lang-en">Your Name</span></label>
-                    <input type="text" id="name" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label for="email"><span class="lang-fr">Votre Email</span><span class="lang-en">Your Email</span></label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="message"><span class="lang-fr">Votre Message</span><span class="lang-en">Your Message</span></label>
-                    <textarea id="message" name="message" rows="6" required></textarea>
-                </div>
-                <button type="submit" class="btn"><span class="lang-fr">Envoyer</span><span class="lang-en">Send</span></button>
-                <div class="form-feedback"></div>
-            </form>
+        <div style="text-align:center; max-width:820px; margin:0 auto 2.5rem;">
+            <h1><span class="lang-fr">Vie Associative</span><span class="lang-en">Association Life</span></h1>
+            <p><span class="lang-fr">En toute transparence : les réunions du bureau, leurs ordres du jour, les comptes-rendus et les décisions prises pour faire vivre l'association.</span><span class="lang-en">In full transparency: board meetings, their agendas, meeting minutes and the decisions taken to run the association.</span></p>
+            <p class="lang-en" style="font-size:0.85rem; color:#999;">Meeting and decision content is currently only available in French.</p>
         </div>
+
+        <section class="va-section">
+            <h2><i class="fas fa-users-rectangle"></i> <span class="lang-fr">Réunions du bureau</span><span class="lang-en">Board meetings</span></h2>
+            <div id="va-reunions"></div>
+            <p class="va-empty" id="va-reunions-empty" style="display:none;"><span class="lang-fr">Aucune réunion publiée pour le moment.</span><span class="lang-en">No meetings published yet.</span></p>
+        </section>
+
+        <section class="va-section">
+            <h2><i class="fas fa-file-lines"></i> <span class="lang-fr">Comptes-rendus</span><span class="lang-en">Meeting minutes</span></h2>
+            <div id="va-cr"></div>
+            <p class="va-empty" id="va-cr-empty" style="display:none;"><span class="lang-fr">Aucun compte-rendu publié pour le moment.</span><span class="lang-en">No minutes published yet.</span></p>
+        </section>
+
+        <section class="va-section">
+            <h2><i class="fas fa-gavel"></i> <span class="lang-fr">Décisions du bureau</span><span class="lang-en">Board decisions</span></h2>
+            <div id="va-decisions"></div>
+            <p class="va-empty" id="va-decisions-empty" style="display:none;"><span class="lang-fr">Aucune décision publiée pour le moment.</span><span class="lang-en">No decisions published yet.</span></p>
+        </section>
     </main>
 
     <footer>
@@ -142,6 +158,7 @@
         </div>
     </footer>
 
+    <script src="assets/js/vie-associative.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/header.js"></script>
 </body>

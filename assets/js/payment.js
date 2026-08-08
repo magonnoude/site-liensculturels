@@ -1,15 +1,146 @@
 /*
- * Paiement en ligne de la cotisation (adhesion.html).
+ * Paiement en ligne (cotisation ou don), via redirection hébergée chez le
+ * prestataire — Stripe Checkout Session et FedaPay renvoient tous les deux
+ * une checkoutUrl, le navigateur y est simplement redirigé. Plus de carte
+ * bancaire embarquée sur ce site : aucune donnée de paiement ne transite par
+ * nos pages.
  *
  * Tant que l'association n'a pas ses propres identifiants Stripe/FedaPay
- * (comptes marchands à son nom, pas ceux de RMS — voir la conversation),
- * GET /payment/config renvoie stripeEnabled=false et fedapayEnabled=false,
- * et cette section reste masquée : le site continue de fonctionner comme
- * aujourd'hui (envoi du RIB par le trésorier après validation). Le jour où
- * les vraies clés sont configurées sur la Lambda liensCulturels-payment,
- * cette UI s'active automatiquement, sans rien changer côté front.
+ * (comptes marchands à son nom, pas ceux de RMS), GET /payment/config renvoie
+ * stripeEnabled=false et fedapayEnabled=false, et toute section de paiement
+ * reste masquée : le site continue de fonctionner comme avant (RIB envoyé
+ * par le trésorier). Le jour où les vraies clés sont configurées sur la
+ * Lambda liensCulturels-payment, ces UI s'activent automatiquement.
  */
+window.LCPayment = (function () {
+    const API_BASE_URL = "https://8igk1o6vw4.execute-api.eu-west-3.amazonaws.com";
+    let configPromise = null;
+
+    function getConfig() {
+        if (!configPromise) {
+            configPromise = fetch(`${API_BASE_URL}/payment/config`)
+                .then((r) => r.json())
+                .catch(() => null);
+        }
+        return configPromise;
+    }
+
+    async function createIntent(payload) {
+        const resp = await fetch(`${API_BASE_URL}/payment/create-intent`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.error || "Erreur lors de la création du paiement.");
+        return data;
+    }
+
+    // Construit les boutons de paiement (Stripe / FedaPay) dans `container`.
+    // `getPayload()` est appelée au clic, pas à l'affichage, pour toujours
+    // lire les valeurs les plus fraîches du formulaire (type, montant...).
+    function renderButtons(container, config, getPayload, onError) {
+        container.innerHTML = "";
+        if (config.stripeEnabled) {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "btn";
+            btn.innerHTML = '<span class="lang-fr">Payer par carte (Stripe)</span><span class="lang-en">Pay by card (Stripe)</span>';
+            btn.addEventListener("click", async () => {
+                try {
+                    const payload = getPayload();
+                    if (!payload) return;
+                    btn.disabled = true;
+                    const result = await createIntent({ ...payload, provider: "stripe" });
+                    if (result.checkoutUrl) window.location.href = result.checkoutUrl;
+                } catch (e) {
+                    btn.disabled = false;
+                    onError(e.message);
+                }
+            });
+            container.appendChild(btn);
+        }
+        if (config.fedapayEnabled) {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "btn";
+            btn.innerHTML = '<span class="lang-fr">Payer via FedaPay (Afrique de l\'Ouest)</span><span class="lang-en">Pay via FedaPay (West Africa)</span>';
+            btn.addEventListener("click", async () => {
+                try {
+                    const payload = getPayload();
+                    if (!payload) return;
+                    btn.disabled = true;
+                    const result = await createIntent({ ...payload, provider: "fedapay" });
+                    if (result.checkoutUrl) window.location.href = result.checkoutUrl;
+                } catch (e) {
+                    btn.disabled = false;
+                    onError(e.message);
+                }
+            });
+            container.appendChild(btn);
+        }
+    }
+
+    // Appelée explicitement par espace-membre.js une fois que
+    // window.LCAuth.handleRedirect() a fini de résoudre l'état de connexion
+    // (plutôt qu'un second écouteur DOMContentLoaded indépendant, qui pourrait
+    // s'exécuter avant la fin de l'échange du code d'autorisation OAuth juste
+    // après une redirection de connexion et laisser la section masquée).
+    async function initMemberPayment() {
+        const section = document.getElementById("member-payment-section");
+        if (!section || !window.LCAuth || !window.LCAuth.isLoggedIn()) return;
+
+        const claims = window.LCAuth.getClaims();
+        const email = (claims && claims.email) || "";
+        const nom = (claims && claims.name) || email;
+
+        const config = await getConfig();
+        const feedbackEl = document.getElementById("member-payment-feedback");
+        function showFeedback(text, kind) {
+            feedbackEl.textContent = text;
+            feedbackEl.className = `form-feedback ${kind}`;
+            feedbackEl.style.display = "block";
+        }
+
+        if (config && (config.stripeEnabled || config.fedapayEnabled)) {
+            section.style.display = "block";
+
+            const cotisationType = document.getElementById("member-cotisation-type");
+            renderButtons(
+                document.getElementById("member-cotisation-buttons"),
+                config,
+                () => ({ type: cotisationType.value, email, nom, returnPage: "espace-membre.html" }),
+                (msg) => showFeedback(msg, "error")
+            );
+
+            const donInput = document.getElementById("member-don-montant");
+            renderButtons(
+                document.getElementById("member-don-buttons"),
+                config,
+                () => {
+                    const montant = parseFloat(donInput.value);
+                    if (!montant || montant < (config.donMin || 1) || montant > (config.donMax || 5000)) {
+                        showFeedback(`Merci d'indiquer un montant de don entre ${config.donMin || 1} € et ${config.donMax || 5000} €.`, "error");
+                        return null;
+                    }
+                    return { type: "don", montant, email, nom, returnPage: "espace-membre.html" };
+                },
+                (msg) => showFeedback(msg, "error")
+            );
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("payment") === "success") {
+            showFeedback("Paiement effectué, merci !", "success");
+            section.style.display = "block";
+        }
+    }
+
+    return { getConfig, createIntent, renderButtons, initMemberPayment };
+})();
+
 document.addEventListener("DOMContentLoaded", async () => {
+    // ---- adhesion.html : régler la cotisation lors de l'inscription ----
     // Le sélecteur de type de cotisation existe en double (un par langue,
     // convention du site : jamais masquer des <option> individuelles).
     // #membershipType (FR) reste la seule source de vérité pour la
@@ -27,106 +158,45 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const paymentSection = document.getElementById("payment-section");
-    const paymentOptions = document.getElementById("payment-options");
-    const ribFallback = document.getElementById("rib-fallback");
-    if (!paymentSection) return; // pas sur adhesion.html
-
-    const API_BASE_URL = "https://8igk1o6vw4.execute-api.eu-west-3.amazonaws.com";
-    let config = null;
-    try {
-        const resp = await fetch(`${API_BASE_URL}/payment/config`);
-        config = await resp.json();
-    } catch (e) {
-        return; // API indisponible : on garde le flux RIB existant, silencieusement
-    }
-
-    if (!config || (!config.stripeEnabled && !config.fedapayEnabled)) {
-        return; // paiement en ligne pas encore activé — rien à faire, le RIB reste affiché
-    }
-
-    const feedbackEl = document.getElementById("payment-feedback");
-    function showFeedback(text, kind) {
-        feedbackEl.textContent = text;
-        feedbackEl.className = `form-feedback ${kind}`;
-        feedbackEl.style.display = "block";
-    }
-
-    let stripeInstance = null;
-    let cardElement = null;
-    if (config.stripeEnabled && window.Stripe && config.stripePublicKey) {
-        stripeInstance = Stripe(config.stripePublicKey);
-    }
-
-    function currentAmount() {
-        const type = document.getElementById("membershipType").value;
-        return config.amounts[type];
-    }
-
-    if (config.stripeEnabled) {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "btn";
-        btn.textContent = `Payer par carte (${currentAmount()} €)`;
-        btn.addEventListener("click", () => {
-            document.getElementById("stripe-payment-form").style.display = "block";
-            if (!cardElement && stripeInstance) {
-                const elements = stripeInstance.elements();
-                cardElement = elements.create("card");
-                cardElement.mount("#stripe-card-element");
-            }
-        });
-        paymentOptions.appendChild(btn);
-    }
-
-    if (config.fedapayEnabled) {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "btn";
-        btn.textContent = "Payer via FedaPay (Afrique de l'Ouest)";
-        btn.addEventListener("click", async () => {
-            const result = await startPayment("fedapay");
-            if (result && result.checkoutUrl) {
-                window.location.href = result.checkoutUrl;
-            }
-        });
-        paymentOptions.appendChild(btn);
-    }
-
-    async function startPayment(provider) {
-        const email = document.getElementById("email").value;
-        const nom = document.getElementById("fullName").value;
-        const type = document.getElementById("membershipType").value;
-        if (!email || !nom) {
-            showFeedback("Merci de renseigner votre nom et e-mail dans le formulaire ci-dessus d'abord.", "error");
-            return null;
+    if (paymentSection) {
+        const paymentOptions = document.getElementById("payment-options");
+        const ribFallback = document.getElementById("rib-fallback");
+        const feedbackEl = document.getElementById("payment-feedback");
+        function showFeedback(text, kind) {
+            feedbackEl.textContent = text;
+            feedbackEl.className = `form-feedback ${kind}`;
+            feedbackEl.style.display = "block";
         }
-        const resp = await fetch(`${API_BASE_URL}/payment/create-intent`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ type, provider, email, nom }),
-        });
-        const data = await resp.json();
-        if (!resp.ok) {
-            showFeedback(data.error || "Erreur lors de la création du paiement.", "error");
-            return null;
-        }
-        return data;
-    }
 
-    document.getElementById("stripe-pay-btn").addEventListener("click", async () => {
-        if (!stripeInstance || !cardElement) return;
-        const result = await startPayment("stripe");
-        if (!result || !result.clientSecret) return;
-        const { error } = await stripeInstance.confirmCardPayment(result.clientSecret, {
-            payment_method: { card: cardElement },
-        });
-        if (error) {
-            showFeedback(error.message, "error");
-        } else {
+        const config = await window.LCPayment.getConfig();
+        if (config && (config.stripeEnabled || config.fedapayEnabled)) {
+            window.LCPayment.renderButtons(
+                paymentOptions,
+                config,
+                () => {
+                    const email = document.getElementById("email").value;
+                    const nom = document.getElementById("fullName") ? document.getElementById("fullName").value
+                        : `${document.getElementById("prenom").value} ${document.getElementById("nom").value}`.trim();
+                    const type = membershipTypeFr.value;
+                    if (!email || !nom) {
+                        showFeedback("Merci de renseigner votre nom et e-mail dans le formulaire ci-dessus d'abord.", "error");
+                        return null;
+                    }
+                    return { type, email, nom, returnPage: "adhesion.html" };
+                },
+                (msg) => showFeedback(msg, "error")
+            );
+            paymentSection.style.display = "block";
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("payment") === "success" && ribFallback) {
             showFeedback("Paiement effectué, merci !", "success");
             ribFallback.style.display = "none";
         }
-    });
+    }
 
-    paymentSection.style.display = "block";
+    // Note : la section paiement de espace-membre.html n'est PAS initialisée
+    // ici (voir window.LCPayment.initMemberPayment, appelée explicitement par
+    // espace-membre.js une fois l'état de connexion résolu).
 });

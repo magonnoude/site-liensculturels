@@ -71,14 +71,61 @@ document.addEventListener('DOMContentLoaded', () => {
     const adhesionForm = document.getElementById('adhesionForm');
     if (adhesionForm) {
         const feedbackEl = adhesionForm.querySelector('.form-feedback');
+        const emailEl = document.getElementById('email');
+        const emailErrorEl = document.getElementById('email-error');
+
+        // Civilité en double (FR/EN, jamais de <option> masquée — convention du
+        // site). #civilite reste la seule source de vérité pour la soumission.
+        const civiliteFr = document.getElementById('civilite');
+        const civiliteEn = document.getElementById('civiliteEn');
+        if (civiliteFr && civiliteEn) {
+            civiliteEn.addEventListener('change', () => { civiliteFr.value = civiliteEn.value; });
+            civiliteFr.addEventListener('change', () => { civiliteEn.value = civiliteFr.value; });
+        }
+
+        // Indicatif pays du téléphone, peuplé depuis assets/js/country-codes.js.
+        const countryCodeEl = document.getElementById('phoneCountryCode');
+        if (countryCodeEl && window.LC_COUNTRY_CODES) {
+            window.LC_COUNTRY_CODES.forEach((c) => {
+                const opt = document.createElement('option');
+                opt.value = c.dial;
+                opt.textContent = `${c.name} (${c.dial})`;
+                countryCodeEl.appendChild(opt);
+            });
+        }
+
+        function isValidEmail(value) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        }
+
         adhesionForm.addEventListener('submit', (e) => {
             e.preventDefault();
+
+            if (!isValidEmail(emailEl.value.trim())) {
+                emailErrorEl.textContent = "Merci de saisir une adresse e-mail valide.";
+                emailErrorEl.style.display = 'inline';
+                emailEl.focus();
+                return;
+            }
+            emailErrorEl.style.display = 'none';
+
             const membershipTypeEl = document.getElementById('membershipType');
+            const prenom = document.getElementById('prenom').value.trim();
+            const nom = document.getElementById('nom').value.trim();
+            const civilite = civiliteFr ? civiliteFr.value : '';
+            const countryCode = countryCodeEl ? countryCodeEl.value : '';
+            const localPhone = document.getElementById('phone').value.trim();
+            const newsletterOptinEl = document.getElementById('newsletterOptin');
+            const email = emailEl.value.trim();
+
             const formData = {
-                fullName: document.getElementById('fullName').value,
+                civilite,
+                prenom,
+                nom,
+                fullName: `${civilite} ${prenom} ${nom}`.trim(),
                 address: document.getElementById('address').value,
-                email: document.getElementById('email').value,
-                phone: document.getElementById('phone').value,
+                email,
+                phone: `${countryCode} ${localPhone}`.trim(),
                 membershipType: membershipTypeEl ? membershipTypeEl.value : undefined,
             };
 
@@ -95,6 +142,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 feedbackEl.innerHTML = "Votre demande d'adhésion a été envoyée !<br>Vous recevrez un email de confirmation.";
                 feedbackEl.className = 'form-feedback success';
                 feedbackEl.style.display = 'block';
+
+                if (newsletterOptinEl && newsletterOptinEl.checked) {
+                    fetch(`${API_BASE_URL}/newsletter/subscribe`, {
+                        method: 'POST',
+                        body: JSON.stringify({ email }),
+                        headers: { 'Content-Type': 'application/json' },
+                    }).catch(() => {}); // best-effort — ne bloque pas la confirmation d'adhésion
+                }
+
                 adhesionForm.reset();
             })
             .catch(error => {
