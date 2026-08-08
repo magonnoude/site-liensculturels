@@ -7,8 +7,8 @@ complété le même jour. Priorisé par impact / effort. `[x]` = corrigé.
 **Les 4 espaces authentifiés (membre / admin / secrétariat / trésorerie) demandés
 séparément sont également construits, déployés et vérifiés en production** (2026-08-08) —
 voir la section dédiée ci-dessous. Ce qui reste ouvert : le câblage des photos de bureau
-(bloqué en attente d'une info de l'association, voir P5) et la traduction du contenu de 13
-pages restantes (l'infrastructure bilingue et 5 pages sont déjà en ligne, voir tableau).
+(bloqué en attente d'une info de l'association, voir P5). **La traduction FR/EN des 25
+pages du site est désormais complète** (2026-08-08) — voir tableau, item 9.
 
 ## Tableau de suivi — demandes du 7–8 août 2026
 
@@ -27,7 +27,7 @@ action externe, pas de moi) · `💬` répondu comme conseil, pas une action à 
 | 6 | Footer avec Mentions Légales / CGU / Confidentialité façon academy | ✅ | `cgu.html` et `confidentialite.html` créées (contenu propre à l'association, pas copié), footer refait sur les 25 pages. |
 | 7 | Email officiel `contact@liensculturels.com` + téléphone `+33674437609` | ✅ | `.com` confirmé être une coquille pour `.org` (déjà l'email utilisé partout) ; téléphone ajouté. |
 | 8 | Boutons séparés « Devenir Membre / Nous Rejoindre » (1ʳᵉ inscription + paiement) et « Accès Membre » | ✅ | Les deux existaient déjà dans des zones différentes mais avec des libellés trop proches ; nommage clarifié, puis le header entier reconstruit le 8 août pour vraiment séparer les deux visuellement (pilule CTA vs lien discret). |
-| 9 | Site multilingue EN/FR | 🟡 | Infrastructure en ligne sur les 25 pages (bascule FR/EN dans le header, persistée) + navigation et pied de page entièrement bilingues partout + contenu traduit sur 5 pages clés (accueil, qui sommes-nous, contact, adhésion, bourse scolaire). **13 pages avec chrome bilingue mais contenu encore en français uniquement** : `projets.html`, `agenda.html`, `blog.html` + les 3 articles `post-*.html`, `bureau.html`, `mot-des-dirigeants.html`, `phototheque.html`, `videotheque.html`, `mentions-legales.html`, `cgu.html`, `confidentialite.html`. |
+| 9 | Site multilingue EN/FR | ✅ | Infrastructure en ligne sur les 25 pages (bascule FR/EN dans le header, persistée) + navigation, pied de page et **contenu des 25 pages** entièrement bilingues, déployé et vérifié en production le 8 août : accueil, qui sommes-nous, contact, adhésion, bourse scolaire (lot précédent), puis projets, agenda (contenu statique — les événements viennent de l'API et restent en français, ainsi que le calendrier FullCalendar lui-même), bureau, mot des dirigeants, photothèque, vidéothèque, blog + les 3 articles, mentions légales, CGU, confidentialité (ce lot). |
 | 10 | Tableau de suivi + mise à jour de la roadmap .md et web | ✅ | Ce tableau, et l'artefact web republié (voir lien dans le fil de discussion). |
 
 ## Espaces authentifiés (membre / admin / secrétariat / trésorerie)
