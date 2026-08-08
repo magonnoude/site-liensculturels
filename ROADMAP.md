@@ -4,10 +4,44 @@ Backlog établi après audit du site, du dépôt Git et de l'infrastructure AWS 
 complété le même jour. Priorisé par impact / effort. `[x]` = corrigé.
 
 **Statut : les 6 priorités mécaniques (P1–P6) sont closes**, y compris la restriction CORS.
-Ce qui reste ouvert : le câblage des photos de bureau (décision de contenu, volontairement
-non faite à la place de l'association) et le site bilingue (optionnel). Les 4 nouveaux
-espaces (membre, admin, secrétaire, trésorier) demandés séparément ne sont pas encore
-construits — voir le fil de discussion pour la proposition d'architecture.
+**Les 4 espaces authentifiés (membre / admin / secrétariat / trésorerie) demandés
+séparément sont également construits, déployés et vérifiés en production** (2026-08-08) —
+voir la section dédiée ci-dessous. Ce qui reste ouvert : le câblage des photos de bureau
+(bloqué en attente d'une info de l'association, voir P5) et le site bilingue (optionnel).
+
+## Espaces authentifiés (membre / admin / secrétariat / trésorerie)
+
+Construits et vérifiés de bout en bout le 2026-08-08, chacun avec compte jetable de test
+avant d'être considéré fini. Architecture : Cognito (pool dédié, isolé du Keycloak
+d'academy.grouperms.com) + DynamoDB + une Lambda par espace (rôle IAM scopé) + pages HTML
+statiques classiques, aucune donnée sensible commitée dans ce dépôt public.
+
+- [x] **[espace-membre.html](https://www.liensculturels.org/espace-membre.html)** —
+  connexion Cognito (PKCE), profil, statut de cotisation. Hub qui affiche les liens vers
+  les 3 espaces suivants selon les groupes Cognito du compte connecté.
+- [x] **[admin.html](https://www.liensculturels.org/admin.html)** — membres (liste,
+  cotisation, invitation), documents publics (`documents/`), agenda (alimente désormais
+  `agenda.html` dynamiquement, les 9 événements historiques ont été migrés), photothèque/
+  vidéothèque (section dynamique ajoutée sous la grille existante, laissée intacte),
+  newsletter (lien vers le tableau de bord Brevo).
+- [x] **[secretariat.html](https://www.liensculturels.org/secretariat.html)** — réunions,
+  comptes-rendus (PDF stockés dans un bucket S3 **privé** dédié, jamais le bucket public du
+  site), décisions.
+- [x] **[tresorerie.html](https://www.liensculturels.org/tresorerie.html)** — cotisations
+  (l'enregistrement d'un paiement met à jour le statut du membre, visible aussi côté admin),
+  dépenses avec justificatifs (bucket privé dédié), export CSV, tuiles de synthèse (solde).
+- [x] **Bug de nav corrigé** : `espace-membre.html` n'affichait un lien d'espace que si le
+  compte était dans le groupe exact correspondant, alors que le backend autorise déjà
+  secrétariat/trésorerie à un compte `admin`. Un admin ne voyait donc pas de lien vers des
+  espaces auxquels il avait pourtant accès par URL directe. Corrigé.
+- [ ] **Fiabilité des e-mails d'invitation Cognito.** Le service d'envoi par défaut de
+  Cognito (adresse générique, filtré en spam, ~50 e-mails/jour) n'est pas fiable pour de
+  vraies invitations. À faire avant d'inviter de vrais membres : brancher Amazon SES avec un
+  domaine d'envoi vérifié (ex. `noreply@liensculturels.org`).
+
+Détails techniques complets (IDs de ressources AWS, bugs trouvés en cours de route, schéma
+des tables DynamoDB) dans la mémoire de session — demander un résumé si besoin pour une
+prochaine session.
 
 ## Priorité 1 — Bugs actifs en production
 
@@ -68,10 +102,18 @@ construits — voir le fil de discussion pour la proposition d'architecture.
 - [x] **`assets/js/loader.js` (code mort) supprimé** — n'était référencé par aucune page.
 - [x] **Balisage HTML invalide** sur les pages de confirmation newsletter — corrigé avec
   le point header/footer de P1.
-- [ ] **Images encore non câblées dans `assets/img/`** (photos de membres du bureau,
-  nouveaux fonds de header/hero) — décision de contenu qui nécessite de savoir quelle
-  photo va sur quelle fiche ; laissé de côté pour éviter une mauvaise attribution de photo
-  à une personne nommée. À traiter avec l'association.
+- [ ] **Photos de bureau encore non câblées dans `assets/img/`** — 4 fiches utilisent
+  encore une image placeholder sur `bureau.html` (Stéphane ANAKPO, Ronel Jethem ATINDEHOU,
+  François DREMONT, Teddy FAROT). Les photos disponibles
+  (`Abdel_Kader_SALIFOU2.jpg`, `Francis DOSSOU2.jpg`, `dossou.jpg`, `Lionel_WILSON.jpg`,
+  `sg.jpeg`, `sga.jpeg`, `tg.jpeg`, `tga.jpeg`, `vp.jpeg`, `pct.jpeg`, `adjointe1-orga.jpeg`)
+  ne correspondent par leur nom à aucune de ces 4 personnes, et les abréviations de rôle
+  (SG/SGA/TG/TGA/VP) ne correspondent à aucun rôle vacant actuel — bloqué en attente de la
+  correspondance exacte photo → personne/rôle de la part de l'association (demandé le
+  2026-08-08, pas encore reçu).
+- [ ] **Fonds de header/hero non câblés** (`fond_header.png`, `fond_header1.png`,
+  `fond_hero.jpg`, `fond_hero1.jpg`) — changement visuel qui doit être validé avant
+  d'écraser le style actuel, pas fait sans confirmation.
 
 ## Priorité 6 — Au-delà
 
