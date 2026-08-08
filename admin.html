@@ -40,14 +40,19 @@
         .gallery-admin-item .del-btn { position: absolute; top: 4px; right: 4px; background: rgba(192,57,43,0.9); color: #fff; border: none; border-radius: 4px; width: 22px; height: 22px; cursor: pointer; font-size: 0.75rem; }
     </style>
 </head>
-<body>
+<body>    <div class="header-utility">
+        <div class="container">
+            <a href="espace-membre.html"><i class="fas fa-user-lock"></i> Espace Membre</a>
+        </div>
+    </div>
+
     <header>
         <div class="container">
             <a href="index.html"><img src="assets/img/logo.png" alt="Logo Liens Culturels" class="logo"></a>
             <nav>
                 <ul>
                     <li><a href="index.html">Accueil</a></li>
-                    <li><a href="espace-membre.html"><i class="fas fa-user"></i> Espace Membre</a></li>
+                    
                 </ul>
             </nav>
         </div>
@@ -170,9 +175,12 @@
             <!-- NEWSLETTER -->
             <div class="admin-panel" id="panel-newsletter">
                 <div class="admin-card">
-                    <h3>Newsletter</h3>
-                    <p>La gestion des abonnés et l'envoi de campagnes se fait directement dans Brevo (Sendinblue), déjà connecté au formulaire du site.</p>
-                    <a class="admin-btn" href="https://app.brevo.com/" target="_blank" rel="noopener">Ouvrir le tableau de bord Brevo <i class="fas fa-arrow-up-right-from-square"></i></a>
+                    <h3>Abonnés à la newsletter</h3>
+                    <p style="color:#777; font-size:0.9rem;">Inscription à double confirmation (e-mail envoyé via AWS SES). <span id="newsletter-count"></span></p>
+                    <table class="admin-table" id="newsletter-table">
+                        <thead><tr><th>E-mail</th><th>Statut</th><th>Inscrit le</th><th></th></tr></thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -180,7 +188,15 @@
 
     <footer>
         <div class="footer-bottom">
-            <p><strong>&copy; 2025 Liens Culturels (LC).</strong> Espace d'administration.</p>
+            <p><strong>&copy; 2025–2026 Liens Culturels (LC).</strong> Espace d'administration.</p>
+        <p class="footer-legal-links">
+            <a href="mentions-legales.html">Mentions Légales</a>
+            <span aria-hidden="true"> · </span>
+            <a href="cgu.html">CGU</a>
+            <span aria-hidden="true"> · </span>
+            <a href="confidentialite.html">Confidentialité</a>
+        </p>
+        <p class="footer-credit">Site conçu, développé et maintenu par <strong>® RMS International Group</strong></p>
         </div>
     </footer>
 

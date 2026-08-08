@@ -277,8 +277,38 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
+    // ---- newsletter ----
+    async function loadNewsletter() {
+        const items = await api("/admin/newsletter");
+        document.getElementById("newsletter-count").textContent =
+            `${items.filter((s) => s.status === "confirmed").length} confirmé(s) sur ${items.length} inscription(s).`;
+        const tbody = document.querySelector("#newsletter-table tbody");
+        tbody.innerHTML = "";
+        items.forEach((s) => {
+            const tr = document.createElement("tr");
+            const date = s.subscribedAt ? new Date(s.subscribedAt * 1000).toLocaleDateString("fr-FR") : "";
+            tr.innerHTML = `
+                <td>${s.email}</td>
+                <td>${s.status === "confirmed" ? "Confirmé" : s.status === "unsubscribed" ? "Désinscrit" : "En attente"}</td>
+                <td>${date}</td>
+                <td><button class="admin-btn danger small" data-del-sub="${encodeURIComponent(s.email)}">Supprimer</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+        tbody.querySelectorAll("button[data-del-sub]").forEach((btn) => {
+            btn.addEventListener("click", async () => {
+                if (!confirm("Supprimer cet abonné ?")) return;
+                try {
+                    await api(`/admin/newsletter/${btn.dataset.delSub}`, { method: "DELETE" });
+                    showMessage("Abonné supprimé.", "success");
+                    await loadNewsletter();
+                } catch (e) { showMessage(e.message, "error"); }
+            });
+        });
+    }
+
     try {
-        await Promise.all([loadMembers(), loadDocuments(), loadAgenda(), loadGallery()]);
+        await Promise.all([loadMembers(), loadDocuments(), loadAgenda(), loadGallery(), loadNewsletter()]);
     } catch (e) {
         showMessage(e.message, "error");
     }

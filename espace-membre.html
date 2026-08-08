@@ -33,7 +33,12 @@
         #portal-loading { text-align: center; padding: 3rem 0; color: #888; }
     </style>
 </head>
-<body>
+<body>    <div class="header-utility">
+        <div class="container">
+            <a href="espace-membre.html"><i class="fas fa-user-lock"></i> Espace Membre</a>
+        </div>
+    </div>
+
     <header>
         <div class="container">
             <a href="index.html"><img src="assets/img/logo.png" alt="Logo Liens Culturels" class="logo"></a>
@@ -96,24 +101,58 @@
                 <h4>Liens Culturels</h4>
                 <p>Association loi 1901 pour la promotion des échanges culturels entre la France, les Antilles et l'Afrique.</p>
                 <p><i class="fas fa-map-marker-alt"></i> CHEMIN DE L'ERMITAGE<br>02310 NOGENT-L'ARTAUD</p>
+                <p><i class="fas fa-phone"></i> <a href="tel:+33674437609">+33 6 74 43 76 09</a></p>
                 <p><i class="fas fa-envelope"></i> <a href="mailto:contact@liensculturels.org">contact@liensculturels.org</a></p>
             </div>
+
             <div class="footer-column">
                 <h4>Navigation</h4>
                 <ul>
                     <li><a href="a-propos.html">Qui sommes-nous ?</a></li>
                     <li><a href="projets.html">Nos Projets</a></li>
                     <li><a href="agenda.html">Agenda</a></li>
-                    <li><a href="mentions-legales.html">Mentions Légales</a></li>
+                    <li><a href="adhesion.html">Devenir Membre</a></li>
                 </ul>
+            </div>
+
+            <div class="footer-column">
+                <div class="newsletter-box">
+                    <h4>📬 Restez Informé</h4>
+                    <p style="font-size: 0.9rem; color: #bdc3c7;">Actualités, événements et projets de l'association.</p>
+                    <form id="newsletterForm" class="newsletter-form">
+                        <input type="email" id="newsletterEmail" name="email" placeholder="Votre adresse email" required>
+                        <button type="submit" aria-label="S'abonner">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    <div class="form-feedback newsletter-feedback"></div>
+                    </form>
+                </div>
+
+                <h4 style="margin-top:20px;">Suivez-nous</h4>
+                <div class="social-links">
+                    <a href="https://web.facebook.com/profile.php?id=61579109620455" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/liensculturels/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/liens-culturels" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://twitter.com/LCulturels" target="_blank" title="X (Twitter)"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.youtube.com/@LiensCulturels" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <p><strong>&copy; 2025 Liens Culturels (LC).</strong> Tous droits réservés - Site conçu et développé par <strong>RMS International Group&reg;.</strong></p>
+            <p><strong>&copy; 2025–2026 Liens Culturels (LC).</strong> Tous droits réservés.</p>
+        <p class="footer-legal-links">
+            <a href="mentions-legales.html">Mentions Légales</a>
+            <span aria-hidden="true"> · </span>
+            <a href="cgu.html">CGU</a>
+            <span aria-hidden="true"> · </span>
+            <a href="confidentialite.html">Confidentialité</a>
+        </p>
+        <p class="footer-credit">Site conçu, développé et maintenu par <strong>® RMS International Group</strong></p>
         </div>
     </footer>
 
     <script src="assets/js/auth.js"></script>
     <script src="assets/js/espace-membre.js"></script>
+    <script src="assets/js/main.js"></script>
 </body>
 </html>

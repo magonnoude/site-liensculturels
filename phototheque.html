@@ -29,7 +29,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js" defer></script>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body>
+<body>    <div class="header-utility">
+        <div class="container">
+            <a href="espace-membre.html"><i class="fas fa-user-lock"></i> Espace Membre</a>
+        </div>
+    </div>
+
     <header>
         <div class="container">
             <a href="index.html"><img src="assets/img/logo.png" alt="Logo Liens Culturels" class="logo"></a>
@@ -43,7 +48,7 @@
                     <li><a href="blog.html">Blog</a></li>
                     <li class="dropdown"><a href="#">Médiathèque ▼</a><ul class="dropdown-menu"><li><a href="phototheque.html">Photothèque</a></li><li><a href="videotheque.html">Vidéothèque</a></li></ul></li>
                     <li><a href="contact.html">Contact</a></li>
-                    <li><a href="espace-membre.html"><i class="fas fa-user"></i> Espace Membre</a></li><li><a href="adhesion.html" class="btn">Devenir Membre</a></li>
+                    <li><a href="adhesion.html" class="btn">Devenir Membre</a></li>
                 </ul>
             </nav>
         </div>
@@ -105,6 +110,7 @@
                 <h4>Liens Culturels</h4>
                 <p>Association loi 1901 pour la promotion des échanges culturels entre la France, les Antilles et l'Afrique.</p>
                 <p><i class="fas fa-map-marker-alt"></i> CHEMIN DE L'ERMITAGE<br>02310 NOGENT-L'ARTAUD</p>
+                <p><i class="fas fa-phone"></i> <a href="tel:+33674437609">+33 6 74 43 76 09</a></p>
                 <p><i class="fas fa-envelope"></i> <a href="mailto:contact@liensculturels.org">contact@liensculturels.org</a></p>
             </div>
 
@@ -114,31 +120,21 @@
                     <li><a href="a-propos.html">Qui sommes-nous ?</a></li>
                     <li><a href="projets.html">Nos Projets</a></li>
                     <li><a href="agenda.html">Agenda</a></li>
-                    <li><a href="mentions-legales.html">Mentions Légales</a></li>
+                    <li><a href="adhesion.html">Devenir Membre</a></li>
                 </ul>
             </div>
 
             <div class="footer-column">
                 <div class="newsletter-box">
-                    <h4>Rejoignez notre communauté</h4>
-                    <p style="font-size: 0.9rem; color: #bdc3c7;">Recevez nos actualités et invitations directement dans votre boîte mail.</p>
-                    
-                   <!-- DÉBUT DU FORMULAIRE NEWSLETTER FINAL -->
-     <form action="https://82d8e083.sibforms.com/serve/MUIFAKdKQb8kz3qGlrzdrfszGWACRrb_OLoajdN9HclH-7vULUW35X2uZwCikeQ9wxj2tJ1scN5pcn0Xk3kzywDU3qEVp3mq0YViPI5v4cBUQ3Ce1AOJPHBtiMkanTWpG-bfZm-AUKspxLMQLJWN7COR_kmyP9xT4vxdSDwxLxeMGec9LPbS64MBtAD6cvDyLBZKibRPpCrlohQi" 
-                        method="POST" 
-                        target="_blank" 
-                        class="newsletter-form">
-
-                        <input type="email" name="EMAIL" placeholder="Votre adresse email" required>
-
-                        <button type="submit" aria-label="S'inscrire">
+                    <h4>📬 Restez Informé</h4>
+                    <p style="font-size: 0.9rem; color: #bdc3c7;">Actualités, événements et projets de l'association.</p>
+                    <form id="newsletterForm" class="newsletter-form">
+                        <input type="email" id="newsletterEmail" name="email" placeholder="Votre adresse email" required>
+                        <button type="submit" aria-label="S'abonner">
                             <i class="fas fa-paper-plane"></i>
                         </button>
-    
-                        <input type="hidden" name="locale" value="fr">
+                    <div class="form-feedback newsletter-feedback"></div>
                     </form>
-<!-- FIN DU FORMULAIRE NEWSLETTER FINAL -->
-
                 </div>
 
                 <h4 style="margin-top:20px;">Suivez-nous</h4>
@@ -152,9 +148,18 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p><strong>&copy; 2025 Liens Culturels.</strong> Tous droits réservés - Site conçu et développé par <strong>RMS International Group.</strong></p>
+            <p><strong>&copy; 2025–2026 Liens Culturels (LC).</strong> Tous droits réservés.</p>
+        <p class="footer-legal-links">
+            <a href="mentions-legales.html">Mentions Légales</a>
+            <span aria-hidden="true"> · </span>
+            <a href="cgu.html">CGU</a>
+            <span aria-hidden="true"> · </span>
+            <a href="confidentialite.html">Confidentialité</a>
+        </p>
+        <p class="footer-credit">Site conçu, développé et maintenu par <strong>® RMS International Group</strong></p>
         </div>
     </footer>
     <script src="assets/js/gallery-dynamic.js"></script>
+    <script src="assets/js/main.js"></script>
 </body>
 </html>

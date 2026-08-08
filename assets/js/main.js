@@ -2,6 +2,36 @@ document.addEventListener('DOMContentLoaded', () => {
     // URL de base de votre API Gateway
     const API_BASE_URL = 'https://8igk1o6vw4.execute-api.eu-west-3.amazonaws.com'
 
+    // --- Gestion du formulaire Newsletter (AWS SES, double opt-in) ---
+    const newsletterForm = document.getElementById('newsletterForm');
+    if (newsletterForm) {
+        const feedbackEl = newsletterForm.querySelector('.form-feedback');
+        newsletterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('newsletterEmail').value;
+
+            fetch(`${API_BASE_URL}/newsletter/subscribe`, {
+                method: 'POST',
+                body: JSON.stringify({ email }),
+                headers: { 'Content-Type': 'application/json' },
+            })
+            .then(response => {
+                if (response.ok) return response.json();
+                throw new Error('Network response was not ok.');
+            })
+            .then(() => {
+                window.location.href = 'merci-newsletter.html';
+            })
+            .catch(() => {
+                if (feedbackEl) {
+                    feedbackEl.textContent = 'Une erreur est survenue. Veuillez réessayer.';
+                    feedbackEl.className = 'form-feedback newsletter-feedback error';
+                    feedbackEl.style.display = 'block';
+                }
+            });
+        });
+    }
+
     // --- Gestion du formulaire de Contact ---
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {

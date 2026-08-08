@@ -35,6 +35,34 @@ a:hover {
     text-decoration: underline;
 }
 
+/* ---- Barre utilitaire (accès réservés) ----
+   Volontairement non sticky : seule la barre principale (logo + nav) reste
+   épinglée au défilement, pour ne pas avoir à faire coïncider en pixels la
+   hauteur de deux bandeaux sticky empilés. */
+.header-utility {
+    background: var(--primary-color);
+}
+.header-utility .container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1.4rem;
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+}
+.header-utility a {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.82rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.header-utility a:hover {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
 /* ---- Header & Navigation ---- */
 header {
     background: var(--white);
@@ -175,6 +203,10 @@ header nav ul li.dropdown .dropdown-menu a:hover {
 
 /* --- Footer --- */
 footer{background:var(--primary-color);color:#ecf0f1;padding:40px 0 0 0;margin-top:40px}.footer-container{display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;max-width:1100px;margin:auto;padding:0 20px}.footer-column{flex:1;min-width:250px;margin-bottom:20px}.footer-column h4{color:var(--white);margin-bottom:15px;border-bottom:2px solid var(--accent-color);padding-bottom:10px;display:inline-block}.footer-column a{color:#bdc3c7}.footer-column a:hover{color:var(--white)}.social-links a{font-size:1.5rem;margin-right:15px}.footer-bottom{text-align:center;padding:20px;margin-top:20px;background-color:rgba(0,0,0,0.1)}
+.footer-bottom p{margin:0.4rem 0}
+.footer-legal-links a{color:#bdc3c7}
+.footer-legal-links a:hover{color:var(--white)}
+.footer-credit{font-size:0.85rem;color:#95a5a6}
 
 /* ---- Newsletter Améliorée ---- */
 .newsletter-box {
