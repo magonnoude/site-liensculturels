@@ -72,10 +72,28 @@
                     <label for="phone">Numéro de Téléphone</label>
                     <input type="tel" id="phone" name="phone" required>
                 </div>
+                <div class="form-group">
+                    <label for="membershipType">Type de cotisation</label>
+                    <select id="membershipType" name="membershipType">
+                        <option value="individuel">Individuelle — 30 €</option>
+                        <option value="famille">Pack famille — 50 €</option>
+                    </select>
+                </div>
                 <button type="submit" class="btn">Envoyer ma demande d'adhésion</button>
                 <div class="form-feedback"></div>
             </form>
-            <p style="text-align: center; margin-top: 1rem;">Après validation, notre trésorier vous enverra le RIB de l'association pour finaliser votre inscription.</p>
+
+            <div id="payment-section" style="display:none; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #eee;">
+                <h3>Régler ma cotisation en ligne</h3>
+                <div id="payment-options" class="admin-form-row" style="gap:0.8rem;"></div>
+                <div id="stripe-payment-form" style="display:none; margin-top:1rem;">
+                    <div id="stripe-card-element" style="padding:0.8rem; border:1px solid #ccc; border-radius:6px;"></div>
+                    <button id="stripe-pay-btn" class="btn" style="margin-top:1rem;">Payer</button>
+                </div>
+                <div id="payment-feedback" class="form-feedback"></div>
+            </div>
+
+            <p id="rib-fallback" style="text-align: center; margin-top: 1rem;">Après validation, notre trésorier vous enverra le RIB de l'association pour finaliser votre inscription.</p>
         </div>
     </main>
 
@@ -135,6 +153,8 @@
         </div>
     </footer>
 
+    <script src="https://js.stripe.com/v3/"></script>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/payment.js"></script>
 </body>
 </html>
