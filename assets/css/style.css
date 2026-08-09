@@ -283,6 +283,59 @@ header nav ul li.dropdown .dropdown-menu a:hover {
     margin: 0.5rem auto 0;
 }
 
+/* ---- En-tête de page avec photo de fond (variante) ---- */
+.page-header.with-photo {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    padding: 3.5rem 0 2.5rem;
+    overflow: hidden;
+}
+.page-header.with-photo::before {
+    content: "";
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background: linear-gradient(135deg, rgba(0,90,156,.90), rgba(0,42,74,.82));
+}
+.page-header.with-photo > * {
+    position: relative;
+    z-index: 1;
+}
+.page-header.photo-nogent { background-image: url('../img/nogent-artaud-eglise.jpg'); }
+.page-header.photo-save { background-image: url('../img/save-benin.jpg'); }
+
+.page-header-credit {
+    display: block;
+    text-align: center;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.7);
+    margin-top: 0.7rem;
+}
+.page-header-credit a { color: rgba(255,255,255,0.9); }
+
+/* ---- Bande photo France/Bénin au-dessus du footer ---- */
+.footer-photo-band {
+    height: 130px;
+    display: flex;
+}
+.footer-photo-band > div {
+    flex: 1;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+.footer-photo-band > div::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,20,40,0.4);
+}
+.footer-photo-band .band-nogent { background-image: url('../img/nogent-artaud-eglise-band.jpg'); }
+.footer-photo-band .band-save { background-image: url('../img/save-benin-band.jpg'); }
+@media (max-width: 600px) {
+    .footer-photo-band { height: 90px; }
+}
+
 /* --- Amélioration des cartes --- */
 .project-card, .blog-post-preview, .promo-card {
     background: var(--white);
