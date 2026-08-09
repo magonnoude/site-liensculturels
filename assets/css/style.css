@@ -92,6 +92,21 @@ a:hover {
     color: var(--primary-color);
     text-decoration: none;
 }
+.header-utility .utility-contacts {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+.header-utility .utility-contacts a {
+    color: inherit;
+}
+.header-utility .utility-contacts a:hover {
+    color: var(--accent-color);
+    text-decoration: none;
+}
 .lang-toggle {
     display: flex;
     gap: 0.15rem;
@@ -243,6 +258,9 @@ header nav ul li.dropdown .dropdown-menu a {
         justify-content: center;
         flex-wrap: wrap;
         text-align: center;
+    }
+    .header-utility .utility-contacts {
+        display: none;
     }
 }
 header nav ul li.dropdown .dropdown-menu a {
