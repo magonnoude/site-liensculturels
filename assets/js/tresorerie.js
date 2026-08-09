@@ -160,11 +160,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    const depenseCategorieSelect = document.getElementById("depense-categorie");
+    const depenseCategorieAutre = document.getElementById("depense-categorie-autre");
+    depenseCategorieSelect.addEventListener("change", () => {
+        depenseCategorieAutre.style.display = depenseCategorieSelect.value === "autre" ? "inline-block" : "none";
+        if (depenseCategorieSelect.value !== "autre") depenseCategorieAutre.value = "";
+    });
+
     document.getElementById("depense-add-btn").addEventListener("click", async () => {
         const libelle = document.getElementById("depense-libelle").value.trim();
         const montant = document.getElementById("depense-montant").value;
         const date = document.getElementById("depense-date").value;
-        const categorie = document.getElementById("depense-categorie").value.trim();
+        const categorie = depenseCategorieSelect.value === "autre"
+            ? depenseCategorieAutre.value.trim()
+            : depenseCategorieSelect.value;
         const type = document.getElementById("depense-type").value;
         const fileInput = document.getElementById("depense-file");
         const file = fileInput.files[0];
@@ -185,7 +194,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (justificatifKey) payload.justificatifKey = justificatifKey;
             await api("/tresorerie/depenses", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
             showMessage("Dépense enregistrée.", "success");
-            ["depense-libelle", "depense-montant", "depense-categorie"].forEach((id) => (document.getElementById(id).value = ""));
+            ["depense-libelle", "depense-montant"].forEach((id) => (document.getElementById(id).value = ""));
+            depenseCategorieSelect.value = "";
+            depenseCategorieAutre.value = "";
+            depenseCategorieAutre.style.display = "none";
             document.getElementById("depense-type").value = "";
             fileInput.value = "";
             await Promise.all([loadDepenses(), loadSummary()]);

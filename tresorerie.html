@@ -144,7 +144,20 @@
                         <input type="text" id="depense-libelle" placeholder="Libellé">
                         <input type="number" id="depense-montant" placeholder="Montant (€)" min="0" step="0.01">
                         <input type="date" id="depense-date">
-                        <input type="text" id="depense-categorie" placeholder="Catégorie">
+                        <select id="depense-categorie">
+                            <option value="">Catégorie</option>
+                            <option value="Abonnement téléphone">Abonnement téléphone</option>
+                            <option value="Nom de domaine (Gandi)">Nom de domaine (Gandi)</option>
+                            <option value="E-mail (Zoho)">E-mail (Zoho)</option>
+                            <option value="Hébergement du site (AWS)">Hébergement du site (AWS)</option>
+                            <option value="Frais bancaires (Qonto)">Frais bancaires (Qonto)</option>
+                            <option value="Frais Stripe">Frais Stripe</option>
+                            <option value="Conception du site (RMS)">Conception du site (RMS)</option>
+                            <option value="Redevance mensuelle (RMS)">Redevance mensuelle (RMS)</option>
+                            <option value="Abonnement Internet">Abonnement Internet</option>
+                            <option value="autre">Autre (préciser)</option>
+                        </select>
+                        <input type="text" id="depense-categorie-autre" placeholder="Préciser la catégorie" style="display:none;">
                         <select id="depense-type">
                             <option value="">Type (optionnel)</option>
                             <option value="fixe">Fixe</option>
