@@ -54,6 +54,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         { visible: isAdmin, href: "admin.html", label: "Espace Admin" },
         { visible: isAdmin || groups.includes("secretaire"), href: "secretariat.html", label: "Espace Secrétariat" },
         { visible: isAdmin || groups.includes("tresorier"), href: "tresorerie.html", label: "Espace Trésorerie" },
+        // Gouvernance est volontairement à part : pas de bypass "admin" (rôle
+        // technique distinct), décision confirmée avec l'association.
+        { visible: groups.includes("gouvernance"), href: "gouvernance.html", label: "Espace Gouvernance" },
     ];
     const groupsEl = document.getElementById("portal-groups");
     spaceLinks.forEach((link) => {

@@ -165,6 +165,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const montant = document.getElementById("depense-montant").value;
         const date = document.getElementById("depense-date").value;
         const categorie = document.getElementById("depense-categorie").value.trim();
+        const type = document.getElementById("depense-type").value;
         const fileInput = document.getElementById("depense-file");
         const file = fileInput.files[0];
         if (!libelle || !montant || !date) { showMessage("Libellé, montant et date requis.", "error"); return; }
@@ -180,10 +181,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 justificatifKey = key;
             }
             const payload = { libelle, montant: Number(montant), date, categorie };
+            if (type) payload.type = type;
             if (justificatifKey) payload.justificatifKey = justificatifKey;
             await api("/tresorerie/depenses", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
             showMessage("Dépense enregistrée.", "success");
             ["depense-libelle", "depense-montant", "depense-categorie"].forEach((id) => (document.getElementById(id).value = ""));
+            document.getElementById("depense-type").value = "";
             fileInput.value = "";
             await Promise.all([loadDepenses(), loadSummary()]);
         } catch (e) { showMessage(e.message, "error"); }
