@@ -153,6 +153,12 @@ Pour la liste exacte et à jour des routes : `aws apigatewayv2 get-routes --api-
 - **`sk_test_`/`whsec_` de Stripe sont en mode TEST** (configurés le 9 août 2026 sur
   `liensCulturels-payment`) — aucune vraie transaction. Voir `PAYMENTS-SETUP.md` pour passer
   en mode live (comptes marchands au nom de l'association nécessaires au préalable).
+- **`liensCulturels-payment` valide `returnPage` contre une liste blanche codée en dur**
+  (`ALLOWED_RETURN_PAGES`, anti-open-redirect volontaire) — toute nouvelle page qui appelle
+  `window.LCPayment.renderButtons()` avec un nouveau `returnPage` doit être ajoutée à cette
+  liste côté Lambda, sinon le paiement aboutit normalement mais la redirection finale retombe
+  silencieusement sur `adhesion.html` (aucune erreur, juste la mauvaise page d'atterrissage).
+  Bug réel rencontré en branchant `bourse-scolaire.html` sur le paiement.
 
 ## 8. Déploiement
 
