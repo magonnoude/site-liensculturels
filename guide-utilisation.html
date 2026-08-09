@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide d'utilisation - Association Liens Culturels</title>
+    <meta name="description" content="Guide d'utilisation du site et de l'espace membre de l'association Liens Culturels, avec une FAQ.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="assets/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="assets/img/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+    <link rel="manifest" href="assets/img/site.webmanifest">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/solid.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .admin-wrap { max-width: 860px; margin: 2.5rem auto; padding: 0 1rem; }
+        .admin-card { background: var(--white); border-radius: 8px; border-top: 4px solid var(--secondary-color); padding: 1.2rem 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 1.2rem; }
+        .admin-card h3 { margin-top: 0; }
+        #guide-denied, #guide-loading { text-align: center; padding: 4rem 0; }
+        .guide-toc { background: #f4f8fb; border-radius: 8px; padding: 1.1rem 1.4rem; margin-bottom: 1.5rem; }
+        .guide-toc h3 { margin: 0 0 0.6rem; font-size: 1rem; }
+        .guide-toc ul { margin: 0; padding-left: 1.2rem; columns: 2; column-gap: 1.5rem; }
+        .guide-toc li { margin-bottom: 0.3rem; font-size: 0.9rem; }
+        .guide-role { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 0.15rem 0.6rem; border-radius: 100px; background: #eaf2f8; color: var(--primary-color); margin-bottom: 0.6rem; }
+        .guide-role.role-all { background: #eafaf1; color: #1e7e45; }
+        .guide-role.role-restricted { background: #fdecea; color: #c0392b; }
+        .admin-card p, .admin-card li { line-height: 1.6; }
+        .admin-card ul { padding-left: 1.3rem; margin: 0.6rem 0; }
+        details.faq-item { border-bottom: 1px solid #eee; padding: 0.8rem 0; }
+        details.faq-item:last-child { border-bottom: none; }
+        details.faq-item summary { cursor: pointer; font-weight: 600; list-style: none; position: relative; padding-right: 1.6rem; }
+        details.faq-item summary::-webkit-details-marker { display: none; }
+        details.faq-item summary::after { content: "+"; position: absolute; right: 0; top: 0; font-weight: 700; color: var(--primary-color); font-size: 1.2rem; }
+        details.faq-item[open] summary::after { content: "–"; }
+        details.faq-item p { margin: 0.7rem 0 0; color: #444; font-size: 0.95rem; }
+    </style>
+</head>
+<body>    <div class="site-header">
+    <div class="header-utility">
+        <div class="container">
+            <a href="espace-membre.html" class="utility-link"><i class="fas fa-user-lock"></i> <span class="lang-fr">Accès Membre</span><span class="lang-en">Member Access</span></a>
+            <span class="utility-divider" aria-hidden="true"></span>
+            <a href="adhesion.html" class="cta-pill"><i class="fas fa-user-plus"></i> <span class="lang-fr">Devenir Membre</span><span class="lang-en">Join Us</span></a>
+            <span class="utility-divider" aria-hidden="true"></span>
+            <div class="lang-toggle">
+                <button type="button" data-lang="fr" class="active">FR</button>
+                <span style="color:rgba(255,255,255,0.3)">|</span>
+                <button type="button" data-lang="en">EN</button>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <a href="index.html"><img src="assets/img/brand/logo-horizontal.svg" alt="Liens Culturels — France, Antilles, Bénin" class="logo"></a>
+            <button type="button" class="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false"><i class="fas fa-bars"></i></button>
+            <nav>
+                <ul>
+                    <li><a href="index.html"><span class="lang-fr">Accueil</span><span class="lang-en">Home</span></a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    </div>
+
+    <main class="admin-wrap">
+        <div id="guide-loading" style="text-align:center; padding:4rem 0; color:#888;">Chargement…</div>
+
+        <div id="guide-denied" style="display:none;">
+            <i class="fas fa-lock" style="font-size:2.5rem; color:#c0392b;"></i>
+            <h1>Accès refusé</h1>
+            <p>Ce guide est réservé aux membres connectés. <a href="espace-membre.html">Se connecter</a>.</p>
+        </div>
+
+        <div id="guide-content" style="display:none;">
+            <div class="page-header with-photo photo-save">
+                <h1><i class="fas fa-circle-question"></i> Guide d'utilisation</h1>
+                <p>Comment utiliser le site et les espaces réservés de l'association, et réponses aux questions fréquentes.</p>
+                <span class="page-header-credit">Photo : Savè, Bénin — Afolabi Ladikpo, <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a></span>
+            </div>
+
+            <div class="guide-toc">
+                <h3>Sommaire</h3>
+                <ul>
+                    <li><a href="#guide-connexion">Se connecter</a></li>
+                    <li><a href="#guide-membre">Espace Membre</a></li>
+                    <li><a href="#guide-admin">Espace Admin</a></li>
+                    <li><a href="#guide-secretariat">Espace Secrétariat</a></li>
+                    <li><a href="#guide-tresorerie">Espace Trésorerie</a></li>
+                    <li><a href="#guide-gouvernance">Espace Gouvernance</a></li>
+                    <li><a href="#guide-adhesion">Fiche d'adhésion</a></li>
+                    <li><a href="#guide-faq">FAQ</a></li>
+                </ul>
+            </div>
+
+            <div class="admin-card" id="guide-connexion">
+                <span class="guide-role role-all">Tous les membres</span>
+                <h3>Se connecter</h3>
+                <p>Sur la page <a href="espace-membre.html">Espace Membre</a>, cliquez sur « Se connecter ». Vous êtes redirigé vers un écran de connexion sécurisé où vous saisissez votre e-mail et votre mot de passe. Si l'association vient de créer votre compte, un mot de passe temporaire vous a été transmis directement (pas par e-mail automatique) : à la première connexion, il vous sera demandé d'en choisir un nouveau.</p>
+                <p>Vous n'avez jamais eu de compte ? Utilisez le bouton « Devenir Membre » en haut de page pour remplir la fiche d'adhésion — voir la section <a href="#guide-adhesion">Fiche d'adhésion</a>.</p>
+            </div>
+
+            <div class="admin-card" id="guide-membre">
+                <span class="guide-role role-all">Tous les membres</span>
+                <h3>Espace Membre</h3>
+                <p>C'est votre tableau de bord personnel, visible juste après connexion :</p>
+                <ul>
+                    <li><strong>Statut de cotisation</strong> — un badge vert « à jour » ou orange « impayée / non renseignée ».</li>
+                    <li><strong>Prochains événements</strong> — un aperçu de l'agenda de l'association.</li>
+                    <li><strong>Cotisation &amp; dons</strong> — payez votre cotisation (individuelle ou pack famille) ou faites un don, par carte bancaire. Le paiement Mobile Money (FedaPay) pour le Bénin arrivera prochainement.</li>
+                    <li><strong>Historique de mes paiements</strong> — la liste de vos cotisations et dons déjà enregistrés, avec le total de vos dons.</li>
+                    <li><strong>Mon profil</strong> — votre e-mail, téléphone et adresse. Ces deux derniers champs sont gérés par le secrétariat et ne peuvent pas être modifiés directement : passez par la page <a href="contact.html">Contact</a> pour toute mise à jour.</li>
+                    <li><strong>Photo de profil</strong> — cliquez sur « Changer ma photo » en haut du tableau de bord.</li>
+                </ul>
+                <p>Si vous avez un rôle supplémentaire (Admin, Secrétariat, Trésorerie ou Gouvernance), un bouton vers l'espace correspondant apparaît automatiquement sous votre nom.</p>
+            </div>
+
+            <div class="admin-card" id="guide-admin">
+                <span class="guide-role role-restricted">Réservé : groupe Admin</span>
+                <h3>Espace Admin</h3>
+                <p>Gestion technique et administrative du site :</p>
+                <ul>
+                    <li><strong>Membres</strong> — inviter un nouveau membre, consulter la liste, changer les rôles d'un compte existant (case à cocher par rôle), voir la cotisation et les dons de chacun.</li>
+                    <li><strong>Documents</strong> — publier des PDF publics (statuts, comptes-rendus d'AG…).</li>
+                    <li><strong>Agenda</strong> — ajouter/modifier les événements affichés sur la page publique Agenda et dans l'espace membre.</li>
+                    <li><strong>Photothèque / Vidéothèque</strong> — ajouter des photos ou des vidéos YouTube à la médiathèque publique.</li>
+                    <li><strong>Newsletter</strong> — composer et envoyer un message aux abonnés confirmés, consulter la liste des abonnés.</li>
+                </ul>
+                <p>Un lien vers la documentation technique complète est disponible en haut de l'<a href="admin.html">espace Admin</a>.</p>
+            </div>
+
+            <div class="admin-card" id="guide-secretariat">
+                <span class="guide-role role-restricted">Réservé : groupe Secrétariat (ou Admin)</span>
+                <h3>Espace Secrétariat</h3>
+                <p>Planification des réunions du bureau et du conseil d'administration : ordre du jour, compte-rendu (texte, et PDF scanné réservé aux personnes connectées), décisions prises. Le texte des réunions (hors PDF) est automatiquement repris sur la page publique <a href="vie-associative.html">Vie Associative</a>, pour informer les membres et visiteurs de l'activité de l'association.</p>
+            </div>
+
+            <div class="admin-card" id="guide-tresorerie">
+                <span class="guide-role role-restricted">Réservé : groupe Trésorerie (ou Admin)</span>
+                <h3>Espace Trésorerie</h3>
+                <p>Suivi financier de l'association : enregistrement manuel des cotisations et dons reçus (par virement, chèque, espèces…), enregistrement des dépenses avec leur catégorie et leur type (Fixe ou Exceptionnelle), export CSV, et un résumé des totaux.</p>
+            </div>
+
+            <div class="admin-card" id="guide-gouvernance">
+                <span class="guide-role role-restricted">Réservé : groupe Gouvernance</span>
+                <h3>Espace Gouvernance</h3>
+                <p>Tableau de bord de pilotage réservé au Conseil d'Administration : nombre d'adhérents et répartition de leur statut de cotisation, point financier (cotisations, dons, dépenses, solde), dépenses par type (charges fixes / exceptionnelles) et par catégorie.</p>
+                <p style="font-size:0.88rem; color:#888;">Gouvernance est un rôle distinct d'Admin — avoir le rôle Admin ne donne pas automatiquement accès à cet espace, c'est volontaire : Admin est un rôle technique, Gouvernance est réservé au pilotage stratégique.</p>
+            </div>
+
+            <div class="admin-card" id="guide-adhesion">
+                <span class="guide-role role-all">Public</span>
+                <h3>Fiche d'adhésion</h3>
+                <p>Accessible sans compte via le bouton « Devenir Membre ». Elle permet de s'inscrire (identité, adresse, contact, éventuellement les membres de la famille pour un pack famille) et de payer sa cotisation par carte bancaire. Les deux étapes sont volontairement séparées : vous pouvez vous inscrire maintenant et payer plus tard, directement depuis votre espace membre une fois votre compte créé.</p>
+            </div>
+
+            <div class="admin-card" id="guide-faq">
+                <h3><i class="fas fa-circle-question"></i> Questions fréquentes</h3>
+
+                <details class="faq-item">
+                    <summary>J'ai oublié mon mot de passe, comment le réinitialiser ?</summary>
+                    <p>Sur l'écran de connexion, utilisez le lien « Mot de passe oublié ? ». Un code de réinitialisation vous est envoyé par e-mail pour choisir un nouveau mot de passe.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>Je suis connecté mais je ne vois aucun lien vers Admin / Secrétariat / Trésorerie / Gouvernance — pourquoi ?</summary>
+                    <p>Ces boutons n'apparaissent que si votre compte a le rôle correspondant. Si vous pensez devoir y avoir accès, contactez un administrateur pour qu'il vérifie ou ajuste vos rôles depuis l'espace Admin (page Membres, colonne Rôles).</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>Pourquoi je ne peux pas modifier mon téléphone ou mon adresse dans mon profil ?</summary>
+                    <p>Ces informations sont gérées par le secrétariat pour garder une source unique et fiable. Passez par la page <a href="contact.html">Contact</a> pour toute mise à jour.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>Le bouton de paiement par carte ne s'affiche pas — pourquoi ?</summary>
+                    <p>Le paiement en ligne peut être temporairement désactivé (par exemple pendant une opération de maintenance). Un message l'indique à la place des boutons habituels ; vous pouvez alors contacter le trésorier via la page Contact pour régler votre cotisation autrement.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>Quelle est la différence entre le rôle Admin et le rôle Gouvernance ?</summary>
+                    <p>Admin est un rôle technique : gestion des membres, du contenu du site, de la newsletter. Gouvernance donne accès au tableau de bord de pilotage stratégique et financier réservé au Conseil d'Administration. Les deux sont volontairement séparés — un compte Admin n'a pas automatiquement accès à Gouvernance.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>Un membre de ma famille peut-il avoir son propre compte ?</summary>
+                    <p>Oui. Sur la fiche d'adhésion, le pack famille permet d'ajouter chaque membre avec son propre e-mail : chacun reçoit alors son propre compte, indépendant du vôtre.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary>Comment vérifier qu'un don ou une cotisation a bien été enregistré ?</summary>
+                    <p>Connectez-vous à votre espace membre : la section « Historique de mes paiements » liste tous vos paiements enregistrés, avec le total de vos dons juste au-dessus. Un e-mail de confirmation vous est aussi envoyé après chaque paiement en ligne réussi.</p>
+                </details>
+            </div>
+
+            <p style="margin-top:2rem;"><a href="espace-membre.html"><i class="fas fa-arrow-left"></i> Retour à l'espace membre</a></p>
+        </div>
+    </main>
+
+    <div class="footer-photo-band" aria-hidden="true">
+        <div class="band-nogent" title="Nogent-l'Artaud, France"></div>
+        <div class="band-save" title="Savè, Bénin"></div>
+    </div>
+    <footer>
+        <div class="footer-bottom">
+            <div class="footer-bottom-row">
+                <p><strong>&copy; 2025–2026 Liens Culturels (LC).</strong> <span class="lang-fr">Guide d'utilisation.</span><span class="lang-en">User guide.</span></p>
+                <p class="footer-legal-links">
+            <a href="mentions-legales.html"><span class="lang-fr">Mentions Légales</span><span class="lang-en">Legal Notice</span></a>
+            <span aria-hidden="true"> · </span>
+            <a href="cgu.html"><span class="lang-fr">CGU</span><span class="lang-en">Terms of Use</span></a>
+            <span aria-hidden="true"> · </span>
+            <a href="confidentialite.html"><span class="lang-fr">Confidentialité</span><span class="lang-en">Privacy Policy</span></a>
+        </p>
+            </div>
+            <p class="footer-credit"><span class="lang-fr">Site conçu, développé et maintenu par</span><span class="lang-en">Site designed, developed and maintained by</span> <strong>® RMS International Group</strong></p>
+        </div>
+    </footer>
+
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/guide-utilisation.js"></script>
+    <script src="assets/js/header.js"></script>
+</body>
+</html>
