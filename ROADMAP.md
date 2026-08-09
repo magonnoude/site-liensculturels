@@ -138,6 +138,19 @@ action externe, pas de moi) · `💬` répondu comme conseil, pas une action à 
 
 **Note en passant** : `README.md` n'a pas été mis à jour et est désormais partiellement en retard sur `DOCUMENTATION-TECHNIQUE.md` (qui reflète l'état réel du système au 9 août) — à harmoniser lors d'un prochain lot si besoin.
 
+## Tableau de suivi — demandes du 9–10 août 2026 (round 11)
+
+| # | Demande | Statut | Détail |
+|---|---|---|---|
+| 46 | Déplacer le mail et les téléphones du footer vers la barre du haut du header, avec drapeau devant les numéros | ✅ | Ajouté dans `.header-utility`, juste à droite de "Accès Membre" (drapeaux 🇫🇷/🇧🇯 en emoji, pas d'asset image). Masqué sur mobile (barre déjà étroite). |
+| 47 | Remettre les contacts aussi dans le footer, même format compact, "Accès Membre" en rouge, simplifier le texte (fini "Tél/WhatsApp"/"France —"/"(temporaire)") partout y compris `contact.html` | ✅ | Footer et `.contact-info-card` de `contact.html` alignés sur le même format compact que la barre du haut. "Accès Membre" en `#c0392b` (rouge déjà utilisé ailleurs sur le site). |
+| 48 | Retirer les numéros de la barre du haut, garder seulement le mail | ✅ | Barre du haut : Accès Membre (rouge) → e-mail → Devenir Membre → FR/EN. Footer et `contact.html` gardent les deux numéros. |
+| 49 | Brancher le bouton "Faire un Don" de bourse-scolaire.html sur un vrai paiement Stripe | ✅ | Réutilise `window.LCPayment.renderButtons()` (même mécanique que adhesion.html/espace-membre.html) : nom, e-mail, montant libre, redirection Stripe Checkout. **Testé en conditions réelles avec une vraie carte de test Stripe (4242…), paiement complet de bout en bout, don retrouvé dans `liensculturels-cotisations` puis supprimé après vérification.** **Bug réel trouvé et corrigé pendant ce test** : la Lambda `liensCulturels-payment` valide `returnPage` contre une liste blanche anti-open-redirect (`ALLOWED_RETURN_PAGES`) qui ne connaissait pas encore `bourse-scolaire.html` — le paiement aboutissait mais la redirection finale retombait silencieusement sur `adhesion.html`. Corrigé (ajout à la liste, redéploiement de la Lambda), retesté de bout en bout avec succès. |
+| 50 | Sanity check global (mémoire, git, déploiement, README, sitemap, robots.txt) | ✅ | Git propre, tous les déploiements récents verts. `sitemap.xml` : 2 pages indexables absentes (`cgu.html`, `confidentialite.html`) — ajoutées. `robots.txt` correct. **`README.md` est périmé** (ne documente que 2 des 8 Lambdas actuelles, aucune mention de Cognito/des espaces membre-admin-secrétariat-trésorerie-gouvernance/Stripe) — pas encore réécrit, à prévoir dans un prochain lot. |
+| 51 | Vérifier si Google Analytics (GA4) est en place | ✅ | **Aucun tag GA4/Google Tag Manager nulle part sur le site** (recherche `gtag(`, `googletagmanager`, `G-XXXXXXX`, `GTM-` — zéro résultat). Cohérent avec `confidentialite.html`, qui affirme explicitement ne pas utiliser d'outils d'analyse tiers — donc pas un oubli, mais un choix déjà documenté. Ajouter GA4 nécessiterait de mettre à jour ce texte en même temps. |
+
+**Amélioration proposée, pas encore demandée** : `README.md` mériterait une réécriture complète pour refléter l'état réel (Cognito, 8 Lambdas, les 4 espaces internes, Stripe) — actuellement il ne documente que l'état du site avant le 8 août.
+
 ## Espaces authentifiés (membre / admin / secrétariat / trésorerie)
 
 Construits et vérifiés de bout en bout le 2026-08-08, chacun avec compte jetable de test
