@@ -112,10 +112,31 @@
         <div style="text-align: center; margin-top: 3rem; background-color: #eaf2f8; padding: 2rem; border-radius: 8px;">
             <h2><span class="lang-fr">Soutenez un étudiant !</span><span class="lang-en">Support a student!</span></h2>
             <p>
-                <span class="lang-fr">Le programme "Avenir Partagé" est financé par la générosité de nos donateurs. Chaque contribution, même modeste, nous aide à construire l'avenir. Vous pouvez choisir de faire un don pour soutenir directement notre programme de bourses.</span>
-                <span class="lang-en">The "Avenir Partagé" program is funded by the generosity of our donors. Every contribution, however modest, helps us build the future. You can choose to donate directly to our scholarship program.</span>
+                <span class="lang-fr">Le programme "Avenir Partagé" est financé par la générosité de nos donateurs. Chaque contribution, même modeste, nous aide à construire l'avenir.</span>
+                <span class="lang-en">The "Avenir Partagé" program is funded by the generosity of our donors. Every contribution, however modest, helps us build the future.</span>
             </p>
-            <a href="contact.html?subject=don_bourse" class="btn"><span class="lang-fr">Faire un Don</span><span class="lang-en">Make a Donation</span></a>
+
+            <p id="bourse-don-fallback" style="display:none; font-size:0.9rem; color:#777;">
+                <span class="lang-fr">Le paiement en ligne n'est pas encore activé. Vous pouvez nous contacter directement via la page <a href="contact.html">Contact</a> pour faire un don.</span>
+                <span class="lang-en">Online payment isn't activated yet. You can reach us directly via the <a href="contact.html">Contact</a> page to make a donation.</span>
+            </p>
+
+            <div id="bourse-don-section" style="display:none; max-width: 420px; margin: 1.5rem auto 0; text-align: left;">
+                <div style="display:flex; gap:0.6rem; flex-wrap:wrap; margin-bottom:0.6rem;">
+                    <input type="text" id="bourse-don-nom" placeholder="Votre nom" style="flex:1; min-width:150px; padding:0.5rem 0.7rem; border:1px solid #ccc; border-radius:6px;">
+                    <input type="email" id="bourse-don-email" placeholder="Votre e-mail" style="flex:1; min-width:150px; padding:0.5rem 0.7rem; border:1px solid #ccc; border-radius:6px;">
+                </div>
+                <div style="margin-bottom:0.8rem;">
+                    <input type="number" id="bourse-don-montant" min="1" max="5000" step="1" placeholder="Montant du don (€)" style="width:100%; box-sizing:border-box; padding:0.5rem 0.7rem; border:1px solid #ccc; border-radius:6px;">
+                </div>
+                <div id="bourse-don-options" style="display:flex; gap:0.8rem; flex-wrap:wrap; justify-content:center;"></div>
+                <p style="font-size:0.82rem; color:#888; margin-top:0.9rem; text-align:center;">
+                    <i class="fas fa-mobile-screen-button"></i>
+                    <span class="lang-fr">Le paiement Mobile Money via FedaPay sera bientôt disponible pour les donateurs au Bénin.</span>
+                    <span class="lang-en">Mobile Money payment via FedaPay will soon be available for donors in Benin.</span>
+                </p>
+                <div id="bourse-don-feedback" class="form-feedback"></div>
+            </div>
         </div>
     </main>
 
@@ -185,6 +206,7 @@
         </div>
     </footer>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/payment.js"></script>
     <script src="assets/js/header.js"></script>
 </body>
 </html>

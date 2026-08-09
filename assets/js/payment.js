@@ -206,6 +206,52 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    // ---- bourse-scolaire.html : don libre pour le programme de bourses ----
+    // Même route/type "don" générique que le don depuis espace-membre.html —
+    // le backend n'a pas de notion de campagne/affectation par programme, ce
+    // don n'est donc pas distingué d'un don "libre" une fois enregistré.
+    const bourseDonSection = document.getElementById("bourse-don-section");
+    if (bourseDonSection) {
+        const bourseDonFallback = document.getElementById("bourse-don-fallback");
+        const bourseDonFeedbackEl = document.getElementById("bourse-don-feedback");
+        function showBourseDonFeedback(text, kind) {
+            bourseDonFeedbackEl.textContent = text;
+            bourseDonFeedbackEl.className = `form-feedback ${kind}`;
+            bourseDonFeedbackEl.style.display = "block";
+        }
+
+        const config = await window.LCPayment.getConfig();
+        if (config && (config.stripeEnabled || config.fedapayEnabled)) {
+            window.LCPayment.renderButtons(
+                document.getElementById("bourse-don-options"),
+                config,
+                () => {
+                    const nom = document.getElementById("bourse-don-nom").value.trim();
+                    const email = document.getElementById("bourse-don-email").value.trim();
+                    const montant = parseFloat(document.getElementById("bourse-don-montant").value);
+                    if (!nom || !email) {
+                        showBourseDonFeedback("Merci de renseigner votre nom et e-mail.", "error");
+                        return null;
+                    }
+                    if (!montant || montant < (config.donMin || 1) || montant > (config.donMax || 5000)) {
+                        showBourseDonFeedback(`Merci d'indiquer un montant de don entre ${config.donMin || 1} € et ${config.donMax || 5000} €.`, "error");
+                        return null;
+                    }
+                    return { type: "don", montant, email, nom, returnPage: "bourse-scolaire.html" };
+                },
+                (msg) => showBourseDonFeedback(msg, "error")
+            );
+            bourseDonSection.style.display = "block";
+        } else if (bourseDonFallback) {
+            bourseDonFallback.style.display = "block";
+        }
+
+        const bourseParams = new URLSearchParams(window.location.search);
+        if (bourseParams.get("payment") === "success") {
+            showBourseDonFeedback("Don effectué, merci pour votre générosité !", "success");
+        }
+    }
+
     // Note : la section paiement de espace-membre.html n'est PAS initialisée
     // ici (voir window.LCPayment.initMemberPayment, appelée explicitement par
     // espace-membre.js une fois l'état de connexion résolu).
