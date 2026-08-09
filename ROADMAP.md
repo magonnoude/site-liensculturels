@@ -12,7 +12,12 @@ pages du site est désormais complète** (2026-08-08) — voir tableau, item 9. 
 (2026-08-09)** : espace membre enrichi (agenda, paiement cotisation/don, historique,
 badge), gestion réelle de la newsletter côté admin, footer aligné sur le gabarit RMS,
 nouvelle page publique "Vie associative", et fiche d'adhésion refondue — voir tableau,
-items 11 à 15.
+items 11 à 15. **Round 3** : corrections suite aux premiers tests utilisateur (footer,
+carte de paiement masquée à tort, détails des membres de la famille, bouton "S'inscrire",
+adresse structurée) — items 16 à 20. **Round 4 (2026-08-09)** : nav simplifiée, favicon
+régénéré, bandeaux photo sur les pages pauvres en design et les espaces internes, photo de
+profil membre, et surtout le vrai bug derrière "mon adhésion n'apparaît nulle part" —
+items 21 à 26.
 
 ## Tableau de suivi — demandes du 7–8 août 2026
 
@@ -45,6 +50,30 @@ action externe, pas de moi) · `💬` répondu comme conseil, pas une action à 
 | 15 | Fiche d'adhésion : civilité séparée, prénom/nom séparés, indicatifs pays pour le téléphone, contrôle du champ e-mail, case newsletter, bouton payer qui redirige vers Stripe/FedaPay | ✅ | `adhesion.html` refondue (civilité + prénom + nom, sélecteur d'indicatif parmi ~195 pays, validation e-mail par regex avant envoi, case à cocher qui déclenche `POST /newsletter/subscribe` si cochée). Paiement généralisé : Stripe bascule sur **Checkout Session hébergé** (fini l'embarqué) — les deux boutons (Stripe, FedaPay) redirigent désormais réellement vers le prestataire, sur `adhesion.html` et `espace-membre.html`. |
 
 **Non vérifié en conditions réelles de bout en bout** : le client Cognito n'autorise que le flux Hosted UI (PKCE/SRP), sans mot de passe direct côté API — impossible de forger un jeton JWT valide depuis cet environnement sans navigateur pour cliquer le parcours de connexion. Chaque route a été vérifiée séparément : les nouvelles Lambdas passent des tests d'invocation directe avec des claims simulées, les nouvelles routes API Gateway ont été testées (401 sans jeton sur les routes protégées, 200 sur les routes publiques), et une lacune de permission IAM (`lambda:InvokeFunction` scopé trop étroitement par chemin) a été trouvée et corrigée sur deux routes pendant cette vérification. **Recommandé : vous connecter une fois vous-même à `espace-membre.html` pour confirmer visuellement le rendu du dashboard, du badge et des boutons de paiement.**
+
+## Tableau de suivi — demandes du 9 août 2026 (round 3)
+
+| # | Demande | Statut | Détail |
+|---|---|---|---|
+| 16 | Footer : le crédit RMS n'était pas centré | ✅ | Bug de spécificité CSS réel (`.footer-bottom p` battait `.footer-credit` malgré l'ordre des règles) — sélecteur requalifié + `!important` en filet de sécurité. |
+| 17 | Espace membre : rien ne s'affichait pour le paiement de la cotisation une fois connecté | ✅ | La carte entière était masquée tant que Stripe/FedaPay ne sont pas activés. Reprend désormais le pattern déjà utilisé sur `adhesion.html` : la carte reste visible, avec un message d'attente à la place des formulaires tant que le paiement n'est pas actif. |
+| 18 | Pack Famille : identifier chaque membre de la famille (nom, prénom, lien de parenté), puis (précision reçue en cours de route) email, téléphone et adresse si différente — tous deviennent membres à part entière | ✅ | `adhesion.html` : lignes dynamiques ajout/suppression par membre de la famille, transmises à la Lambda d'adhésion. |
+| 19 | Bouton « S'inscrire » sur l'écran de connexion de l'espace membre, vers la fiche d'adhésion | ✅ | Ajouté sous le bouton de connexion. |
+| 20 | Fiche d'adhésion : séparer adresse / ville / code postal / pays (liste) | ✅ | 4 champs distincts, pays en liste déroulante (~195 pays, réutilise `country-codes.js`). |
+
+**Bug incident trouvé pendant la vérification** (pas une demande, corrigé au passage) : une option du sélecteur de cotisation dans l'espace membre avait du balisage `<span class="lang-fr">` à l'intérieur d'une balise `<option>` — les navigateurs n'affichent que le texte brut d'une `<option>`, donc la bascule FR/EN n'y fonctionnait pas. Retiré, comme pour l'option "famille" voisine qui n'avait jamais eu ce problème.
+
+## Tableau de suivi — demandes du 9 août 2026 (round 4)
+
+| # | Demande | Statut | Détail |
+|---|---|---|---|
+| 21 | Nav : deux libellés différents pour le même lien ("Devenir Membre / Nous Rejoindre" en haut, "Devenir Membre" dans le menu) — n'en garder qu'un | ✅ | Réviser l'item 8 du premier tableau : le doublon volontaire de l'époque s'est avéré redondant à l'usage. `cta-pill` simplifié en "Devenir Membre" sur les 26 pages. |
+| 22 | Favicon « pas adapté » | ✅ | Régénéré depuis `logo.png` (recadré sur l'emblème seul, sans le texte, pour rester lisible en 16×16/32×32) : `favicon.ico`, toutes les tailles PNG, `apple-touch-icon`. `site.webmanifest` avait aussi un vrai bug (chemins d'icônes à la racine au lieu de `assets/img/`, 404 en prod) — corrigé au passage. |
+| 23 | Design trop pauvre sur bureau, mot des dirigeants, contact, adhésion | ✅ | Bandeau photo (`.page-header.with-photo`) ajouté aux 4 pages — pattern déjà défini dans `style.css` mais jusque-là inutilisé par ces pages. |
+| 24 | Espace membre : photo de profil | ✅ | Avatar circulaire (photo ou initiales), upload direct vers S3 via URL présignée (nouvelle route `POST /me/photo-upload-url`). Clé S3 unique par envoi (le cache CloudFront du site ignore les query strings, un simple `?v=` n'aurait pas suffi à invalider une photo remplacée). |
+| 25 | Adhésion + newsletter : rien ne s'affiche dans admin/trésorerie après inscription | ✅ | Cause racine : la Lambda d'adhésion n'a jamais persisté nulle part (2 emails, et c'est tout) — confirmé en récupérant son code déployé. Elle crée désormais directement le compte Cognito (groupe "membre") + la fiche `liensculturels-members`, comme le fait déjà "Inviter un membre" côté admin — donc visible immédiatement dans `admin.html` et `tresorerie.html`. Chaque membre de la famille (pack "famille") avec un email obtient aussi son propre compte. Testé de bout en bout avec des comptes jetables (créés puis supprimés) : compte principal, membre de famille avec email, membre de famille sans email, et soumission en double. |
+| 25b | Agrémenter admin / secrétariat / trésorerie d'images modernes adaptées | ✅ | Même bandeau photo qu'au point 23, onglets et boutons retouchés (coins arrondis, survol, légère élévation). |
+| 26 | Agrémenter toutes les pages de fond d'images des deux villes (Bénin et France) | ✅ | Aucune vraie photo des deux villes n'existait dans le dépôt (les fichiers déjà présents et non utilisés se sont révélés être des visuels de tennis de table déposés par erreur depuis `tennis2table.grouperms.com` — supprimés). 2 photos réelles sourcées sur Wikimedia Commons (licence CC BY-SA, crédit affiché) : l'église de Nogent-l'Artaud et la formation rocheuse de Savè. Bandeau photo discret ajouté juste avant le footer sur les 26 pages. |
 
 ## Espaces authentifiés (membre / admin / secrétariat / trésorerie)
 
