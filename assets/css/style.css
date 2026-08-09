@@ -127,6 +127,11 @@ header .logo {
     height: 56px;
     width: auto;
 }
+@media print {
+    header .logo {
+        content: url("../img/brand/logo-monochrome.svg");
+    }
+}
 header nav ul {
     margin: 0;
     padding: 0;
@@ -202,6 +207,9 @@ header nav ul li.dropdown .dropdown-menu a {
 }
 
 @media (max-width: 900px) {
+    header .logo {
+        height: 44px;
+    }
     .nav-toggle {
         display: inline-flex;
     }
