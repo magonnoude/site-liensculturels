@@ -87,6 +87,15 @@ action externe, pas de moi) · `💬` répondu comme conseil, pas une action à 
 | 29 | Le domaine liensculturels.org est-il vérifié en SES ? | ✅ | Il ne l'était plus (statut `FAILED`, dernier contrôle réussi le 2026-07-08). Vérification DNS en direct : les enregistrements DKIM et MAIL FROM transmis précédemment étaient en fait déjà bien ajoutés côté Gandi — le statut AWS était simplement périmé (dernier contrôle du 2026-07-19, jamais rafraîchi depuis). Recheck déclenché manuellement : DKIM, MAIL FROM et le domaine sont passés à `SUCCESS` en moins d'une minute. **Le domaine est maintenant vérifié.** |
 | 30 | Quel est le problème avec DKIM ? | ✅ | Voir point 29 — plus de problème, c'était un statut périmé côté AWS, pas un enregistrement DNS manquant ou incorrect. |
 
+## Tableau de suivi — demandes du 9 août 2026 (round 6)
+
+| # | Demande | Statut | Détail |
+|---|---|---|---|
+| 31 | Quels sont mes droits (modeste.agonnoude@gmail.com) ? Je n'arrive pas à faire de modifications dans l'admin | ✅ | Compte dans les 3 groupes (admin, secrétaire, trésorier) — droits complets, ce n'était pas un problème de permissions. Cause réelle trouvée : l'admin ne permettait de modifier, pour un membre **existant**, que son statut de cotisation — aucune fonctionnalité pour changer son rôle. Voir point 33. |
+| 32 | Créer un compte admin avec contact@liensculturels.org, tous les droits | ✅ | Compte créé (groupes admin + secrétaire + trésorier), mot de passe temporaire transmis directement (email d'invitation Cognito par défaut désactivé — peu fiable, cf. point 4 du 1er tableau). |
+| 33 | Si j'affecte un rôle à quelqu'un, le compte se crée automatiquement ou doit-il déjà exister ? | ✅ | Avant ce round : une seule voie ("Inviter un membre"), qui **crée toujours** un compte tout neuf et échoue si l'e-mail existe déjà — aucun moyen de changer le rôle d'un compte existant. **Corrigé** : nouvelle colonne "Rôles" dans le tableau des membres de l'admin (sélecteur multiple, sauvegarde immédiate), nouvelle route `PUT /admin/members/{id}/groups` côté `liensCulturels-admin-api` (calcule le diff des groupes Cognito actuels/souhaités). Aucun changement IAM nécessaire — les permissions Cognito étaient déjà accordées au rôle de la Lambda. |
+| 34 | Aucune notification reçue lors du test de paiement Stripe (ni au payeur ni à contact@liensculturels.org) | ✅ | Confirmé dans le code : la Lambda de paiement n'envoyait strictement aucun e-mail, contrairement à la Lambda d'adhésion. Ajouté : e-mail de confirmation au payeur + notification à la trésorerie après chaque paiement réussi (Stripe et FedaPay), point d'entrée commun `_record_cotisation()`. IAM : permission `ses:SendEmail` ajoutée au rôle de la Lambda (absente jusqu'ici). Re-testé de bout en bout avec le même scénario Playwright que la veille — aucune erreur d'envoi dans les logs. |
+
 ## Espaces authentifiés (membre / admin / secrétariat / trésorerie)
 
 Construits et vérifiés de bout en bout le 2026-08-08, chacun avec compte jetable de test
