@@ -47,6 +47,13 @@
         .portal-history-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
         .portal-history-table th, .portal-history-table td { text-align: left; padding: 0.45rem 0.5rem; border-bottom: 1px solid #eee; }
         .portal-history-empty { color: #888; font-size: 0.9rem; }
+        .portal-header-row { display: flex; align-items: center; gap: 1.2rem; flex-wrap: wrap; }
+        .portal-avatar { position: relative; width: 84px; height: 84px; border-radius: 50%; overflow: hidden; flex: none; background: linear-gradient(135deg, var(--primary-color), #003c68); display: flex; align-items: center; justify-content: center; border: 3px solid var(--white); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+        .portal-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .portal-avatar-initials { color: #fff; font-size: 1.6rem; font-weight: 700; }
+        .portal-avatar-upload-btn { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.5rem; font-size: 0.85rem; color: var(--primary-color); cursor: pointer; border: 1px solid #ddd; padding: 0.3rem 0.7rem; border-radius: 100px; transition: background-color .15s ease; }
+        .portal-avatar-upload-btn:hover { background: #f2f6fa; }
+        .portal-avatar-upload-btn.uploading { opacity: 0.6; pointer-events: none; }
     </style>
 </head>
 <body>    <div class="site-header">
@@ -99,8 +106,20 @@
         </div>
 
         <div class="portal-box wide" id="portal-dashboard" style="display:none;">
-            <h1>Bonjour <span id="portal-name"></span></h1>
-            <p><span class="lang-fr">Statut de cotisation :</span><span class="lang-en">Membership status:</span> <span class="portal-badge" id="portal-cotisation-badge"></span></p>
+            <div class="portal-header-row">
+                <div class="portal-avatar" id="portal-avatar">
+                    <img id="portal-avatar-img" src="" alt="" style="display:none;">
+                    <span class="portal-avatar-initials" id="portal-avatar-initials"></span>
+                </div>
+                <div>
+                    <h1>Bonjour <span id="portal-name"></span></h1>
+                    <p><span class="lang-fr">Statut de cotisation :</span><span class="lang-en">Membership status:</span> <span class="portal-badge" id="portal-cotisation-badge"></span></p>
+                    <label class="portal-avatar-upload-btn" for="portal-photo-input" id="portal-avatar-upload-label">
+                        <i class="fas fa-camera"></i> <span class="lang-fr">Changer ma photo</span><span class="lang-en">Change my photo</span>
+                    </label>
+                    <input type="file" id="portal-photo-input" accept="image/jpeg,image/png,image/webp" style="display:none;">
+                </div>
+            </div>
 
             <div class="portal-groups" id="portal-groups"></div>
 

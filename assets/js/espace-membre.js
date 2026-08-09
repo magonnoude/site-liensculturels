@@ -28,6 +28,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     const claims = window.LCAuth.getClaims();
     document.getElementById("portal-name").textContent = (claims && claims.name) || "";
 
+    const avatarImgEl = document.getElementById("portal-avatar-img");
+    const avatarInitialsEl = document.getElementById("portal-avatar-initials");
+    function setAvatar(photoUrl) {
+        if (photoUrl) {
+            avatarImgEl.src = photoUrl;
+            avatarImgEl.style.display = "block";
+            avatarInitialsEl.style.display = "none";
+        } else {
+            const name = (claims && claims.name) || (claims && claims.email) || "?";
+            avatarInitialsEl.textContent = name.trim().charAt(0).toUpperCase();
+            avatarImgEl.style.display = "none";
+            avatarInitialsEl.style.display = "block";
+        }
+    }
+    setAvatar(null);
+
     const groups = (claims && claims["cognito:groups"]) || [];
     const isAdmin = groups.includes("admin");
     // Mirrors each Lambda's own authorization check (secretaire OR admin,
@@ -69,6 +85,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         emailEl.value = profile.email || "";
         telEl.value = profile.telephone || "";
         addrEl.value = profile.adresse || "";
+        setAvatar(profile.photoUrl || null);
         const statut = profile.statutCotisation || "inconnu";
         const icon = statut === "a_jour" ? '<i class="fas fa-circle-check"></i> ' : '<i class="fas fa-triangle-exclamation"></i> ';
         badgeEl.innerHTML = icon + (statut === "a_jour" ? "À jour de cotisation" : statut === "impaye" ? "Cotisation impayée" : "Statut non renseigné");
@@ -132,6 +149,56 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (window.LCPayment) {
         window.LCPayment.initMemberPayment();
     }
+
+    // ---- Photo de profil ----
+    document.getElementById("portal-photo-input").addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const labelEl = document.getElementById("portal-avatar-upload-label");
+        const allowed = { "image/jpeg": true, "image/png": true, "image/webp": true };
+        if (!allowed[file.type]) {
+            showMessage("Format d'image non supporté (JPEG, PNG ou WebP uniquement).", "error");
+            e.target.value = "";
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            showMessage("L'image dépasse la taille maximale de 5 Mo.", "error");
+            e.target.value = "";
+            return;
+        }
+        labelEl.classList.add("uploading");
+        try {
+            const resp = await window.LCAuth.apiFetch("/me/photo-upload-url", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ contentType: file.type }),
+            });
+            if (!resp.ok) throw new Error("Impossible d'obtenir l'URL d'envoi.");
+            const { uploadUrl, photoUrl } = await resp.json();
+
+            const putResp = await fetch(uploadUrl, {
+                method: "PUT",
+                headers: { "Content-Type": file.type },
+                body: file,
+            });
+            if (!putResp.ok) throw new Error("Échec de l'envoi de la photo.");
+
+            const saveResp = await window.LCAuth.apiFetch("/me", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ photoUrl }),
+            });
+            if (!saveResp.ok) throw new Error("Échec de l'enregistrement de la photo.");
+
+            setAvatar(photoUrl);
+            showMessage("Photo de profil mise à jour.", "success");
+        } catch (err) {
+            showMessage("Une erreur est survenue lors de l'envoi de la photo.", "error");
+        } finally {
+            labelEl.classList.remove("uploading");
+            e.target.value = "";
+        }
+    });
 
     document.getElementById("portal-form").addEventListener("submit", async (e) => {
         e.preventDefault();
