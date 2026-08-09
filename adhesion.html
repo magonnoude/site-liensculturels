@@ -26,6 +26,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/solid.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/brands.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .family-member-row { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-bottom: 0.6rem; padding: 0.7rem; background: #f7f7f7; border-radius: 6px; }
+        .family-member-row input, .family-member-row select { padding: 0.5rem 0.6rem; border: 1px solid #ccc; border-radius: 5px; font-size: 0.9rem; }
+        .family-member-row .fm-prenom, .family-member-row .fm-nom { flex: 1; min-width: 120px; }
+        .family-member-row .fm-lien { flex: 0 0 auto; }
+        .family-member-row .fm-remove { background: #c0392b; color: #fff; border: none; border-radius: 5px; padding: 0.4rem 0.7rem; cursor: pointer; font-size: 0.85rem; }
+    </style>
 </head>
 <body>    <div class="site-header">
     <div class="header-utility">
@@ -125,6 +132,14 @@
                         </select>
                     </span>
                 </div>
+
+                <div class="form-group" id="familyMembersSection" style="display:none;">
+                    <label><span class="lang-fr">Membres de la famille couverts par le pack</span><span class="lang-en">Family members covered by the pack</span></label>
+                    <p style="font-size:0.85rem; color:#777; margin-top:-0.3rem;"><span class="lang-fr">Ajoutez chaque membre de votre foyer (conjoint, enfant…) pour que le trésorier sache qui est couvert par l'adhésion.</span><span class="lang-en">Add each member of your household (spouse, child…) so the treasurer knows who is covered by the membership.</span></p>
+                    <div id="familyMembersList"></div>
+                    <button type="button" class="btn" id="addFamilyMemberBtn" style="background-color: var(--secondary-color, #8BC34A);"><span class="lang-fr">+ Ajouter un membre de la famille</span><span class="lang-en">+ Add a family member</span></button>
+                </div>
+
                 <div class="form-group" style="display:flex; align-items:center; gap:0.5rem;">
                     <input type="checkbox" id="newsletterOptin" name="newsletterOptin" style="width:auto;">
                     <label for="newsletterOptin" style="margin:0;"><span class="lang-fr">M'inscrire aussi à la newsletter de l'association</span><span class="lang-en">Also subscribe me to the association's newsletter</span></label>

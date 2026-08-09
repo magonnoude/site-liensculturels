@@ -98,6 +98,66 @@ document.addEventListener('DOMContentLoaded', () => {
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
         }
 
+        // --- Membres de la famille (visible uniquement pour le pack "famille") ---
+        const membershipTypeElForFamily = document.getElementById('membershipType');
+        const familySection = document.getElementById('familyMembersSection');
+        const familyList = document.getElementById('familyMembersList');
+        const addFamilyMemberBtn = document.getElementById('addFamilyMemberBtn');
+
+        function addFamilyMemberRow() {
+            const row = document.createElement('div');
+            row.className = 'family-member-row';
+            row.innerHTML = `
+                <input type="text" class="fm-prenom" placeholder="Prénom">
+                <input type="text" class="fm-nom" placeholder="Nom">
+                <select class="fm-lien">
+                    <option value="conjoint">Conjoint(e)</option>
+                    <option value="enfant">Enfant</option>
+                    <option value="parent">Parent</option>
+                    <option value="autre">Autre</option>
+                </select>
+                <button type="button" class="fm-remove">&times;</button>
+            `;
+            row.querySelector('.fm-remove').addEventListener('click', () => row.remove());
+            familyList.appendChild(row);
+        }
+
+        function toggleFamilySection() {
+            if (!membershipTypeElForFamily || !familySection) return;
+            const isFamille = membershipTypeElForFamily.value === 'famille';
+            familySection.style.display = isFamille ? 'block' : 'none';
+            if (isFamille && familyList.children.length === 0) {
+                addFamilyMemberRow();
+            }
+        }
+
+        const membershipTypeEnForFamily = document.getElementById('membershipTypeEn');
+        if (membershipTypeElForFamily) {
+            membershipTypeElForFamily.addEventListener('change', toggleFamilySection);
+            // #membershipTypeEn only updates #membershipType's *value* via the sync
+            // listener in payment.js (a scripted .value assignment, which does not
+            // itself dispatch a "change" event) — listen here too or switching via
+            // the English dropdown would leave this section stuck in the wrong state.
+            if (membershipTypeEnForFamily) {
+                membershipTypeEnForFamily.addEventListener('change', toggleFamilySection);
+            }
+            toggleFamilySection();
+        }
+        if (addFamilyMemberBtn) {
+            addFamilyMemberBtn.addEventListener('click', addFamilyMemberRow);
+        }
+
+        function collectFamilyMembers() {
+            if (!familySection || familySection.style.display === 'none') return [];
+            return Array.from(familyList.querySelectorAll('.family-member-row'))
+                .map((row) => ({
+                    prenom: row.querySelector('.fm-prenom').value.trim(),
+                    nom: row.querySelector('.fm-nom').value.trim(),
+                    lien: row.querySelector('.fm-lien').value,
+                }))
+                .filter((m) => m.prenom || m.nom);
+        }
+
         adhesionForm.addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -127,6 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 email,
                 phone: `${countryCode} ${localPhone}`.trim(),
                 membershipType: membershipTypeEl ? membershipTypeEl.value : undefined,
+                familyMembers: collectFamilyMembers(),
             };
 
             fetch(`${API_BASE_URL}/adhesion`, { // Endpoint à créer
@@ -152,6 +213,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 adhesionForm.reset();
+                if (familyList) familyList.innerHTML = '';
+                toggleFamilySection();
             })
             .catch(error => {
                 feedbackEl.textContent = 'Une erreur est survenue. Veuillez réessayer.';
