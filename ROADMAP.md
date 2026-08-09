@@ -17,7 +17,10 @@ carte de paiement masquée à tort, détails des membres de la famille, bouton "
 adresse structurée) — items 16 à 20. **Round 4 (2026-08-09)** : nav simplifiée, favicon
 régénéré, bandeaux photo sur les pages pauvres en design et les espaces internes, photo de
 profil membre, et surtout le vrai bug derrière "mon adhésion n'apparaît nulle part" —
-items 21 à 26.
+items 21 à 26. **Round 5** : bug CORS S3 empêchant tout upload direct depuis un navigateur
+(photos membres, mais aussi comptes-rendus et justificatifs — probablement jamais
+fonctionnels), design de agenda/contact/adhésion, statut SES/DKIM clarifié et corrigé
+(statut périmé, pas un vrai problème DNS) — items 27 à 30.
 
 ## Tableau de suivi — demandes du 7–8 août 2026
 
@@ -74,6 +77,15 @@ action externe, pas de moi) · `💬` répondu comme conseil, pas une action à 
 | 25 | Adhésion + newsletter : rien ne s'affiche dans admin/trésorerie après inscription | ✅ | Cause racine : la Lambda d'adhésion n'a jamais persisté nulle part (2 emails, et c'est tout) — confirmé en récupérant son code déployé. Elle crée désormais directement le compte Cognito (groupe "membre") + la fiche `liensculturels-members`, comme le fait déjà "Inviter un membre" côté admin — donc visible immédiatement dans `admin.html` et `tresorerie.html`. Chaque membre de la famille (pack "famille") avec un email obtient aussi son propre compte. Testé de bout en bout avec des comptes jetables (créés puis supprimés) : compte principal, membre de famille avec email, membre de famille sans email, et soumission en double. |
 | 25b | Agrémenter admin / secrétariat / trésorerie d'images modernes adaptées | ✅ | Même bandeau photo qu'au point 23, onglets et boutons retouchés (coins arrondis, survol, légère élévation). |
 | 26 | Agrémenter toutes les pages de fond d'images des deux villes (Bénin et France) | ✅ | Aucune vraie photo des deux villes n'existait dans le dépôt (les fichiers déjà présents et non utilisés se sont révélés être des visuels de tennis de table déposés par erreur depuis `tennis2table.grouperms.com` — supprimés). 2 photos réelles sourcées sur Wikimedia Commons (licence CC BY-SA, crédit affiché) : l'église de Nogent-l'Artaud et la formation rocheuse de Savè. Bandeau photo discret ajouté juste avant le footer sur les 26 pages. |
+
+## Tableau de suivi — demandes du 9 août 2026 (round 5)
+
+| # | Demande | Statut | Détail |
+|---|---|---|---|
+| 27 | Impossible de charger la photo de profil (nouvelle fonctionnalité du round 4) | ✅ | Cause racine : aucun des 3 buckets S3 recevant des envois directs depuis le navigateur (photos membres, comptes-rendus secrétariat, justificatifs trésorerie) n'avait de configuration CORS — un `PUT` avec en-tête `Content-Type` déclenche un préflight que S3 rejetait silencieusement côté navigateur (invisible en test `curl`, qui n'applique pas CORS). Configuration CORS ajoutée sur les 3 buckets, scopée aux deux domaines du site. **Découverte importante au passage : les uploads de comptes-rendus et de justificatifs de dépenses, marqués ✅ lors de leur construction, avaient très probablement le même bug** — jamais testés depuis un vrai navigateur, seulement en ligne de commande. |
+| 28 | Améliorer le design de contact, adhésion, agenda (avec retour en arrière possible) | ✅ | `agenda.html` : bandeau photo + légende de couleur À venir/Passé. `contact.html` : formulaire + carte "Nous trouver" en 2 colonnes. `adhesion.html` : long formulaire regroupé en 4 sections visuelles (Identité, Adresse, Contact & cotisation, Famille). Chaque page dans un commit séparé — un `git revert` suffit à annuler sans toucher au reste du site. |
+| 29 | Le domaine liensculturels.org est-il vérifié en SES ? | ✅ | Il ne l'était plus (statut `FAILED`, dernier contrôle réussi le 2026-07-08). Vérification DNS en direct : les enregistrements DKIM et MAIL FROM transmis précédemment étaient en fait déjà bien ajoutés côté Gandi — le statut AWS était simplement périmé (dernier contrôle du 2026-07-19, jamais rafraîchi depuis). Recheck déclenché manuellement : DKIM, MAIL FROM et le domaine sont passés à `SUCCESS` en moins d'une minute. **Le domaine est maintenant vérifié.** |
+| 30 | Quel est le problème avec DKIM ? | ✅ | Voir point 29 — plus de problème, c'était un statut périmé côté AWS, pas un enregistrement DNS manquant ou incorrect. |
 
 ## Espaces authentifiés (membre / admin / secrétariat / trésorerie)
 
