@@ -67,24 +67,39 @@
             <p><span class="lang-fr">Une question, une idée, envie de nous rejoindre ? Écrivez-nous.</span><span class="lang-en">A question, an idea, want to join us? Write to us.</span></p>
             <span class="page-header-credit"><span class="lang-fr">Photo : Nogent-l'Artaud, France — </span><span class="lang-en">Photo: Nogent-l'Artaud, France — </span>Thor19, <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC BY-SA 3.0</a></span>
         </div>
-        <div class="form-container">
-            <p><span class="lang-fr">Pour toute question, n'hésitez pas à nous laisser un message. Notre email :</span><span class="lang-en">For any question, feel free to leave us a message. Our email:</span> <strong>contact@liensculturels.org</strong></p>
-            <form id="contactForm">
-                <div class="form-group">
-                    <label for="name"><span class="lang-fr">Votre Nom</span><span class="lang-en">Your Name</span></label>
-                    <input type="text" id="name" name="name" required>
+        <div class="contact-layout">
+            <div class="form-container contact-form-col">
+                <p><span class="lang-fr">Pour toute question, n'hésitez pas à nous laisser un message.</span><span class="lang-en">For any question, feel free to leave us a message.</span></p>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name"><span class="lang-fr">Votre Nom</span><span class="lang-en">Your Name</span></label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email"><span class="lang-fr">Votre Email</span><span class="lang-en">Your Email</span></label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message"><span class="lang-fr">Votre Message</span><span class="lang-en">Your Message</span></label>
+                        <textarea id="message" name="message" rows="6" required></textarea>
+                    </div>
+                    <button type="submit" class="btn"><span class="lang-fr">Envoyer</span><span class="lang-en">Send</span></button>
+                    <div class="form-feedback"></div>
+                </form>
+            </div>
+            <aside class="contact-info-card">
+                <h3><span class="lang-fr">Nous trouver</span><span class="lang-en">Find Us</span></h3>
+                <p><i class="fas fa-map-marker-alt"></i> CHEMIN DE L'ERMITAGE<br>02310 NOGENT-L'ARTAUD</p>
+                <p><i class="fas fa-phone"></i> <a href="tel:+33674437609">+33 6 74 43 76 09</a></p>
+                <p><i class="fas fa-envelope"></i> <a href="mailto:contact@liensculturels.org">contact@liensculturels.org</a></p>
+                <div class="contact-info-social">
+                    <a href="https://web.facebook.com/profile.php?id=61579109620455" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/liensculturels/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/liens-culturels" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://twitter.com/LCulturels" target="_blank" title="X (Twitter)"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.youtube.com/@LiensCulturels" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
                 </div>
-                <div class="form-group">
-                    <label for="email"><span class="lang-fr">Votre Email</span><span class="lang-en">Your Email</span></label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="message"><span class="lang-fr">Votre Message</span><span class="lang-en">Your Message</span></label>
-                    <textarea id="message" name="message" rows="6" required></textarea>
-                </div>
-                <button type="submit" class="btn"><span class="lang-fr">Envoyer</span><span class="lang-en">Send</span></button>
-                <div class="form-feedback"></div>
-            </form>
+            </aside>
         </div>
     </main>
 

@@ -86,79 +86,90 @@
                 <span class="lang-en">Annual dues are <strong>€30</strong> per person and <strong>€50</strong> for a family pack. Fill in the form below to submit your request.</span>
             </p>
             <form id="adhesionForm">
-                <div class="form-group">
-                    <label for="civilite"><span class="lang-fr">Civilité</span><span class="lang-en">Title</span></label>
-                    <span class="lang-fr">
-                        <select id="civilite" name="civilite">
-                            <option value="M.">M.</option>
-                            <option value="Mme">Mme</option>
-                            <option value="Autre">Autre</option>
-                        </select>
-                    </span>
-                    <span class="lang-en">
-                        <select id="civiliteEn">
-                            <option value="M.">Mr</option>
-                            <option value="Mme">Ms</option>
-                            <option value="Autre">Other</option>
-                        </select>
-                    </span>
-                </div>
-                <div class="form-group">
-                    <label for="prenom"><span class="lang-fr">Prénom</span><span class="lang-en">First Name</span></label>
-                    <input type="text" id="prenom" name="prenom" required>
-                </div>
-                <div class="form-group">
-                    <label for="nom"><span class="lang-fr">Nom</span><span class="lang-en">Last Name</span></label>
-                    <input type="text" id="nom" name="nom" required>
-                </div>
-                <div class="form-group">
-                    <label for="address"><span class="lang-fr">Adresse (rue et numéro)</span><span class="lang-en">Street Address</span></label>
-                    <input type="text" id="address" name="address" required>
-                </div>
-                <div class="form-group" style="display:flex; gap:0.8rem; flex-wrap:wrap;">
-                    <div style="flex:0 0 140px;">
-                        <label for="postalCode"><span class="lang-fr">Code Postal</span><span class="lang-en">Postal Code</span></label>
-                        <input type="text" id="postalCode" name="postalCode" required>
+                <div class="adhesion-section">
+                    <h3 class="adhesion-section-title"><i class="fas fa-id-card"></i> <span class="lang-fr">Votre identité</span><span class="lang-en">Your Identity</span></h3>
+                    <div class="form-group">
+                        <label for="civilite"><span class="lang-fr">Civilité</span><span class="lang-en">Title</span></label>
+                        <span class="lang-fr">
+                            <select id="civilite" name="civilite">
+                                <option value="M.">M.</option>
+                                <option value="Mme">Mme</option>
+                                <option value="Autre">Autre</option>
+                            </select>
+                        </span>
+                        <span class="lang-en">
+                            <select id="civiliteEn">
+                                <option value="M.">Mr</option>
+                                <option value="Mme">Ms</option>
+                                <option value="Autre">Other</option>
+                            </select>
+                        </span>
                     </div>
-                    <div style="flex:1; min-width:160px;">
-                        <label for="city"><span class="lang-fr">Ville</span><span class="lang-en">City</span></label>
-                        <input type="text" id="city" name="city" required>
+                    <div class="form-group">
+                        <label for="prenom"><span class="lang-fr">Prénom</span><span class="lang-en">First Name</span></label>
+                        <input type="text" id="prenom" name="prenom" required>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="country"><span class="lang-fr">Pays</span><span class="lang-en">Country</span></label>
-                    <select id="country" name="country" required></select>
-                </div>
-                <div class="form-group">
-                    <label for="email"><span class="lang-fr">Adresse Email</span><span class="lang-en">Email Address</span></label>
-                    <input type="email" id="email" name="email" required>
-                    <span class="form-field-error" id="email-error" style="display:none; color:#c0392b; font-size:0.85rem;"></span>
-                </div>
-                <div class="form-group">
-                    <label for="phone"><span class="lang-fr">Numéro de Téléphone</span><span class="lang-en">Phone Number</span></label>
-                    <div style="display:flex; gap:0.5rem;">
-                        <select id="phoneCountryCode" style="flex:0 0 auto; max-width:40%;"></select>
-                        <input type="tel" id="phone" name="phone" required style="flex:1;" placeholder="6 12 34 56 78">
+                    <div class="form-group">
+                        <label for="nom"><span class="lang-fr">Nom</span><span class="lang-en">Last Name</span></label>
+                        <input type="text" id="nom" name="nom" required>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="membershipType"><span class="lang-fr">Type de cotisation</span><span class="lang-en">Membership type</span></label>
-                    <span class="lang-fr">
-                        <select id="membershipType" name="membershipType">
-                            <option value="individuel">Individuelle — 30 €</option>
-                            <option value="famille">Pack famille — 50 €</option>
-                        </select>
-                    </span>
-                    <span class="lang-en">
-                        <select id="membershipTypeEn">
-                            <option value="individuel">Individual — €30</option>
-                            <option value="famille">Family pack — €50</option>
-                        </select>
-                    </span>
                 </div>
 
-                <div class="form-group" id="familyMembersSection" style="display:none;">
-                    <label><span class="lang-fr">Membres de la famille</span><span class="lang-en">Family members</span></label>
+                <div class="adhesion-section">
+                    <h3 class="adhesion-section-title"><i class="fas fa-location-dot"></i> <span class="lang-fr">Votre adresse</span><span class="lang-en">Your Address</span></h3>
+                    <div class="form-group">
+                        <label for="address"><span class="lang-fr">Adresse (rue et numéro)</span><span class="lang-en">Street Address</span></label>
+                        <input type="text" id="address" name="address" required>
+                    </div>
+                    <div class="form-group" style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+                        <div style="flex:0 0 140px;">
+                            <label for="postalCode"><span class="lang-fr">Code Postal</span><span class="lang-en">Postal Code</span></label>
+                            <input type="text" id="postalCode" name="postalCode" required>
+                        </div>
+                        <div style="flex:1; min-width:160px;">
+                            <label for="city"><span class="lang-fr">Ville</span><span class="lang-en">City</span></label>
+                            <input type="text" id="city" name="city" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="country"><span class="lang-fr">Pays</span><span class="lang-en">Country</span></label>
+                        <select id="country" name="country" required></select>
+                    </div>
+                </div>
+
+                <div class="adhesion-section">
+                    <h3 class="adhesion-section-title"><i class="fas fa-envelope"></i> <span class="lang-fr">Contact &amp; cotisation</span><span class="lang-en">Contact &amp; Membership</span></h3>
+                    <div class="form-group">
+                        <label for="email"><span class="lang-fr">Adresse Email</span><span class="lang-en">Email Address</span></label>
+                        <input type="email" id="email" name="email" required>
+                        <span class="form-field-error" id="email-error" style="display:none; color:#c0392b; font-size:0.85rem;"></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone"><span class="lang-fr">Numéro de Téléphone</span><span class="lang-en">Phone Number</span></label>
+                        <div style="display:flex; gap:0.5rem;">
+                            <select id="phoneCountryCode" style="flex:0 0 auto; max-width:40%;"></select>
+                            <input type="tel" id="phone" name="phone" required style="flex:1;" placeholder="6 12 34 56 78">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="membershipType"><span class="lang-fr">Type de cotisation</span><span class="lang-en">Membership type</span></label>
+                        <span class="lang-fr">
+                            <select id="membershipType" name="membershipType">
+                                <option value="individuel">Individuelle — 30 €</option>
+                                <option value="famille">Pack famille — 50 €</option>
+                            </select>
+                        </span>
+                        <span class="lang-en">
+                            <select id="membershipTypeEn">
+                                <option value="individuel">Individual — €30</option>
+                                <option value="famille">Family pack — €50</option>
+                            </select>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="adhesion-section" id="familyMembersSection" style="display:none;">
+                    <h3 class="adhesion-section-title"><i class="fas fa-people-roof"></i> <span class="lang-fr">Membres de la famille</span><span class="lang-en">Family Members</span></h3>
                     <p style="font-size:0.85rem; color:#777; margin-top:-0.3rem;"><span class="lang-fr">Chaque membre de votre foyer (conjoint, enfant…) devient membre de l'association à part entière. Laissez l'adresse vide si elle est identique à la vôtre.</span><span class="lang-en">Every member of your household (spouse, child…) becomes a full member of the association. Leave the address blank if it's the same as yours.</span></p>
                     <div id="familyMembersList"></div>
                     <button type="button" class="btn" id="addFamilyMemberBtn" style="background-color: var(--secondary-color, #8BC34A);"><span class="lang-fr">+ Ajouter un membre de la famille</span><span class="lang-en">+ Add a family member</span></button>
@@ -168,7 +179,7 @@
                     <input type="checkbox" id="newsletterOptin" name="newsletterOptin" style="width:auto;">
                     <label for="newsletterOptin" style="margin:0;"><span class="lang-fr">M'inscrire aussi à la newsletter de l'association</span><span class="lang-en">Also subscribe me to the association's newsletter</span></label>
                 </div>
-                <button type="submit" class="btn"><span class="lang-fr">Envoyer ma demande d'adhésion</span><span class="lang-en">Submit my membership request</span></button>
+                <button type="submit" class="btn"><i class="fas fa-paper-plane"></i> <span class="lang-fr">Envoyer ma demande d'adhésion</span><span class="lang-en">Submit my membership request</span></button>
                 <div class="form-feedback"></div>
             </form>
 

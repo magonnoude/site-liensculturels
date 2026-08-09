@@ -374,6 +374,7 @@ header nav ul li.dropdown .dropdown-menu a:hover {
 .promo-card .status.closed { background-color: #ecf0f1; color: #7f8c8d; }
 
 /* --- Agenda & Modale --- */
+.agenda-legend{display:flex;justify-content:center;gap:1.5rem;margin:0 auto 0.8rem;max-width:900px;font-size:0.85rem;color:var(--text-color)}.agenda-legend-item{display:inline-flex;align-items:center;gap:0.4rem}.agenda-legend .dot{width:10px;height:10px;border-radius:50%;display:inline-block}.agenda-legend .dot.upcoming{background:var(--primary-color)}.agenda-legend .dot.past{background:#95a5a6}
 #calendar{padding:2rem;background-color:var(--white);border-radius:8px;box-shadow:0 5px 15px rgba(0,0,0,0.1);max-width:900px;margin:2rem auto}.fc-event{cursor:pointer;background-color:var(--primary-color)!important;border-color:var(--primary-color)!important}.fc-event.event-past{background-color:#95a5a6!important;border-color:#95a5a6!important;opacity:.7}.modal{display:none;position:fixed;z-index:2000;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,0.6)}.modal-content{background-color:#fefefe;margin:15% auto;padding:30px;border:1px solid #888;width:80%;max-width:600px;border-radius:8px;position:relative;animation-name:animatetop;animation-duration:.4s}.modal-close{color:#aaa;position:absolute;top:10px;right:20px;font-size:28px;font-weight:bold;cursor:pointer}@keyframes animatetop{from{top:-300px;opacity:0}to{top:0;opacity:1}}
 
 /* --- Footer --- */
@@ -435,6 +436,67 @@ footer{background:var(--primary-color);color:#ecf0f1;padding:40px 0 0 0;margin-t
     margin-top: 0;
     margin-bottom: 1.5rem;
 }
+
+/* ---- Page Contact : formulaire + carte "Nous trouver" ---- */
+.contact-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+.contact-form-col { margin: 0; }
+.contact-info-card {
+    background: var(--primary-color);
+    color: var(--white);
+    border-radius: 8px;
+    padding: 2.2rem 2rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.contact-info-card h3 {
+    color: var(--white);
+    margin-top: 0;
+    margin-bottom: 1.3rem;
+}
+.contact-info-card p {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    margin: 0 0 1.1rem;
+    opacity: 0.95;
+    line-height: 1.4;
+}
+.contact-info-card p i { margin-top: 0.2rem; width: 1em; }
+.contact-info-card a { color: var(--white); text-decoration: underline; text-decoration-color: rgba(255,255,255,0.4); }
+.contact-info-card a:hover { text-decoration-color: var(--white); }
+.contact-info-social {
+    display: flex; gap: 0.7rem; margin-top: 1.6rem; padding-top: 1.4rem;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+.contact-info-social a {
+    width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center; text-decoration: none;
+    transition: background-color .15s ease;
+}
+.contact-info-social a:hover { background: rgba(255,255,255,0.3); }
+@media (min-width: 760px) {
+    .contact-layout { flex-direction: row; align-items: flex-start; }
+    .contact-form-col { flex: 1.4; }
+    .contact-info-card { flex: 1; }
+}
+
+/* ---- Page Adhésion : formulaire regroupé par sections ---- */
+.adhesion-section {
+    border-top: 3px solid var(--secondary-color);
+    background: var(--background-color);
+    border-radius: 8px;
+    padding: 1.4rem 1.6rem 0.4rem;
+    margin-bottom: 1.6rem;
+}
+.adhesion-section-title {
+    display: flex; align-items: center; gap: 0.55rem;
+    font-size: 1rem; color: var(--primary-color);
+    margin: 0 0 1.1rem;
+}
+.adhesion-section-title i { color: var(--secondary-color); }
 .form-group { 
     margin-bottom: 1.5rem; 
 }
