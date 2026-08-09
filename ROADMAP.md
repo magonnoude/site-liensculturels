@@ -177,9 +177,10 @@ prochaine session.
   (SG/SGA/TG/TGA/VP) ne correspondent à aucun rôle vacant actuel — bloqué en attente de la
   correspondance exacte photo → personne/rôle de la part de l'association (demandé le
   2026-08-08, pas encore reçu).
-- [ ] **Fonds de header/hero non câblés** (`fond_header.png`, `fond_header1.png`,
-  `fond_hero.jpg`, `fond_hero1.jpg`) — changement visuel qui doit être validé avant
-  d'écraser le style actuel, pas fait sans confirmation.
+- [x] **Fonds de header/hero non câblés** — en creusant pour le point 26 (round 4), ces 4
+  fichiers se sont révélés être des visuels de tennis de table (fédération béninoise, Centre
+  Culturel Chinois) déposés par erreur depuis `tennis2table.grouperms.com` : supprimés. 2
+  vraies photos sourcées sur Wikimedia Commons (licence CC BY-SA) les remplacent.
 
 ## Priorité 6 — Au-delà
 
