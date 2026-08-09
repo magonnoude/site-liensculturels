@@ -159,6 +159,15 @@ Pour la liste exacte et à jour des routes : `aws apigatewayv2 get-routes --api-
   liste côté Lambda, sinon le paiement aboutit normalement mais la redirection finale retombe
   silencieusement sur `adhesion.html` (aucune erreur, juste la mauvaise page d'atterrissage).
   Bug réel rencontré en branchant `bourse-scolaire.html` sur le paiement.
+- **La Response Headers Policy CloudFront `liensculturels-security-headers` a un
+  Content-Security-Policy strict** — tout nouveau domaine externe appelé depuis le navigateur
+  (script, XHR/fetch, police, iframe...) doit être ajouté explicitement à `script-src`/
+  `connect-src`/etc., sinon le navigateur bloque silencieusement la requête (visible uniquement
+  dans la console DevTools, pas d'erreur réseau côté serveur). Rencontré en activant Google
+  Analytics 4 le 9 août 2026 : `gtag.js` bloqué par `script-src`, puis le beacon de mesure
+  (`region1.google-analytics.com/g/collect`) bloqué par `connect-src` — corrigé en ajoutant
+  `https://www.googletagmanager.com` à `script-src` et `https://www.google-analytics.com
+  https://analytics.google.com https://*.google-analytics.com` à `connect-src`.
 
 ## 8. Déploiement
 
