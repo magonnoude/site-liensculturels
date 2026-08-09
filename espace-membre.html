@@ -109,26 +109,33 @@
             </div>
 
             <!-- Paiement -->
-            <div class="portal-card" id="member-payment-section" style="display:none;">
+            <div class="portal-card" id="member-payment-section">
                 <h2><i class="fas fa-credit-card"></i> <span class="lang-fr">Cotisation &amp; dons</span><span class="lang-en">Dues &amp; donations</span></h2>
 
-                <div class="portal-payment-block">
-                    <h3><span class="lang-fr">Payer ma cotisation</span><span class="lang-en">Pay my membership dues</span></h3>
-                    <div class="portal-payment-row">
-                        <select id="member-cotisation-type">
-                            <option value="individuel"><span class="lang-fr">Individuelle — 30 €</span></option>
-                            <option value="famille">Pack famille — 50 €</option>
-                        </select>
-                    </div>
-                    <div class="portal-payment-row" id="member-cotisation-buttons"></div>
-                </div>
+                <p id="member-payment-fallback" style="display:none;">
+                    <span class="lang-fr">Le paiement en ligne n'est pas encore activé. Notre trésorier vous contactera pour régler votre cotisation, ou vous pouvez le/la contacter directement via la page <a href="contact.html">Contact</a>.</span>
+                    <span class="lang-en">Online payment isn't activated yet. Our treasurer will contact you to settle your dues, or you can reach them directly via the <a href="contact.html">Contact</a> page.</span>
+                </p>
 
-                <div class="portal-payment-block">
-                    <h3><span class="lang-fr">Faire un don</span><span class="lang-en">Make a donation</span></h3>
-                    <div class="portal-payment-row">
-                        <input type="number" id="member-don-montant" min="1" max="5000" step="1" placeholder="Montant (€)">
+                <div id="member-payment-forms" style="display:none;">
+                    <div class="portal-payment-block">
+                        <h3><span class="lang-fr">Payer ma cotisation</span><span class="lang-en">Pay my membership dues</span></h3>
+                        <div class="portal-payment-row">
+                            <select id="member-cotisation-type">
+                                <option value="individuel"><span class="lang-fr">Individuelle — 30 €</span></option>
+                                <option value="famille">Pack famille — 50 €</option>
+                            </select>
+                        </div>
+                        <div class="portal-payment-row" id="member-cotisation-buttons"></div>
                     </div>
-                    <div class="portal-payment-row" id="member-don-buttons"></div>
+
+                    <div class="portal-payment-block">
+                        <h3><span class="lang-fr">Faire un don</span><span class="lang-en">Make a donation</span></h3>
+                        <div class="portal-payment-row">
+                            <input type="number" id="member-don-montant" min="1" max="5000" step="1" placeholder="Montant (€)">
+                        </div>
+                        <div class="portal-payment-row" id="member-don-buttons"></div>
+                    </div>
                 </div>
 
                 <div class="form-feedback" id="member-payment-feedback"></div>

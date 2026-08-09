@@ -95,6 +95,8 @@ window.LCPayment = (function () {
         const nom = (claims && claims.name) || email;
 
         const config = await getConfig();
+        const fallbackEl = document.getElementById("member-payment-fallback");
+        const formsEl = document.getElementById("member-payment-forms");
         const feedbackEl = document.getElementById("member-payment-feedback");
         function showFeedback(text, kind) {
             feedbackEl.textContent = text;
@@ -102,8 +104,14 @@ window.LCPayment = (function () {
             feedbackEl.style.display = "block";
         }
 
+        // La carte "Cotisation & dons" reste toujours visible (comme Agenda et
+        // Historique) — seul son contenu bascule entre le message d'attente et
+        // les vrais formulaires, plutôt que de faire disparaître toute la
+        // section tant que Stripe/FedaPay ne sont pas activés (ce qui donnait
+        // l'impression que la fonctionnalité n'existait pas du tout).
         if (config && (config.stripeEnabled || config.fedapayEnabled)) {
-            section.style.display = "block";
+            fallbackEl.style.display = "none";
+            formsEl.style.display = "block";
 
             const cotisationType = document.getElementById("member-cotisation-type");
             renderButtons(
@@ -127,12 +135,13 @@ window.LCPayment = (function () {
                 },
                 (msg) => showFeedback(msg, "error")
             );
+        } else {
+            fallbackEl.style.display = "block";
         }
 
         const params = new URLSearchParams(window.location.search);
         if (params.get("payment") === "success") {
             showFeedback("Paiement effectué, merci !", "success");
-            section.style.display = "block";
         }
     }
 
