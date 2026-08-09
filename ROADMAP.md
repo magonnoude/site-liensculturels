@@ -20,7 +20,16 @@ profil membre, et surtout le vrai bug derrière "mon adhésion n'apparaît nulle
 items 21 à 26. **Round 5** : bug CORS S3 empêchant tout upload direct depuis un navigateur
 (photos membres, mais aussi comptes-rendus et justificatifs — probablement jamais
 fonctionnels), design de agenda/contact/adhésion, statut SES/DKIM clarifié et corrigé
-(statut périmé, pas un vrai problème DNS) — items 27 à 30.
+(statut périmé, pas un vrai problème DNS) — items 27 à 30. **Round 6** : audit des droits
+admin, création du compte `contact@liensculturels.org`, gestion des rôles depuis l'admin,
+notifications e-mail de paiement — items 31 à 34. **Round 7** : vrai bug 403 sur les
+comptes multi-groupes Cognito (espace vs virgule), texte de la fiche d'adhésion refondu
+— items 35 à 36. **Round 8** : nouvelle identité visuelle (logo, favicons, og-image) —
+items 37 à 38. **Round 9** : verrouillage téléphone/adresse en espace membre, dons
+séparés en admin, deux numéros de téléphone, provisionnement Cognito du bureau — items
+39 à 42. **Round 10** : rôle Gouvernance séparé d'Admin avec tableau de bord dédié,
+champ Type sur les dépenses, documentation technique + documentation d'utilisation/FAQ
+— items 43 à 44.
 
 ## Tableau de suivi — demandes du 7–8 août 2026
 
@@ -118,6 +127,15 @@ action externe, pas de moi) · `💬` répondu comme conseil, pas une action à 
 | 40 | Admin : montant des dons affiché séparément de la cotisation | ✅ | Nouvelle colonne "Dons" dans le tableau des membres. `list_members()` agrège désormais `liensculturels-cotisations` par e-mail (la table lie par e-mail, pas par `memberId` Cognito) — permission IAM `dynamodb:Scan` ajoutée sur cette table. |
 | 41 | Deux numéros de téléphone (France + Bénin, avec mention WhatsApp et "temporaire") | ✅ | Remplacement mécanique sur les 24 occurrences (23 pages + 2× sur `contact.html`) : "France — Tél/WhatsApp : +33 6 74 43 76 09 (temporaire)" et "Bénin — Tél/WhatsApp : +229 01 61 95 04 15 (temporaire)". |
 | 42 | Provisionner les comptes Cognito du bureau (liste fournie), sans notification, rôles selon la fonction, ne garder que Trésorier pour l'utilisateur | ✅ | 6 comptes créés (les seuls avec un e-mail sur les 20 personnes listées) : Judicaël Senan Boni et Elie Smith → `admin` ; Franck-Olivier Gbeboutin et Gaëlle Sylviane Massenon → `secretaire` ; Stéphane Anakpo → `tresorier` ; François Dremont → `membre`. Aucun e-mail envoyé (`MessageAction=SUPPRESS` + mot de passe temporaire généré, transmis directement). Compte de l'utilisateur modifié : ne conserve plus que le groupe `tresorier` (retrait de `admin`/`secretaire`). **13 personnes laissées de côté faute d'e-mail dans la liste fournie** : Ronel Jethem Atindéhou, Christelle Le Tallec, Teddy Farot, Elyes Smith, Jordan Smith, Dominique Duclos, Denis Oba Chabi, Aures Oba Chabi, Deen Radji, Vanessa Cina, Christian Fournage, Dimitri Fournage, Nadège Levasseur. **Incident IAM trouvé et corrigé pendant ce lot** : l'ajout de la permission de lecture sur `liensculturels-cotisations` (point 40) a été fait à partir d'une lecture *filtrée* de la policy existante de `liensCulturels-admin-api`, écrasant par erreur 3 autres blocs de permissions (upload documents/galerie, invitation de membres, envoi newsletter) — repéré immédiatement (`list_members()` ne retrouvait plus aucun groupe), corrigé en restaurant la policy complète, revérifié. |
+
+## Tableau de suivi — demandes du 9 août 2026 (round 10 — rôle Gouvernance & documentation)
+
+| # | Demande | Statut | Détail |
+|---|---|---|---|
+| 43 | Séparer un rôle "Gouvernance" du rôle "Admin" (plutôt technique), avec un tableau de bord dédié (adhérents, point financier, bilan, charges fixes/exceptionnelles, dépenses) réservé au CA et aux 2 maires ; Judicaël et Elie sortent d'Admin pour rejoindre Gouvernance avec Franck-Olivier, Gaëlle, Stéphane et l'utilisateur | ✅ | Nouveau groupe Cognito `gouvernance`, **volontairement sans bypass "admin"** (rôle distinct confirmé) — même `contact@liensculturels.org` (admin+secrétaire+trésorier) n'y a pas accès sans ajout explicite. 6 comptes réaffectés : Judicaël Boni et Elie Smith quittent `admin` pour ne garder que `gouvernance` ; Franck-Olivier Gbeboutin et Gaëlle Massenon gardent `secretaire` + `gouvernance` ; Stéphane Anakpo et l'utilisateur gardent `tresorier` + `gouvernance`. Nouvelle page `gouvernance.html` + nouvelle Lambda dédiée **lecture seule** `liensCulturels-gouvernance-api` (`GET /gouvernance/summary` : nombre d'adhérents et répartition du statut de cotisation, cotisations/dons/dépenses/solde, dépenses par type et par catégorie). Nouveau champ "Type" (Fixe/Exceptionnelle) ajouté au formulaire de dépense en trésorerie pour alimenter ce découpage — pas de notion de "dépenses budgétées" (aucune donnée de budget prévisionnel saisie nulle part actuellement, volontairement absent du tableau de bord plutôt que fabriqué). **Les 2 maires (Dominique Duclos, Denis Oba Chabi) laissés de côté pour l'instant, faute d'e-mail dans les données fournies** — à ajouter dès qu'ils seront transmis. Vérifié en navigateur réel (Playwright) : dashboard visible et correct pour un compte du groupe `gouvernance`, accès refusé pour un compte qui ne l'a pas. |
+| 44 | Documentation technique et documentation d'utilisation, avec une FAQ | ✅ | **Documentation technique** : nouveau fichier [`DOCUMENTATION-TECHNIQUE.md`](DOCUMENTATION-TECHNIQUE.md) à la racine du dépôt — architecture, les 8 Lambdas et leurs routes, schéma DynamoDB (avec le piège `cotisations.memberId` = e-mail, pas l'identifiant Cognito), Cognito (pool, 5 groupes désormais), une section "Pièges connus" qui documente les vrais bugs rencontrés cette session (groupes Cognito espace-vs-virgule, permissions Lambda scopées par route, écrasement de policy IAM par une lecture filtrée, CORS manquant sur les buckets d'upload, `deploy.yml` sans suppression automatique, `StripeObject.get()`, confinement snap d'Inkscape). **Documentation d'utilisation + FAQ** : artefact web publié, organisé par espace (connexion, espace membre, admin, secrétariat, trésorerie, gouvernance, fiche d'adhésion) avec une FAQ de 7 questions, destiné aux membres du bureau non-techniques. |
+
+**Note en passant** : `README.md` n'a pas été mis à jour et est désormais partiellement en retard sur `DOCUMENTATION-TECHNIQUE.md` (qui reflète l'état réel du système au 9 août) — à harmoniser lors d'un prochain lot si besoin.
 
 ## Espaces authentifiés (membre / admin / secrétariat / trésorerie)
 
