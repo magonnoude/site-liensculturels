@@ -151,6 +151,7 @@ action externe, pas de moi) · `💬` répondu comme conseil, pas une action à 
 | 52 | Catégories de dépenses standardisées (téléphone, Gandi, Zoho, AWS, Qonto, Stripe, conception RMS, redevance RMS, internet) | ✅ | Champ libre remplacé par une liste déroulante avec les postes de coûts réels de l'association + option "Autre" en saisie libre. Rend `depensesParCategorie` (dashboard Gouvernance) directement exploitable. Testé en conditions réelles (bascule "Autre", enregistrement d'une dépense test, supprimée après vérification). |
 | 53 | Google Analytics (GA4) à activer + mise à jour de `confidentialite.html` | ⏳ | En attente de l'identifiant de mesure GA4 (`G-XXXXXXX`) — voir échange en cours avec l'utilisateur. |
 | 54 | Contrat RMS ↔ Liens Culturels (conception de la plateforme + redevance récurrente) et remboursement des frais déjà engagés | ⏳ | Document juridique/financier, volontairement **hors du dépôt Git** (public) — en attente des conditions commerciales (montants, dates, modalités) pour rédiger le contrat. |
+| 55 | Catégories de dépenses à ajouter une fois qu'un local sera disponible (électricité, eau, internet du local, achat PC/imprimante) | ⏳ | Pas encore ajoutées à la liste déroulante trésorerie — conditionnées à l'existence d'un local, pas encore le cas. "Autre" couvre ce cas en attendant. |
 
 **Amélioration proposée, pas encore demandée** : `README.md` mériterait une réécriture complète pour refléter l'état réel (Cognito, 8 Lambdas, les 4 espaces internes, Stripe) — actuellement il ne documente que l'état du site avant le 8 août.
 
