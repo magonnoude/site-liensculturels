@@ -27,11 +27,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/brands.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        .family-member-row { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-bottom: 0.6rem; padding: 0.7rem; background: #f7f7f7; border-radius: 6px; }
-        .family-member-row input, .family-member-row select { padding: 0.5rem 0.6rem; border: 1px solid #ccc; border-radius: 5px; font-size: 0.9rem; }
-        .family-member-row .fm-prenom, .family-member-row .fm-nom { flex: 1; min-width: 120px; }
+        .family-member-row { margin-bottom: 0.8rem; padding: 0.8rem; background: #f7f7f7; border-radius: 6px; }
+        .family-member-row input, .family-member-row select { padding: 0.5rem 0.6rem; border: 1px solid #ccc; border-radius: 5px; font-size: 0.9rem; box-sizing: border-box; }
+        .fm-line { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; margin-bottom: 0.5rem; }
+        .fm-line:last-child { margin-bottom: 0; }
+        .family-member-row .fm-prenom, .family-member-row .fm-nom, .family-member-row .fm-email { flex: 1; min-width: 130px; }
+        .family-member-row .fm-telephone, .family-member-row .fm-adresse { flex: 1; min-width: 160px; }
         .family-member-row .fm-lien { flex: 0 0 auto; }
-        .family-member-row .fm-remove { background: #c0392b; color: #fff; border: none; border-radius: 5px; padding: 0.4rem 0.7rem; cursor: pointer; font-size: 0.85rem; }
+        .family-member-row .fm-remove { background: #c0392b; color: #fff; border: none; border-radius: 5px; padding: 0.4rem 0.7rem; cursor: pointer; font-size: 0.85rem; flex: 0 0 auto; }
     </style>
 </head>
 <body>    <div class="site-header">
@@ -102,8 +105,22 @@
                     <input type="text" id="nom" name="nom" required>
                 </div>
                 <div class="form-group">
-                    <label for="address"><span class="lang-fr">Adresse Postale Complète</span><span class="lang-en">Full Postal Address</span></label>
+                    <label for="address"><span class="lang-fr">Adresse (rue et numéro)</span><span class="lang-en">Street Address</span></label>
                     <input type="text" id="address" name="address" required>
+                </div>
+                <div class="form-group" style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+                    <div style="flex:0 0 140px;">
+                        <label for="postalCode"><span class="lang-fr">Code Postal</span><span class="lang-en">Postal Code</span></label>
+                        <input type="text" id="postalCode" name="postalCode" required>
+                    </div>
+                    <div style="flex:1; min-width:160px;">
+                        <label for="city"><span class="lang-fr">Ville</span><span class="lang-en">City</span></label>
+                        <input type="text" id="city" name="city" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="country"><span class="lang-fr">Pays</span><span class="lang-en">Country</span></label>
+                    <select id="country" name="country" required></select>
                 </div>
                 <div class="form-group">
                     <label for="email"><span class="lang-fr">Adresse Email</span><span class="lang-en">Email Address</span></label>
@@ -134,8 +151,8 @@
                 </div>
 
                 <div class="form-group" id="familyMembersSection" style="display:none;">
-                    <label><span class="lang-fr">Membres de la famille couverts par le pack</span><span class="lang-en">Family members covered by the pack</span></label>
-                    <p style="font-size:0.85rem; color:#777; margin-top:-0.3rem;"><span class="lang-fr">Ajoutez chaque membre de votre foyer (conjoint, enfant…) pour que le trésorier sache qui est couvert par l'adhésion.</span><span class="lang-en">Add each member of your household (spouse, child…) so the treasurer knows who is covered by the membership.</span></p>
+                    <label><span class="lang-fr">Membres de la famille</span><span class="lang-en">Family members</span></label>
+                    <p style="font-size:0.85rem; color:#777; margin-top:-0.3rem;"><span class="lang-fr">Chaque membre de votre foyer (conjoint, enfant…) devient membre de l'association à part entière. Laissez l'adresse vide si elle est identique à la vôtre.</span><span class="lang-en">Every member of your household (spouse, child…) becomes a full member of the association. Leave the address blank if it's the same as yours.</span></p>
                     <div id="familyMembersList"></div>
                     <button type="button" class="btn" id="addFamilyMemberBtn" style="background-color: var(--secondary-color, #8BC34A);"><span class="lang-fr">+ Ajouter un membre de la famille</span><span class="lang-en">+ Add a family member</span></button>
                 </div>

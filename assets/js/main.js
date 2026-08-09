@@ -94,6 +94,19 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        // Pays de résidence (adresse postale), même liste de pays que les
+        // indicatifs téléphoniques (assets/js/country-codes.js), mais la
+        // valeur envoyée est le nom du pays, pas l'indicatif.
+        const countryEl = document.getElementById('country');
+        if (countryEl && window.LC_COUNTRY_CODES) {
+            window.LC_COUNTRY_CODES.forEach((c) => {
+                const opt = document.createElement('option');
+                opt.value = c.name;
+                opt.textContent = c.name;
+                countryEl.appendChild(opt);
+            });
+        }
+
         function isValidEmail(value) {
             return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
         }
@@ -108,15 +121,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const row = document.createElement('div');
             row.className = 'family-member-row';
             row.innerHTML = `
-                <input type="text" class="fm-prenom" placeholder="Prénom">
-                <input type="text" class="fm-nom" placeholder="Nom">
-                <select class="fm-lien">
-                    <option value="conjoint">Conjoint(e)</option>
-                    <option value="enfant">Enfant</option>
-                    <option value="parent">Parent</option>
-                    <option value="autre">Autre</option>
-                </select>
-                <button type="button" class="fm-remove">&times;</button>
+                <div class="fm-line">
+                    <input type="text" class="fm-prenom" placeholder="Prénom">
+                    <input type="text" class="fm-nom" placeholder="Nom">
+                    <select class="fm-lien">
+                        <option value="conjoint">Conjoint(e)</option>
+                        <option value="enfant">Enfant</option>
+                        <option value="parent">Parent</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                    <button type="button" class="fm-remove">&times;</button>
+                </div>
+                <div class="fm-line">
+                    <input type="email" class="fm-email" placeholder="Email">
+                    <input type="tel" class="fm-telephone" placeholder="Téléphone">
+                    <input type="text" class="fm-adresse" placeholder="Adresse (si différente)">
+                </div>
             `;
             row.querySelector('.fm-remove').addEventListener('click', () => row.remove());
             familyList.appendChild(row);
@@ -154,6 +174,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     prenom: row.querySelector('.fm-prenom').value.trim(),
                     nom: row.querySelector('.fm-nom').value.trim(),
                     lien: row.querySelector('.fm-lien').value,
+                    email: row.querySelector('.fm-email').value.trim(),
+                    telephone: row.querySelector('.fm-telephone').value.trim(),
+                    // Vide = même adresse que le membre principal.
+                    adresse: row.querySelector('.fm-adresse').value.trim(),
                 }))
                 .filter((m) => m.prenom || m.nom);
         }
@@ -178,12 +202,22 @@ document.addEventListener('DOMContentLoaded', () => {
             const newsletterOptinEl = document.getElementById('newsletterOptin');
             const email = emailEl.value.trim();
 
+            const streetAddress = document.getElementById('address').value.trim();
+            const postalCode = document.getElementById('postalCode').value.trim();
+            const city = document.getElementById('city').value.trim();
+            const country = document.getElementById('country').value;
+            const fullAddress = `${streetAddress}, ${postalCode} ${city}, ${country}`.trim();
+
             const formData = {
                 civilite,
                 prenom,
                 nom,
                 fullName: `${civilite} ${prenom} ${nom}`.trim(),
-                address: document.getElementById('address').value,
+                street: streetAddress,
+                postalCode,
+                city,
+                country,
+                address: fullAddress,
                 email,
                 phone: `${countryCode} ${localPhone}`.trim(),
                 membershipType: membershipTypeEl ? membershipTypeEl.value : undefined,
