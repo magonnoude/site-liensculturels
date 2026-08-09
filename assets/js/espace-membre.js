@@ -125,6 +125,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     (async () => {
         const tableEl = document.getElementById("portal-history-table");
         const emptyEl = document.getElementById("portal-history-empty");
+        const donsTotalEl = document.getElementById("portal-dons-total");
+        const donsTotalAmountEl = document.getElementById("portal-dons-total-amount");
         try {
             const resp = await window.LCAuth.apiFetch("/me/cotisations");
             if (!resp.ok) throw new Error("Erreur");
@@ -133,13 +135,19 @@ document.addEventListener("DOMContentLoaded", async () => {
             emptyEl.style.display = "none";
             tableEl.style.display = "table";
             const tbody = tableEl.querySelector("tbody");
+            let donsTotal = 0;
             items.forEach((c) => {
                 const tr = document.createElement("tr");
                 const type = c.type === "don" ? "Don" : "Cotisation";
                 const montant = typeof c.montant === "number" ? c.montant : parseFloat(c.montant) || 0;
+                if (c.type === "don") donsTotal += montant;
                 tr.innerHTML = `<td>${c.date || ""}</td><td>${type}</td><td>${montant} €</td><td>${c.methode || ""}</td>`;
                 tbody.appendChild(tr);
             });
+            if (donsTotal > 0) {
+                donsTotalAmountEl.textContent = `${donsTotal} €`;
+                donsTotalEl.style.display = "block";
+            }
         } catch (e) {
             // reste sur l'état "aucun paiement" par défaut
         }
@@ -197,22 +205,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         } finally {
             labelEl.classList.remove("uploading");
             e.target.value = "";
-        }
-    });
-
-    document.getElementById("portal-form").addEventListener("submit", async (e) => {
-        e.preventDefault();
-        msgEl.style.display = "none";
-        try {
-            const resp = await window.LCAuth.apiFetch("/me", {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ telephone: telEl.value, adresse: addrEl.value }),
-            });
-            if (!resp.ok) throw new Error("Échec de la mise à jour.");
-            showMessage("Profil mis à jour.", "success");
-        } catch (e) {
-            showMessage("Une erreur est survenue. Veuillez réessayer.", "error");
         }
     });
 });

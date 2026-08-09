@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         <option value="impaye" ${m.statutCotisation === "impaye" ? "selected" : ""}>Impayée</option>
                     </select>
                 </td>
+                <td>${m.totalDons ? m.totalDons + " €" : "—"}</td>
                 <td>
                     <select multiple size="4" data-groups-member="${m.memberId}" data-groups-email="${m.email || ""}" title="Ctrl/Cmd+clic pour sélectionner plusieurs rôles">
                         ${groupOptions}

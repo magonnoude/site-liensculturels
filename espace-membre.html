@@ -167,6 +167,7 @@
             <!-- Historique -->
             <div class="portal-card">
                 <h2><i class="fas fa-clock-rotate-left"></i> <span class="lang-fr">Historique de mes paiements</span><span class="lang-en">My payment history</span></h2>
+                <p id="portal-dons-total" style="display:none; font-size:0.9rem; color:#555;"><i class="fas fa-heart" style="color:var(--secondary-color, #8BC34A);"></i> <span class="lang-fr">Total de mes dons :</span><span class="lang-en">Total donated:</span> <strong id="portal-dons-total-amount"></strong></p>
                 <table class="portal-history-table" id="portal-history-table" style="display:none;">
                     <thead><tr>
                         <th><span class="lang-fr">Date</span><span class="lang-en">Date</span></th>
@@ -189,14 +190,14 @@
                     </div>
                     <div class="portal-field">
                         <label for="portal-telephone">Téléphone</label>
-                        <input type="tel" id="portal-telephone" placeholder="06 12 34 56 78">
+                        <input type="tel" id="portal-telephone" disabled>
                     </div>
                     <div class="portal-field">
                         <label for="portal-adresse">Adresse</label>
-                        <input type="text" id="portal-adresse" placeholder="Votre adresse postale">
+                        <input type="text" id="portal-adresse" disabled>
                     </div>
-                    <button type="submit" class="btn" style="border:none; cursor:pointer; font-size:1rem;">Enregistrer</button>
                 </form>
+                <p style="font-size:0.85rem; color:#777; margin-top:-0.6rem;"><span class="lang-fr">Ces informations sont gérées par le secrétariat — <a href="contact.html">contactez-nous</a> pour les mettre à jour.</span><span class="lang-en">This information is managed by the secretariat — <a href="contact.html">contact us</a> to update it.</span></p>
                 <div class="portal-msg" id="portal-msg"></div>
             </div>
 
@@ -215,7 +216,8 @@
                 <h4>Liens Culturels</h4>
                 <p><span class="lang-fr">Association loi 1901 pour la promotion des échanges culturels entre la France, les Antilles et l'Afrique.</span><span class="lang-en">A French non-profit association (loi 1901) promoting cultural exchange between France, the Caribbean and Africa.</span></p>
                 <p><i class="fas fa-map-marker-alt"></i> CHEMIN DE L'ERMITAGE<br>02310 NOGENT-L'ARTAUD</p>
-                <p><i class="fas fa-phone"></i> <a href="tel:+33674437609">+33 6 74 43 76 09</a></p>
+                <p><i class="fas fa-phone"></i> <span class="lang-fr">France — Tél/WhatsApp : </span><span class="lang-en">France — Phone/WhatsApp: </span><a href="tel:+33674437609">+33 6 74 43 76 09</a> <span class="lang-fr" style="opacity:.7;font-size:.85em;">(temporaire)</span><span class="lang-en" style="opacity:.7;font-size:.85em;">(temporary)</span></p>
+            <p><i class="fas fa-phone"></i> <span class="lang-fr">Bénin — Tél/WhatsApp : </span><span class="lang-en">Benin — Phone/WhatsApp: </span><a href="tel:+2290161950415">+229 01 61 95 04 15</a> <span class="lang-fr" style="opacity:.7;font-size:.85em;">(temporaire)</span><span class="lang-en" style="opacity:.7;font-size:.85em;">(temporary)</span></p>
                 <p><i class="fas fa-envelope"></i> <a href="mailto:contact@liensculturels.org">contact@liensculturels.org</a></p>
             </div>
 
