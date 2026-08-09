@@ -169,7 +169,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const paymentSection = document.getElementById("payment-section");
     if (paymentSection) {
         const paymentOptions = document.getElementById("payment-options");
-        const ribFallback = document.getElementById("rib-fallback");
+        const paymentFallback = document.getElementById("payment-fallback");
         const feedbackEl = document.getElementById("payment-feedback");
         function showFeedback(text, kind) {
             feedbackEl.textContent = text;
@@ -196,12 +196,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 (msg) => showFeedback(msg, "error")
             );
             paymentSection.style.display = "block";
+        } else if (paymentFallback) {
+            paymentFallback.style.display = "block";
         }
 
         const params = new URLSearchParams(window.location.search);
-        if (params.get("payment") === "success" && ribFallback) {
+        if (params.get("payment") === "success") {
             showFeedback("Paiement effectué, merci !", "success");
-            ribFallback.style.display = "none";
         }
     }
 
