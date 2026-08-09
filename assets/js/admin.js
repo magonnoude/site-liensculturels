@@ -43,12 +43,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ---- membres ----
+    const GROUP_LABELS = { admin: "Admin", secretaire: "Secrétaire", tresorier: "Trésorier", membre: "Membre" };
+
     async function loadMembers() {
         const members = await api("/admin/members");
         const tbody = document.querySelector("#members-table tbody");
         tbody.innerHTML = "";
         members.forEach((m) => {
             const tr = document.createElement("tr");
+            const groups = m.groups || [];
+            const groupOptions = Object.entries(GROUP_LABELS)
+                .map(([value, label]) => `<option value="${value}" ${groups.includes(value) ? "selected" : ""}>${label}</option>`)
+                .join("");
             tr.innerHTML = `
                 <td>${m.nom || ""}</td>
                 <td>${m.email || ""}</td>
@@ -60,7 +66,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                         <option value="impaye" ${m.statutCotisation === "impaye" ? "selected" : ""}>Impayée</option>
                     </select>
                 </td>
-                <td></td>
+                <td>
+                    <select multiple size="4" data-groups-member="${m.memberId}" data-groups-email="${m.email || ""}" title="Ctrl/Cmd+clic pour sélectionner plusieurs rôles">
+                        ${groupOptions}
+                    </select>
+                </td>
             `;
             tbody.appendChild(tr);
         });
@@ -73,6 +83,28 @@ document.addEventListener("DOMContentLoaded", async () => {
                         body: JSON.stringify({ statutCotisation: sel.value }),
                     });
                     showMessage("Statut de cotisation mis à jour.", "success");
+                } catch (e) {
+                    showMessage(e.message, "error");
+                }
+            });
+        });
+        tbody.querySelectorAll("select[data-groups-member]").forEach((sel) => {
+            sel.addEventListener("change", async () => {
+                const newGroups = Array.from(sel.selectedOptions).map((o) => o.value);
+                if (!newGroups.includes("admin") && Array.from(sel.options).some((o) => o.value === "admin" && o.defaultSelected)) {
+                    if (!confirm("Retirer le rôle Admin à ce compte ? Il perdra l'accès à l'espace admin.")) {
+                        sel.querySelector('option[value="admin"]').selected = true;
+                        return;
+                    }
+                }
+                try {
+                    await api(`/admin/members/${sel.dataset.groupsMember}/groups`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ email: sel.dataset.groupsEmail, groups: newGroups }),
+                    });
+                    showMessage("Rôles mis à jour.", "success");
+                    sel.querySelectorAll("option").forEach((o) => { o.defaultSelected = o.selected; });
                 } catch (e) {
                     showMessage(e.message, "error");
                 }
