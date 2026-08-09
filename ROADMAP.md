@@ -8,7 +8,11 @@ complété le même jour. Priorisé par impact / effort. `[x]` = corrigé.
 séparément sont également construits, déployés et vérifiés en production** (2026-08-08) —
 voir la section dédiée ci-dessous. Ce qui reste ouvert : le câblage des photos de bureau
 (bloqué en attente d'une info de l'association, voir P5). **La traduction FR/EN des 25
-pages du site est désormais complète** (2026-08-08) — voir tableau, item 9.
+pages du site est désormais complète** (2026-08-08) — voir tableau, item 9. **Round 2
+(2026-08-09)** : espace membre enrichi (agenda, paiement cotisation/don, historique,
+badge), gestion réelle de la newsletter côté admin, footer aligné sur le gabarit RMS,
+nouvelle page publique "Vie associative", et fiche d'adhésion refondue — voir tableau,
+items 11 à 15.
 
 ## Tableau de suivi — demandes du 7–8 août 2026
 
@@ -29,6 +33,18 @@ action externe, pas de moi) · `💬` répondu comme conseil, pas une action à 
 | 8 | Boutons séparés « Devenir Membre / Nous Rejoindre » (1ʳᵉ inscription + paiement) et « Accès Membre » | ✅ | Les deux existaient déjà dans des zones différentes mais avec des libellés trop proches ; nommage clarifié, puis le header entier reconstruit le 8 août pour vraiment séparer les deux visuellement (pilule CTA vs lien discret). |
 | 9 | Site multilingue EN/FR | ✅ | Infrastructure en ligne sur les 25 pages (bascule FR/EN dans le header, persistée) + navigation, pied de page et **contenu des 25 pages** entièrement bilingues, déployé et vérifié en production le 8 août : accueil, qui sommes-nous, contact, adhésion, bourse scolaire (lot précédent), puis projets, agenda (contenu statique — les événements viennent de l'API et restent en français, ainsi que le calendrier FullCalendar lui-même), bureau, mot des dirigeants, photothèque, vidéothèque, blog + les 3 articles, mentions légales, CGU, confidentialité (ce lot). |
 | 10 | Tableau de suivi + mise à jour de la roadmap .md et web | ✅ | Ce tableau, et l'artefact web republié (voir lien dans le fil de discussion). |
+
+## Tableau de suivi — demandes du 8–9 août 2026 (round 2)
+
+| # | Demande | Statut | Détail |
+|---|---|---|---|
+| 11 | Espace membre : agenda, boutons « payer ma cotisation » / « faire un don », dashboard des paiements passés, badge « à jour de cotisation » | ✅ | `espace-membre.html` : widget des 5 prochains événements (réutilise `GET /agenda` public), section paiement (cotisation + don, montant libre), historique via nouvelle route `GET /me/cotisations` (`liensCulturels-member-profile`), badge visuel dégradé vert/orange selon `statutCotisation`. |
+| 12 | Admin : gérer la newsletter | ✅ | Au-delà de la liste/suppression déjà existante : composition + envoi réel via SES aux abonnés confirmés (`POST /admin/newsletter/send`, nouvelle route sur `liensCulturels-admin-api`). |
+| 13 | Footer : copyright à gauche, liens légaux à droite sur la même ligne, crédit RMS en dessous sur sa propre ligne, comme les autres sites RMS | ✅ | Repris du gabarit `kesho.grouperms.com` (`pied-de-page.tsx`) : `.footer-bottom-row` en flex `justify-content:space-between`, `.footer-credit` séparé par une bordure, centré, sur les 25 pages. |
+| 14 | Les actions du secrétariat (réunions, ordre du jour, CR, décisions) doivent apparaître sur le site | ✅ | Nouvelle page publique `vie-associative.html` (liée dans la nav « L'Association », `sitemap.xml`), alimentée par une nouvelle route publique `GET /public/vie-associative` sur `liensCulturels-secretariat-api`. **Choix confirmé avec vous** : texte (titre, date, ordre du jour, contenu, décisions) public ; le PDF scanné d'un compte-rendu reste réservé au secrétariat connecté. |
+| 15 | Fiche d'adhésion : civilité séparée, prénom/nom séparés, indicatifs pays pour le téléphone, contrôle du champ e-mail, case newsletter, bouton payer qui redirige vers Stripe/FedaPay | ✅ | `adhesion.html` refondue (civilité + prénom + nom, sélecteur d'indicatif parmi ~195 pays, validation e-mail par regex avant envoi, case à cocher qui déclenche `POST /newsletter/subscribe` si cochée). Paiement généralisé : Stripe bascule sur **Checkout Session hébergé** (fini l'embarqué) — les deux boutons (Stripe, FedaPay) redirigent désormais réellement vers le prestataire, sur `adhesion.html` et `espace-membre.html`. |
+
+**Non vérifié en conditions réelles de bout en bout** : le client Cognito n'autorise que le flux Hosted UI (PKCE/SRP), sans mot de passe direct côté API — impossible de forger un jeton JWT valide depuis cet environnement sans navigateur pour cliquer le parcours de connexion. Chaque route a été vérifiée séparément : les nouvelles Lambdas passent des tests d'invocation directe avec des claims simulées, les nouvelles routes API Gateway ont été testées (401 sans jeton sur les routes protégées, 200 sur les routes publiques), et une lacune de permission IAM (`lambda:InvokeFunction` scopé trop étroitement par chemin) a été trouvée et corrigée sur deux routes pendant cette vérification. **Recommandé : vous connecter une fois vous-même à `espace-membre.html` pour confirmer visuellement le rendu du dashboard, du badge et des boutons de paiement.**
 
 ## Espaces authentifiés (membre / admin / secrétariat / trésorerie)
 
