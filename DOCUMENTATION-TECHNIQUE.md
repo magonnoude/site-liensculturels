@@ -83,7 +83,7 @@ modifier, ne jamais deviner l'état actuel à partir d'une ancienne copie locale
 | Lambda | Rôle | Routes principales |
 |---|---|---|
 | `liensCulturels-contact-form` | Formulaire de contact public | `POST /contact` |
-| `liensCulturels-adhesion-form` | Formulaire d'adhésion — crée directement le compte Cognito + la fiche membre (groupe `membre`), envoie 2 e-mails (confirmation + notification trésorerie) | `POST /adhesion` |
+| `liensCulturels-adhesion-form` | Formulaire d'adhésion — crée directement le compte Cognito + la fiche membre (groupe `membre`), envoie 2 e-mails (confirmation + notification trésorerie). Depuis le 10/08/2026, avertit aussi contact@ (dans le corps de l'e-mail admin uniquement, jamais montré au public) si le téléphone saisi correspond déjà à un membre existant — signal utile quand la même personne se réinscrit avec un e-mail différent, ce que la détection par e-mail exact ne peut pas voir | `POST /adhesion` |
 | `liensCulturels-payment` | Paiement Stripe/FedaPay (cotisation ou don), webhooks, e-mails de confirmation | `GET /payment/config`, `POST /payment/create-intent`, `POST /webhook/stripe`, `POST /webhook/fedapay` |
 | `liensCulturels-member-profile` | Profil du membre connecté (lecture seule côté membre pour téléphone/adresse — gérés par le secrétariat), photo de profil, historique de paiements | `GET/PUT /me`, `GET /me/cotisations`, `POST /me/photo-upload-url` |
 | `liensCulturels-admin-api` | Gestion technique : membres (statut cotisation, rôles), documents, agenda, galerie, newsletter | `GET/PUT /admin/members`, `PUT /admin/members/{id}/groups`, `.../documents`, `.../agenda`, `.../gallery`, `.../newsletter` |
