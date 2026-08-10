@@ -1,9 +1,9 @@
 # Documentation technique — www.liensculturels.org
 
 Document de référence pour toute personne qui reprend la maintenance technique du site.
-Décrit l'état réel de l'infrastructure au 9 août 2026. Le `README.md` du dépôt est plus
-ancien et partiellement obsolète (mentionne encore Brevo pour la newsletter, par exemple) —
-ce document-ci fait foi pour l'état courant.
+Décrit l'état réel de l'infrastructure au 10 août 2026 (**Version 1.00 — Release
+Candidate**, tag Git `v1.00-rc`). `README.md` a été réécrit le 10 août 2026 et reflète
+maintenant aussi l'état courant.
 
 ## 1. Vue d'ensemble
 
@@ -24,7 +24,8 @@ certificat ACM du domaine nu (us-east-1, obligatoire pour CloudFront).
 
 ## 2. Frontend
 
-- 27 pages HTML à la racine du dépôt, pas de sous-dossiers de pages.
+- 28 pages HTML à la racine du dépôt, pas de sous-dossiers de pages (dont `guide-utilisation.html`,
+  réservé aux membres connectés — voir §2 fin de section).
 - Bilingue FR/EN **sans pages séparées** : chaque texte existe deux fois, dans
   `<span class="lang-fr">…</span>` et `<span class="lang-en">…</span>`, basculées en JS
   (`main.js` → `switchLanguage()`), préférence persistée en `localStorage`. **Ne jamais**
@@ -48,6 +49,12 @@ certificat ACM du domaine nu (us-east-1, obligatoire pour CloudFront).
   getClaims/hasGroup/apiFetch) — flux OAuth2 Authorization Code + PKCE contre le Hosted UI
   Cognito. **Stocke les tokens en `sessionStorage`**, pas `localStorage` — donc pas partagé
   entre onglets, perdu à la fermeture de l'onglet (comportement voulu, pas un bug).
+- `assets/js/consent.js` (ajouté le 9 août 2026, sur les 23 pages publiques uniquement —
+  pas sur les 5 espaces internes) : bannière de consentement RGPD, expose
+  `window.LCConsent.reset()`. Google Analytics 4 (`G-EMTKPDTSJY`) n'est chargé qu'après clic
+  "Accepter" — jamais au chargement de la page. Choix mémorisé en `localStorage`
+  (`lc_analytics_consent`). Domaine `googletagmanager.com`/`google-analytics.com` autorisé
+  dans la CSP CloudFront (voir piège §7).
 
 ## 3. Authentification — Amazon Cognito
 
@@ -112,7 +119,7 @@ Pour la liste exacte et à jour des routes : `aws apigatewayv2 get-routes --api-
 |---|---|---|
 | `liensculturels-members` | `memberId` (= `sub` Cognito) | `email`, `nom`, `telephone`, `adresse`, `statutCotisation` (`inconnu`/`a_jour`/`impaye`), `photoUrl`, `familyMembers` (liste, pour le pack famille de l'adhésion), `createdAt` |
 | `liensculturels-cotisations` | `cotisationId` | ⚠️ **`memberId` de cette table est l'e-mail du payeur, pas le `sub` Cognito** (héritage du paiement, qui ne connaît que l'e-mail saisi) — toute agrégation par membre doit joindre par e-mail. `type` = `"cotisation"` ou `"don"`. |
-| `liensculturels-depenses` | `depenseId` | `libelle`, `montant`, `date`, `categorie` (texte libre), `type` (`"fixe"`/`"exceptionnelle"`, depuis le 9 août 2026), `justificatifKey` (S3, optionnel) |
+| `liensculturels-depenses` | `depenseId` | `libelle`, `montant`, `date`, `categorie` (liste standardisée côté `tresorerie.html` depuis le 9 août 2026 — téléphone, Gandi, Zoho, AWS, Qonto, Stripe, RMS, internet, + "Autre" en saisie libre ; reste un champ texte côté Lambda, pas de contrainte serveur), `type` (`"fixe"`/`"exceptionnelle"`), `justificatifKey` (S3, optionnel) |
 | `liensculturels-agenda` | `eventId` | Alimente `agenda.html` (public) et le widget de `espace-membre.html` |
 | `liensculturels-gallery` | `itemId` | Photothèque/vidéothèque |
 | `liensculturels-newsletter` | `email` | `status` (`pending`/`confirmed`/`unsubscribed`), double opt-in |
@@ -150,9 +157,19 @@ Pour la liste exacte et à jour des routes : `aws apigatewayv2 get-routes --api-
   `.to_dict()` (récursif par défaut) avant de manipuler l'objet comme un dictionnaire.
 - **Inkscape (snap)** ne peut lire/écrire que sous `$HOME` — jamais `/tmp`, échoue
   silencieusement avec un message qui ressemble à une erreur de chemin.
-- **`sk_test_`/`whsec_` de Stripe sont en mode TEST** (configurés le 9 août 2026 sur
-  `liensCulturels-payment`) — aucune vraie transaction. Voir `PAYMENTS-SETUP.md` pour passer
-  en mode live (comptes marchands au nom de l'association nécessaires au préalable).
+- **Stripe est passé en mode LIVE le 10 août 2026** (`sk_live_`/`pk_live_`/`whsec_` sur
+  `liensCulturels-payment`) — les paiements sont désormais réels. **Piège rencontré au
+  passage en live** : le endpoint webhook créé côté Stripe pointait vers
+  `/payment/webhook` (probablement par analogie avec `/payment/config` et
+  `/payment/create-intent`) au lieu du vrai chemin `/webhook/stripe` — 2 tentatives de
+  livraison en échec, un vrai paiement passé côté Stripe sans jamais être enregistré côté
+  site (silencieux : `stripe_webhook()` ne loggue rien en cas d'échec de vérification de
+  signature, seulement un `return 400`). Diagnostiqué via **Stripe → Développeurs →
+  Webhooks → historique des tentatives** (le plus rapide) plutôt que les logs Lambda.
+  Rattrapé en interrogeant directement l'API Stripe (`GET /v1/checkout/sessions`) pour
+  retrouver le paiement manqué et en rejouant manuellement `_record_cotisation()` +
+  `_send_payment_emails()`. Toujours vérifier l'URL exacte du endpoint webhook dans Stripe
+  après toute reconfiguration.
 - **`liensCulturels-payment` valide `returnPage` contre une liste blanche codée en dur**
   (`ALLOWED_RETURN_PAGES`, anti-open-redirect volontaire) — toute nouvelle page qui appelle
   `window.LCPayment.renderButtons()` avec un nouveau `returnPage` doit être ajoutée à cette
@@ -184,12 +201,17 @@ Pour la liste exacte et à jour des routes : `aws apigatewayv2 get-routes --api-
 
 ## 9. Paiements
 
-Voir `PAYMENTS-SETUP.md` pour la configuration complète. En résumé : Stripe Checkout Session
-(hébergé, pas de formulaire de carte embarqué) + FedaPay pour le Mobile Money au Bénin (pas
-encore activé — ni clé de test ni clé live configurée à ce jour). Les deux passent par
-`liensCulturels-payment`, qui envoie un e-mail de confirmation au payeur et une notification
-à `contact@liensculturels.org` après chaque paiement réussi (webhook `checkout.session.
-completed` pour Stripe, `transaction.approved` pour FedaPay).
+Voir `PAYMENTS-SETUP.md` pour la configuration complète. Stripe Checkout Session (hébergé,
+pas de formulaire de carte embarqué) — **en mode LIVE depuis le 10 août 2026**, paiements
+réels. FedaPay pour le Mobile Money au Bénin pas encore activé (ni clé de test ni clé live
+configurée à ce jour). Les deux passent par `liensCulturels-payment`, qui envoie un e-mail de
+confirmation au payeur et une notification à `contact@liensculturels.org` après chaque
+paiement réussi (webhook `checkout.session.completed` pour Stripe, sur
+`POST /webhook/stripe` — **pas** `/payment/webhook`, voir piège §7 — `transaction.approved`
+pour FedaPay sur `POST /webhook/fedapay`).
+
+`ALLOWED_RETURN_PAGES` (anti-open-redirect) inclut désormais `adhesion.html`,
+`espace-membre.html` et `bourse-scolaire.html`.
 
 ## 10. Pour aller plus loin
 
