@@ -170,6 +170,17 @@ Pour la liste exacte et à jour des routes : `aws apigatewayv2 get-routes --api-
   retrouver le paiement manqué et en rejouant manuellement `_record_cotisation()` +
   `_send_payment_emails()`. Toujours vérifier l'URL exacte du endpoint webhook dans Stripe
   après toute reconfiguration.
+- **Suite directe du piège précédent — webhook non idempotent** : une fois l'URL corrigée,
+  Stripe a automatiquement renvoyé la notification en échec (comportement normal et
+  documenté par Stripe — un webhook peut toujours être livré plusieurs fois), ce qui a
+  recréé le même paiement une deuxième fois en base (le paiement manqué avait déjà été
+  rattrapé manuellement). `_record_cotisation()` ne vérifiait pas l'unicité de
+  `external_id` avant d'insérer. Corrigé : nouveau champ `externalId` sur chaque cotisation,
+  vérifié par un `scan` avant tout `put_item` — si une référence existe déjà, l'insertion et
+  les e-mails de confirmation sont ignorés. **A nécessité l'ajout de `dynamodb:Scan`** sur
+  `liensculturels-cotisations` au rôle `liensculturels-payment-lambda-role` (le rôle n'avait
+  que `PutItem`/`GetItem`/`Query` — sans ce correctif IAM, la vérification d'idempotence
+  aurait échoué silencieusement, capturée par un `try/except`, sans jamais rien bloquer).
 - **`liensCulturels-payment` valide `returnPage` contre une liste blanche codée en dur**
   (`ALLOWED_RETURN_PAGES`, anti-open-redirect volontaire) — toute nouvelle page qui appelle
   `window.LCPayment.renderButtons()` avec un nouveau `returnPage` doit être ajoutée à cette
