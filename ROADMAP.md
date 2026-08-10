@@ -1,5 +1,20 @@
 # ROADMAP — www.liensculturels.org
 
+## 🏷️ Version 1.00 — Release Candidate, 10 août 2026, 06h30
+
+Ce document (rounds 1 à 11, items 1 à 55) documente la construction complète de la
+**Version 1.00** de la plateforme : site public bilingue, adhésion et paiement Stripe en
+production, 4 espaces internes authentifiés (admin/secrétariat/trésorerie/gouvernance),
+conformité RGPD (bannière de consentement, Google Analytics 4), documentation technique et
+utilisateur. Ce contenu est désormais figé comme référence historique de la v1.00 — tag Git
+`v1.00-rc`.
+
+**À partir de maintenant, tout nouveau problème, incident ou évolution se suit dans la
+section [Backlog (après la Version 1.00)](#backlog-après-la-version-100) en bas de ce
+document**, pas en ajoutant de nouveaux "rounds" à la suite de l'historique ci-dessous.
+
+---
+
 Backlog établi après audit du site, du dépôt Git et de l'infrastructure AWS (2026-08-07),
 complété le même jour. Priorisé par impact / effort. `[x]` = corrigé.
 
@@ -278,3 +293,24 @@ s'est retrouvé publié sur le bucket public. Corrigé (pattern ajouté aux deux
 S3 orphelins (fichiers FBTT, anciennes cartes PNG, `loader.js`, `deploy.sh`) ont été
 supprimés manuellement puisque le workflow de sync n'utilise volontairement pas `--delete`.
 CloudFront invalidé et 404 vérifiée sur chacun de ces chemins.
+
+---
+
+## Backlog (après la Version 1.00)
+
+Ouvert le 10 août 2026, à la suite du gel de la Version 1.00 (tag `v1.00-rc`). Tout nouveau
+problème, incident ou évolution se documente ici — pas de nouveau "round" ajouté à
+l'historique ci-dessus, qui reste figé comme référence de la v1.00.
+
+**Légende** : `🐛` bug/incident · `✨` évolution/nouvelle fonctionnalité · `🔧` dette
+technique/maintenance · statut `ouvert` / `en cours` / `fait`.
+
+| # | Type | Sujet | Statut | Détail |
+|---|---|---|---|---|
+| B1 | 🔧 | `README.md` était périmé (mentionnait encore Brevo, 2 Lambdas sur 8) | fait | Réécrit le 10/08/2026 pour refléter l'état réel de la v1.00. |
+| B2 | ✨ | Bourse scolaire v2 : suivi des dons par campagne (au lieu d'un don générique indifférencié) | ouvert | Explicitement repoussé par l'association — priorité donnée à la validation du contrat de prestation RMS avant nouvelle évolution. |
+| B3 | ✨ | Catégories de dépenses liées à un local (électricité, eau, internet, achat PC/imprimante) | ouvert | Conditionné à l'existence d'un local, pas encore le cas. "Autre" couvre le besoin en attendant. |
+| B4 | 🔧 | Modalités de transfert des données en cas de résiliation du contrat RMS ↔ Association | fait | Fixé à 30 jours dans le contrat (voir dossier administratif, hors dépôt public). |
+
+*(Table à compléter au fil de l'eau — ajouter une ligne par nouveau sujet, avec la date dans
+le détail si utile.)*

@@ -1,139 +1,109 @@
 # site-liensculturels
-# Site Web de l'Association Liens Culturels
 
-![Logo de Liens Culturels](assets/img/logo.png)
+## Site web et plateforme numérique de l'Association Liens Culturels
 
-Bienvenue sur le dépôt GitHub du site officiel de l'association **Liens Culturels**. Ce projet a pour but de fournir une vitrine numérique moderne, accessible et informative pour présenter les missions, les projets et les activités de l'association.
+![Logo de Liens Culturels](assets/img/brand/logo-horizontal.svg)
 
-## 🎯 Objectif du Site
+Dépôt du site officiel **et** de la plateforme numérique de l'association **Liens
+Culturels** (loi 1901, Nogent-l'Artaud — France, Antilles, Bénin) : vitrine publique
+bilingue FR/EN, adhésion et paiement en ligne, et quatre espaces internes authentifiés
+(membre, admin, secrétariat, trésorerie, gouvernance).
 
-Le site `www.liensculturels.org` a été conçu pour :
+**Version 1.00 — Release Candidate, 10 août 2026.** Voir `ROADMAP.md` pour l'historique
+complet des rounds de développement et le backlog des points ouverts après cette version.
+
+---
+
+## 🎯 Objectif
+
 * **Informer** le public sur la vision et les actions de l'association.
-* **Faciliter l'interaction** avec la communauté via des formulaires de contact et d'adhésion.
-* **Promouvoir les projets**, notamment le programme de bourse scolaire "Avenir Partagé".
-* **Centraliser la communication** grâce à une newsletter et une médiathèque.
+* **Gérer les adhésions** : inscription en ligne, paiement de la cotisation par carte
+  bancaire (Stripe, en production), pack famille.
+* **Outiller le bureau** : gestion des membres et des rôles, documents, agenda,
+  médiathèque, newsletter, réunions/comptes-rendus/décisions, trésorerie (cotisations,
+  dons, dépenses), et un tableau de bord de pilotage pour le Conseil d'Administration.
+* **Mesurer l'audience**, avec le consentement explicite des visiteurs (RGPD).
 
----
+## ✨ Fonctionnalités principales
 
-## ✨ Fonctionnalités Principales
+* **Site public bilingue** (FR/EN, 28 pages) : présentation de l'association, projets,
+  bourse scolaire "Avenir Partagé" (avec don en ligne), agenda, médiathèque, vie
+  associative, mentions légales/CGU/confidentialité, guide d'utilisation + FAQ.
+* **Adhésion et paiement en ligne** : fiche d'adhésion (individuelle ou pack famille),
+  paiement de la cotisation ou don libre par carte bancaire via **Stripe** (mode
+  **production**, FedaPay/Mobile Money prévu pour le Bénin, pas encore activé).
+* **Espace membre authentifié** (Amazon Cognito) : profil, statut de cotisation, photo,
+  historique des paiements, agenda personnalisé.
+* **Quatre espaces internes**, selon le rôle du compte connecté :
+  * **Admin** — membres, rôles, documents, agenda, médiathèque, newsletter.
+  * **Secrétariat** — réunions, comptes-rendus, décisions (alimente la page publique
+    "Vie associative").
+  * **Trésorerie** — cotisations, dons, dépenses (catégorisées), export CSV.
+  * **Gouvernance** — tableau de bord de pilotage pour le Conseil d'Administration :
+    adhérents, point financier, dépenses par type et catégorie.
+* **Conformité RGPD** : bannière de consentement avant tout chargement de Google
+  Analytics 4, politique de confidentialité à jour.
 
-* **Présentation Complète :** Pages dédiées à l'association, au bureau et aux dirigeants.
-* **Galerie Média :** Une photothèque interactive et une vidéothèque pour partager les moments forts.
-* **Formulaires Dynamiques :**
-    * Un formulaire de **contact** pour les demandes d'information.
-    * Un formulaire d'**adhésion** pour les nouveaux membres.
-    * Les soumissions sont traitées par une architecture "serverless" et envoyées par e-mail.
-* **Newsletter :** Un formulaire d'inscription intégré au service Brevo pour garder la communauté engagée.
-* **Design Responsive :** Le site est entièrement adaptable aux ordinateurs, tablettes et mobiles.
+## 🛠️ Technologies utilisées
 
----
+* **Frontend** : HTML5 / CSS3 / JavaScript vanilla (aucun framework, aucun build),
+  Font Awesome, Lightbox2.
+* **Backend serverless** (AWS, non versionné dans ce dépôt — voir
+  `DOCUMENTATION-TECHNIQUE.md`) : API Gateway (HTTP API), 8 fonctions Lambda
+  (Python 3.11), DynamoDB, Amazon Cognito (authentification), Amazon SES (e-mails
+  transactionnels), Stripe (paiements).
 
-## 🛠️ Technologies Utilisées
+## 🚀 Installation et déploiement
 
-Ce site repose sur une architecture moderne, performante et économique, combinant des technologies statiques pour l'interface et des services "serverless" pour l'interactivité.
+Le site est hébergé en production sur **AWS S3 + CloudFront**.
 
-* **Frontend :**
-    * **HTML5**
-    * **CSS3** (avec Flexbox et Grid pour la mise en page)
-    * **JavaScript "vanilla"** (sans framework) pour la gestion des formulaires et des interactions.
-    * **Font Awesome** pour les icônes.
-    * **Lightbox2** pour la galerie photo.
+```bash
+git clone https://github.com/magonnoude/site-liensculturels.git
+python3 -m http.server   # aperçu local depuis la racine du dépôt
+```
 
-* **Backend (Serverless) :**
-    * **AWS API Gateway :** Pour créer un point d'entrée sécurisé pour les données des formulaires.
-    * **AWS Lambda :** Pour exécuter le code de traitement des formulaires (écrit en **Python 3.11**).
-    * **AWS SES (Simple Email Service) :** Pour l'envoi fiable des e-mails de notification.
+**Déploiement automatique** : tout push sur `main` déclenche
+`.github/workflows/deploy.yml` (sync S3 + invalidation CloudFront).
 
-* **Services Tiers :**
-    * **Brevo (Sendinblue) :** Pour la gestion professionnelle de la newsletter.
-
----
-
-## 🚀 Installation et Déploiement
-
-Le site est hébergé en production sur **AWS S3 + CloudFront** (voir infra ci-dessous).
-
-1.  Clonez ce dépôt :
-    ```bash
-    git clone https://github.com/magonnoude/site-liensculturels.git
-    ```
-2.  Ouvrez le fichier `index.html` dans votre navigateur (ou `python3 -m http.server`
-    depuis la racine) pour visualiser le site en local.
-
-**Déploiement (voie normale) :** tout push sur `main` déclenche
-`.github/workflows/deploy.yml` — sync S3 + invalidation CloudFront automatiques.
-
-**Déploiement manuel :**
+**Déploiement manuel** :
 ```bash
 cd ~/RMS_Projects/www.liensculturels.org
 ./deploy.sh "message de commit"
 ```
 
-Les endpoints des formulaires dans `assets/js/main.js` et les liens de la newsletter sont
-configurés pour la production et ne nécessitent pas de modification sauf en cas de
-changement d'infrastructure.
-
----
-
-## ☁️ Infrastructure AWS (compte `928883700132`, région `eu-west-3`)
-
-| Ressource | Valeur |
-|---|---|
-| S3 (site statique) | `www.liensculturels.org` (eu-west-3) — privé, accès via CloudFront OAC uniquement |
-| CloudFront | `E27Z3FWSMEYT5U` → `d3egnxbq47opx9.cloudfront.net` |
-| Alias CloudFront | `www.liensculturels.org`, `*.liensculturels.org`, `liensculturels.org` |
-| CloudFront Function | `redirect-root-to-www` (301 `liensculturels.org` → `www.liensculturels.org`) — actif, atteignable |
-| Certificat ACM | `liensculturels.org` + SAN `*.liensculturels.org` (us-east-1, `6586fe54-c9cb-468b-bcc3-a1e38b173315`) — couvre domaine nu et sous-domaines |
-| DNS | Géré chez **Gandi** (hors Route53 — ce compte AWS n'a pas de zone hébergée pour ce domaine) |
-| IAM déploiement | `github-actions-liensculturels` — policy `liensculturels-deploy-policy` (S3 + invalidation CloudFront scopées) |
-| API Gateway | `liensCulturels-API` (HTTP API, id `8igk1o6vw4`) — routes `POST /contact`, `POST /adhesion` |
-| Lambda contact | `liensCulturels-contact-form` (Python 3.11) |
-| Lambda adhésion | `liensCulturels-adhesion-form` (Python 3.11) — **déjà en production**, malgré la mention historique "endpoint à créer" dans `assets/js/main.js` |
-| Newsletter | Formulaire Brevo (Sendinblue) intégré dans `footer` de chaque page |
-| Logs CloudFront | Bucket dédié `www-liensculturels-org-logs` (chiffré, privé, expiration 30j) via CloudWatch Logs vended-logs delivery (`liensculturels-cf-access-logs`) |
-| En-têtes de sécurité | Response Headers Policy `liensculturels-security-headers` (CSP, HSTS, X-Frame-Options, Referrer-Policy, X-Content-Type-Options) |
-| Page d'erreur | 403/404 CloudFront → `/404.html` (statut HTTP 404) |
-
-✅ **Domaine nu corrigé (2026-08-07) :** `https://liensculturels.org` et
-`http://liensculturels.org` redirigent désormais en 301 vers `https://www.liensculturels.org`
-via `redirect-root-to-www`. Correctif : nouveau certificat ACM avec SAN sur le domaine nu,
-validé par CNAME chez Gandi, puis alias + certificat mis à jour sur la distribution
-CloudFront. L'ancien certificat (`ee2a2253-...`, wildcard uniquement) a été supprimé.
-
-Le backend serverless (Lambda, API Gateway, SES) n'est pas versionné dans ce dépôt.
-
----
-
-## 📂 Structure des Fichiers
+## 📂 Structure du dépôt
 
 ```
 .
-├── .github/workflows/deploy.yml  # Déploiement auto (push main → S3 + CloudFront)
-├── .github/workflows/lint.yml    # Validation HTML + liens morts sur chaque PR
-├── 404.html                       # Page d'erreur (mappée depuis CloudFront)
+├── .github/workflows/       # deploy.yml (déploiement auto), lint.yml (validation HTML)
 ├── assets/
-│   ├── css/
-│   │   └── style.css       # Feuille de style principale
-│   ├── img/                # Toutes les images (logos, photos, etc.)
-│   └── js/
-│       ├── main.js         # Formulaires contact/adhésion + vidéothèque
-│       └── agenda-script.js
-├── documents/               # PDFs publics (statuts, règlement intérieur, PV d'AG)
-├── tasks/                   # todo.md / lessons.md — suivi de travail Claude Code
-├── index.html               # Page d'accueil
-├── a-propos.html
-├── bureau.html
-├── contact.html
-├── ... (toutes les autres pages HTML)
-├── sitemap.xml / robots.txt # SEO
-├── deploy.sh                 # Déploiement manuel (miroir du workflow GitHub Actions)
-├── CLAUDE.md                 # Règles de travail pour Claude Code sur ce dépôt
-├── ROADMAP.md                 # Backlog priorisé d'améliorations
-└── README.md                 # Ce fichier
+│   ├── css/style.css        # feuille de style principale
+│   ├── img/                 # images, identité visuelle (assets/img/brand/)
+│   └── js/                  # main.js, auth.js, payment.js, consent.js, espace-membre.js, ...
+├── documents/                # PDFs publics (statuts, PV d'AG)
+├── index.html, a-propos.html, ... # 28 pages HTML à la racine (pas de sous-dossiers de pages)
+├── admin.html, secretariat.html, tresorerie.html, gouvernance.html, espace-membre.html
+│                              # espaces internes — hors nav publique et sitemap.xml
+├── sitemap.xml / robots.txt  # SEO
+├── deploy.sh                  # déploiement manuel (miroir du workflow GitHub Actions)
+├── CLAUDE.md                  # règles de travail pour Claude Code sur ce dépôt
+├── DOCUMENTATION-TECHNIQUE.md  # référence technique complète (architecture, Lambdas, pièges connus)
+├── ROADMAP.md                  # historique des rounds de développement + backlog
+└── README.md                   # ce fichier
 ```
 
----
+## 📚 Pour aller plus loin
+
+- **`DOCUMENTATION-TECHNIQUE.md`** — architecture complète, les 8 Lambdas et leurs routes,
+  schéma DynamoDB, Cognito, et une section "pièges connus" tirée d'incidents réels.
+  Document de référence pour toute personne qui reprend la maintenance technique.
+- **`ROADMAP.md`** — historique complet des demandes traitées, round par round, plus le
+  backlog des points ouverts après la Version 1.00.
+- **`PAYMENTS-SETUP.md`** — configuration Stripe/FedaPay.
+- Guide d'utilisation en ligne (membres connectés) :
+  [www.liensculturels.org/guide-utilisation.html](https://www.liensculturels.org/guide-utilisation.html).
 
 ## Contact
 
-Pour toute question relative à l'association, veuillez utiliser le formulaire de contact du site ou envoyer un e-mail à **contact@liensculturels.org**.
+Pour toute question, utilisez le formulaire de contact du site ou écrivez à
+**contact@liensculturels.org**.
