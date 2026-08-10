@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ---- membres ----
-    const GROUP_LABELS = { admin: "Admin", secretaire: "Secrétaire", tresorier: "Trésorier", membre: "Membre" };
+    const GROUP_LABELS = { admin: "Admin", secretaire: "Secrétaire", tresorier: "Trésorier", gouvernance: "Gouvernance", membre: "Membre" };
 
     async function loadMembers() {
         const members = await api("/admin/members");
@@ -72,6 +72,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         ${groupOptions}
                     </select>
                 </td>
+                <td>${m.accountStatus === "connecte" ? '<span title="A défini son propre mot de passe">✅ Connecté</span>' : '<span title="Toujours sur le mot de passe temporaire initial" style="color:#888;">⏳ Invitation en attente</span>'}</td>
             `;
             tbody.appendChild(tr);
         });

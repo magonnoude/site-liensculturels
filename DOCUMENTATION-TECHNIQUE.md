@@ -210,6 +210,26 @@ Pour la liste exacte et à jour des routes : `aws apigatewayv2 get-routes --api-
 - IAM de déploiement : utilisateur `github-actions-liensculturels`, policy scopée S3 (ce
   bucket uniquement) + invalidation CloudFront (cette distribution uniquement).
 
+## 8bis. Convention : notification systématique de `contact@liensculturels.org`
+
+Toute action significative sur un compte ou une transaction envoie une notification
+séparée à `SENDER_EMAIL` (`contact@liensculturels.org`) — **pas une copie (CC) sur l'e-mail
+envoyé à l'utilisateur**, un second `ses.send_email()` distinct. Déjà en place :
+
+| Flux | Vers l'utilisateur | Vers contact@ |
+|---|---|---|
+| `liensCulturels-contact-form` | — | ✅ (c'est son seul but) |
+| `liensCulturels-adhesion-form` | ✅ confirmation | ✅ notification séparée |
+| `liensCulturels-payment` (`_send_payment_emails`) | ✅ confirmation | ✅ notification séparée |
+| `liensCulturels-admin-api` (`update_member_groups`, depuis le 10/08/2026) | — | ✅ résumé du changement de rôle |
+
+**Toute nouvelle route qui modifie un compte, une cotisation ou un rôle doit suivre cette
+même convention** — envoi enveloppé dans un `try/except ClientError` pour ne jamais faire
+échouer l'action principale si l'e-mail ne part pas (voir le pattern dans
+`_send_payment_emails` ou `update_member_groups`). Les envois manuels/ponctuels (ex. :
+invitations groupées) doivent aussi notifier contact@ séparément — un oubli réel s'est déjà
+produit sur ce point (round 11).
+
 ## 9. Paiements
 
 Voir `PAYMENTS-SETUP.md` pour la configuration complète. Stripe Checkout Session (hébergé,
