@@ -16,7 +16,7 @@ paiements en ligne.
 Navigateur
   ├─ Pages statiques ──────────► CloudFront (E27Z3FWSMEYT5U) ──► S3 (www.liensculturels.org)
   ├─ Connexion (Hosted UI) ────► Cognito (pool eu-west-3_nG1lWCmJK)
-  └─ Appels API (fetch) ───────► API Gateway (8igk1o6vw4) ──► 8 Lambdas ──► DynamoDB / SES / S3
+  └─ Appels API (fetch) ───────► API Gateway (8igk1o6vw4) ──► 10 Lambdas ──► DynamoDB / SES / S3
 ```
 
 Compte AWS `928883700132`, région `eu-west-3` (Paris) pour toutes les ressources sauf le
@@ -74,7 +74,7 @@ certificat ACM du domaine nu (us-east-1, obligatoire pour CloudFront).
   fiable (adresse générique, souvent filtré en spam). À la place : `MessageAction=SUPPRESS`
   + mot de passe temporaire généré côté serveur, transmis par un autre canal.
 
-## 4. Les 8 Lambdas (Python 3.11, hors dépôt Git)
+## 4. Les 10 Lambdas (Python 3.11, hors dépôt Git)
 
 Aucune n'est versionnée dans ce dépôt — leur code vit uniquement dans AWS. Toujours
 `aws lambda get-function --query Code.Location` pour récupérer la source déployée avant de la
@@ -90,6 +90,11 @@ modifier, ne jamais deviner l'état actuel à partir d'une ancienne copie locale
 | `liensCulturels-secretariat-api` | Réunions, comptes-rendus, décisions ; alimente aussi la page publique `vie-associative.html` | `.../secretariat/reunions`, `.../comptes-rendus`, `.../decisions`, `GET /public/vie-associative` (sans authorizer) |
 | `liensCulturels-tresorerie-api` | Cotisations, dépenses (avec champ `type` Fixe/Exceptionnelle depuis le 9 août 2026), export CSV, synthèse | `.../tresorerie/cotisations`, `.../depenses`, `GET /tresorerie/summary`, `GET /tresorerie/membres` |
 | `liensCulturels-gouvernance-api` | **Nouvelle (9 août 2026), lecture seule** — tableau de bord agrégé pour le CA | `GET /gouvernance/summary` |
+| `liensCulturels-newsletter` | Inscription/confirmation/désinscription newsletter (double opt-in) | `POST /newsletter/subscribe`, `GET /newsletter/confirm`, `GET /newsletter/unsubscribe` |
+| `liensCulturels-public-content` | Contenu public en lecture seule (agenda, galerie) consommé par le site sans authentification | `GET /agenda`, `GET /gallery` |
+
+Ces deux dernières manquaient à une version antérieure de ce document (10 Lambdas réellement
+déployées, pas 8) — corrigé le 11/08/2026 en vérifiant `aws lambda list-functions`.
 
 Convention d'autorisation commune (sauf `contact-form`/`adhesion-form`/routes publiques,
 sans authorizer) : claims lues dans
@@ -112,6 +117,11 @@ session, voir §7.
 
 Pour la liste exacte et à jour des routes : `aws apigatewayv2 get-routes --api-id 8igk1o6vw4
 --region eu-west-3 --query "Items[].RouteKey" --output text`.
+
+**Supervision (depuis le 11/08/2026)** : une alarme CloudWatch par Lambda sur la métrique
+`Errors` (seuil ≥ 1 sur 5 min) publie sur le topic SNS `liensculturels-alerts` (abonnement
+e-mail `contact@liensculturels.org`). **PITR activé** sur `liensculturels-members`,
+`-cotisations` et `-depenses` (restauration possible jusqu'à 35 jours en arrière).
 
 ## 6. DynamoDB
 
