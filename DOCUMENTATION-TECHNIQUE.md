@@ -56,6 +56,11 @@ certificat ACM du domaine nu (us-east-1, obligatoire pour CloudFront).
   "Accepter" — jamais au chargement de la page. Choix mémorisé en `localStorage`
   (`lc_analytics_consent`). Domaine `googletagmanager.com`/`google-analytics.com` autorisé
   dans la CSP CloudFront (voir piège §7).
+- **PWA (installable, depuis le 11/08/2026)** : `assets/img/site.webmanifest` (nom, icônes,
+  couleurs, `start_url`, `scope: "/"`) + `sw.js` à la racine (réseau d'abord, cache en
+  secours hors-ligne uniquement, jamais le HTML — cohérent avec le `no-cache` du HTML côté
+  déploiement). Enregistrement du service worker + bouton "Installer l'app" injectés depuis
+  `assets/js/header.js` (déjà chargé partout) — pas d'app native, pas de fiche Store.
 
 ## 3. Authentification — Amazon Cognito
 
@@ -146,6 +151,12 @@ rafale 5) via `RouteSettings` du stage `$default` — anti-abus, testé en condi
 
 ## 7. Pièges connus (vécus, pas hypothétiques)
 
+- **Un service worker ne doit intercepter que le same-origin.** Un `fetch` handler qui
+  ré-émet aussi les requêtes cross-origin (ex. Font Awesome sur cdnjs) peut casser leur
+  chargement (`net::ERR_FAILED`) — constaté en conditions réelles (le smoke test B15 l'a
+  détecté dans la minute suivant le premier déploiement de `sw.js`, voir B8). Toujours
+  vérifier `new URL(event.request.url).origin === self.location.origin` avant
+  `event.respondWith(...)`, sinon laisser passer sans intercepter.
 - **Vendoring d'une dépendance tierce dans une Lambda : toujours forcer la plateforme/version
   Python cible.** `pip install <pkg> --target .` sans contrainte installe les wheels compilés
   pour l'environnement LOCAL (ex. Python 3.12 sur cette machine), pas pour le runtime Lambda
