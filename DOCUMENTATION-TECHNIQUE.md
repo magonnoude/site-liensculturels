@@ -16,7 +16,7 @@ paiements en ligne.
 Navigateur
   ├─ Pages statiques ──────────► CloudFront (E27Z3FWSMEYT5U) ──► S3 (www.liensculturels.org)
   ├─ Connexion (Hosted UI) ────► Cognito (pool eu-west-3_nG1lWCmJK)
-  └─ Appels API (fetch) ───────► API Gateway (8igk1o6vw4) ──► 10 Lambdas ──► DynamoDB / SES / S3
+  └─ Appels API (fetch) ───────► API Gateway (8igk1o6vw4) ──► 11 Lambdas ──► DynamoDB / SES / S3
 ```
 
 Compte AWS `928883700132`, région `eu-west-3` (Paris) pour toutes les ressources sauf le
@@ -74,7 +74,7 @@ certificat ACM du domaine nu (us-east-1, obligatoire pour CloudFront).
   fiable (adresse générique, souvent filtré en spam). À la place : `MessageAction=SUPPRESS`
   + mot de passe temporaire généré côté serveur, transmis par un autre canal.
 
-## 4. Les 10 Lambdas (Python 3.11, hors dépôt Git)
+## 4. Les 11 Lambdas (Python 3.11, hors dépôt Git)
 
 Aucune n'est versionnée dans ce dépôt — leur code vit uniquement dans AWS. Toujours
 `aws lambda get-function --query Code.Location` pour récupérer la source déployée avant de la
@@ -92,9 +92,11 @@ modifier, ne jamais deviner l'état actuel à partir d'une ancienne copie locale
 | `liensCulturels-gouvernance-api` | **Nouvelle (9 août 2026), lecture seule** — tableau de bord agrégé pour le CA | `GET /gouvernance/summary` |
 | `liensCulturels-newsletter` | Inscription/confirmation/désinscription newsletter (double opt-in) | `POST /newsletter/subscribe`, `GET /newsletter/confirm`, `GET /newsletter/unsubscribe` |
 | `liensCulturels-public-content` | Contenu public en lecture seule (agenda, galerie) consommé par le site sans authentification | `GET /agenda`, `GET /gallery` |
+| `liensCulturels-cotisation-reminder` | **Nouvelle (11/08/2026)**, pas de route API — déclenchée uniquement par EventBridge (règle `liensculturels-cotisation-reminder-annuel`, 1er novembre 8h UTC). Rappelle par e-mail aux membres dont la cotisation la plus récente n'est pas celle de l'année en cours. | — (invocation planifiée uniquement) |
 
-Ces deux dernières manquaient à une version antérieure de ce document (10 Lambdas réellement
-déployées, pas 8) — corrigé le 11/08/2026 en vérifiant `aws lambda list-functions`.
+Les deux avant-dernières manquaient à une version antérieure de ce document (10 Lambdas
+réellement déployées à l'époque, pas 8) — corrigé le 11/08/2026 en vérifiant
+`aws lambda list-functions`.
 
 Convention d'autorisation commune (sauf `contact-form`/`adhesion-form`/routes publiques,
 sans authorizer) : claims lues dans
