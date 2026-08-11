@@ -20,6 +20,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     contentEl.style.display = "block";
 
+    const topbarUser = document.getElementById("topbar-user");
+    if (topbarUser) {
+        document.getElementById("topbar-user-name").textContent = window.LCAuth.getDisplayName();
+        topbarUser.style.display = "inline-flex";
+    }
+
     const msgEl = document.getElementById("comm-msg");
     function showMessage(text, kind) {
         msgEl.textContent = text;

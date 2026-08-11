@@ -137,6 +137,11 @@
         return groups.includes(name);
     }
 
+    function getDisplayName() {
+        const claims = getClaims();
+        return (claims && claims.name) || "";
+    }
+
     function logout() {
         sessionStorage.removeItem(STORAGE_KEY);
         sessionStorage.removeItem(VERIFIER_KEY);
@@ -168,6 +173,7 @@
         getIdToken,
         getClaims,
         hasGroup,
+        getDisplayName,
         apiFetch,
     };
 })();

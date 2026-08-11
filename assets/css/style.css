@@ -67,6 +67,15 @@ a:hover {
     padding-top: 0.45rem;
     padding-bottom: 0.45rem;
 }
+.header-utility .utility-user {
+    margin-right: auto;
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
 .header-utility .utility-link {
     color: #c0392b;
     font-size: 0.82rem;

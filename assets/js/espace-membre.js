@@ -28,6 +28,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const claims = window.LCAuth.getClaims();
     document.getElementById("portal-name").textContent = (claims && claims.name) || "";
 
+    const topbarUser = document.getElementById("topbar-user");
+    if (topbarUser) {
+        document.getElementById("topbar-user-name").textContent = window.LCAuth.getDisplayName();
+        topbarUser.style.display = "inline-flex";
+    }
+
     const avatarImgEl = document.getElementById("portal-avatar-img");
     const avatarInitialsEl = document.getElementById("portal-avatar-initials");
     function setAvatar(photoUrl) {
@@ -51,26 +57,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     // regardless of this list, so the nav has to reflect that or the link
     // is just invisible to them even though it works.
     const spaceLinks = [
-        { visible: isAdmin, href: "admin.html", label: "Espace Admin" },
-        { visible: isAdmin || groups.includes("secretaire"), href: "secretariat.html", label: "Espace Secrétariat" },
-        { visible: isAdmin || groups.includes("tresorier"), href: "tresorerie.html", label: "Espace Trésorerie" },
+        { visible: isAdmin, href: "admin.html", label: "Espace Admin", icon: "fa-user-shield" },
+        { visible: isAdmin || groups.includes("secretaire"), href: "secretariat.html", label: "Espace Secrétariat", icon: "fa-file-signature" },
+        { visible: isAdmin || groups.includes("tresorier"), href: "tresorerie.html", label: "Espace Trésorerie", icon: "fa-coins" },
         // Gouvernance est volontairement à part : pas de bypass "admin" (rôle
         // technique distinct), décision confirmée avec l'association.
-        { visible: groups.includes("gouvernance"), href: "gouvernance.html", label: "Espace Gouvernance" },
+        { visible: groups.includes("gouvernance"), href: "gouvernance.html", label: "Espace Gouvernance", icon: "fa-landmark" },
         // Communication, à l'inverse de Gouvernance : bypass "admin" autorisé
         // (décision B13 confirmée avec l'association).
-        { visible: isAdmin || groups.includes("communication"), href: "communication.html", label: "Espace Communication" },
+        { visible: isAdmin || groups.includes("communication"), href: "communication.html", label: "Espace Communication", icon: "fa-bullhorn" },
     ];
     const groupsEl = document.getElementById("portal-groups");
-    spaceLinks.forEach((link) => {
-        if (link.visible) {
-            const a = document.createElement("a");
-            a.href = link.href;
-            a.className = "btn";
-            a.textContent = link.label;
-            groupsEl.appendChild(a);
-        }
-    });
+    const groupsCardEl = document.getElementById("portal-groups-card");
+    const visibleSpaceLinks = spaceLinks.filter((link) => link.visible);
+    if (visibleSpaceLinks.length) {
+        groupsCardEl.style.display = "block";
+        visibleSpaceLinks.forEach((link) => {
+            const card = document.createElement("a");
+            card.href = link.href;
+            card.className = "promo-card impact-card";
+            card.style.display = "block";
+            card.innerHTML = `<h3><i class="fas ${link.icon}"></i> ${link.label}</h3>`;
+            groupsEl.appendChild(card);
+        });
+    }
 
     const msgEl = document.getElementById("portal-msg");
     const badgeEl = document.getElementById("portal-cotisation-badge");

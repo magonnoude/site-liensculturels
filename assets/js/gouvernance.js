@@ -19,6 +19,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     contentEl.style.display = "block";
 
+    const topbarUser = document.getElementById("topbar-user");
+    if (topbarUser) {
+        document.getElementById("topbar-user-name").textContent = window.LCAuth.getDisplayName();
+        topbarUser.style.display = "inline-flex";
+    }
+
     function euros(n) {
         const value = typeof n === "number" ? n : parseFloat(n) || 0;
         return `${value} €`;

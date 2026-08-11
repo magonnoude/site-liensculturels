@@ -59,6 +59,7 @@
 <body>    <div class="site-header">
     <div class="header-utility">
         <div class="container">
+            <span class="utility-user" id="topbar-user" style="display:none;"><i class="fas fa-circle-user"></i> <span id="topbar-user-name"></span></span>
             <a href="espace-membre.html" class="utility-link"><i class="fas fa-user-lock"></i> <span class="lang-fr">Accès Membre</span><span class="lang-en">Member Access</span></a>
             <span class="utility-divider" aria-hidden="true"></span>
             <div class="utility-contacts">
@@ -125,7 +126,32 @@
                 </div>
             </div>
 
-            <div class="portal-groups" id="portal-groups"></div>
+            <!-- Accès rapides -->
+            <div class="portal-card">
+                <h2><span class="lang-fr">Accès rapides</span><span class="lang-en">Quick access</span></h2>
+                <div class="promo-grid">
+                    <div class="promo-card impact-card">
+                        <h3><i class="fas fa-people-group"></i> <span class="lang-fr">Vie associative</span><span class="lang-en">Association life</span></h3>
+                        <p style="font-size:0.9rem; color:#555;"><span class="lang-fr">Réunions du bureau, comptes-rendus et décisions — en toute transparence, réservé aux membres connectés.</span><span class="lang-en">Board meetings, meeting minutes and decisions — in full transparency, reserved for logged-in members.</span></p>
+                        <p><a href="vie-associative.html"><span class="lang-fr">Consulter</span><span class="lang-en">See more</span> →</a></p>
+                    </div>
+                    <div class="promo-card impact-card">
+                        <h3><i class="fas fa-download"></i> <span class="lang-fr">Télécharger mes données</span><span class="lang-en">Download my data</span></h3>
+                        <p style="font-size:0.9rem; color:#555;"><span class="lang-fr">Export au format RGPD (droit d'accès et de portabilité) de votre profil et de votre historique de cotisations/dons.</span><span class="lang-en">GDPR-format export (right of access and portability) of your profile and dues/donations history.</span></p>
+                        <p><button type="button" class="btn" id="portal-export-btn" style="margin-top:0;"><i class="fas fa-download"></i> <span class="lang-fr">Télécharger</span><span class="lang-en">Download</span></button></p>
+                    </div>
+                    <div class="promo-card impact-card">
+                        <h3><i class="fas fa-address-card"></i> <span class="lang-fr">Trombinoscope</span><span class="lang-en">Board directory</span></h3>
+                        <p style="font-size:0.9rem; color:#555;"><span class="lang-fr">Qui est qui au bureau de l'association.</span><span class="lang-en">Who's who on the association's board.</span></p>
+                        <p><a href="trombinoscope.html"><span class="lang-fr">Voir</span><span class="lang-en">See more</span> →</a></p>
+                    </div>
+                    <div class="promo-card impact-card">
+                        <h3><i class="fas fa-circle-question"></i> <span class="lang-fr">Besoin d'aide ?</span><span class="lang-en">Need help?</span></h3>
+                        <p style="font-size:0.9rem; color:#555;"><span class="lang-fr">Le guide d'utilisation du site : comment payer sa cotisation, à quoi servent les différents espaces, questions fréquentes.</span><span class="lang-en">The site's user guide: how to pay your dues, what each space is for, frequently asked questions.</span></p>
+                        <p><a href="guide-utilisation.html"><span class="lang-fr">Consulter</span><span class="lang-en">See more</span> →</a></p>
+                    </div>
+                </div>
+            </div>
 
             <!-- Agenda -->
             <div class="portal-card">
@@ -211,30 +237,13 @@
                     </div>
                 </form>
                 <p style="font-size:0.85rem; color:#777; margin-top:-0.6rem;"><span class="lang-fr">Ces informations sont gérées par le secrétariat — <a href="contact.html">contactez-nous</a> pour les mettre à jour.</span><span class="lang-en">This information is managed by the secretariat — <a href="contact.html">contact us</a> to update it.</span></p>
-                <button type="button" class="btn" id="portal-export-btn" style="margin-top:0.5rem;"><i class="fas fa-download"></i> <span class="lang-fr">Télécharger mes données</span><span class="lang-en">Download my data</span></button>
-                <p style="font-size:0.8rem; color:#777; margin-top:0.4rem;"><span class="lang-fr">Export au format RGPD (droit d'accès et de portabilité) de votre profil et de votre historique de cotisations/dons.</span><span class="lang-en">GDPR-format export (right of access and portability) of your profile and dues/donations history.</span></p>
                 <div class="portal-msg" id="portal-msg"></div>
             </div>
 
-            <!-- Vie associative -->
-            <div class="portal-card">
-                <h2><i class="fas fa-people-group"></i> <span class="lang-fr">Vie associative</span><span class="lang-en">Association life</span></h2>
-                <p style="font-size:0.9rem; color:#555;"><span class="lang-fr">Réunions du bureau, comptes-rendus et décisions — en toute transparence, réservé aux membres connectés.</span><span class="lang-en">Board meetings, meeting minutes and decisions — in full transparency, reserved for logged-in members.</span></p>
-                <p><a href="vie-associative.html"><span class="lang-fr">Consulter la vie associative</span><span class="lang-en">See association life</span> →</a></p>
-            </div>
-
-            <!-- Trombinoscope -->
-            <div class="portal-card">
-                <h2><i class="fas fa-address-card"></i> <span class="lang-fr">Trombinoscope</span><span class="lang-en">Board directory</span></h2>
-                <p style="font-size:0.9rem; color:#555;"><span class="lang-fr">Qui est qui au bureau de l'association.</span><span class="lang-en">Who's who on the association's board.</span></p>
-                <p><a href="trombinoscope.html"><span class="lang-fr">Voir le trombinoscope</span><span class="lang-en">See the directory</span> →</a></p>
-            </div>
-
-            <!-- Guide d'utilisation -->
-            <div class="portal-card">
-                <h2><i class="fas fa-circle-question"></i> <span class="lang-fr">Besoin d'aide ?</span><span class="lang-en">Need help?</span></h2>
-                <p style="font-size:0.9rem; color:#555;"><span class="lang-fr">Consultez le guide d'utilisation du site : comment payer sa cotisation, à quoi servent les différents espaces, questions fréquentes.</span><span class="lang-en">See the site's user guide: how to pay your dues, what each space is for, frequently asked questions.</span></p>
-                <p><a href="guide-utilisation.html"><span class="lang-fr">Consulter le guide d'utilisation</span><span class="lang-en">Read the user guide</span> →</a></p>
+            <!-- Autres espaces -->
+            <div class="portal-card" id="portal-groups-card" style="display:none;">
+                <h2><i class="fas fa-layer-group"></i> <span class="lang-fr">Autres espaces</span><span class="lang-en">Other spaces</span></h2>
+                <div class="promo-grid" id="portal-groups"></div>
             </div>
 
             <p style="margin-top: 2rem;"><a href="#" id="portal-logout-btn"><i class="fas fa-right-from-bracket"></i> Se déconnecter</a></p>
