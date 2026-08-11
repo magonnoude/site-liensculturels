@@ -122,6 +122,8 @@ Pour la liste exacte et à jour des routes : `aws apigatewayv2 get-routes --api-
 `Errors` (seuil ≥ 1 sur 5 min) publie sur le topic SNS `liensculturels-alerts` (abonnement
 e-mail `contact@liensculturels.org`). **PITR activé** sur `liensculturels-members`,
 `-cotisations` et `-depenses` (restauration possible jusqu'à 35 jours en arrière).
+**Throttling** par route sur `POST /adhesion`/`/contact`/`/newsletter/subscribe` (2 req/s,
+rafale 5) via `RouteSettings` du stage `$default` — anti-abus, testé en conditions réelles.
 
 ## 6. DynamoDB
 
