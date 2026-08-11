@@ -57,6 +57,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Gouvernance est volontairement à part : pas de bypass "admin" (rôle
         // technique distinct), décision confirmée avec l'association.
         { visible: groups.includes("gouvernance"), href: "gouvernance.html", label: "Espace Gouvernance" },
+        // Communication, à l'inverse de Gouvernance : bypass "admin" autorisé
+        // (décision B13 confirmée avec l'association).
+        { visible: isAdmin || groups.includes("communication"), href: "communication.html", label: "Espace Communication" },
     ];
     const groupsEl = document.getElementById("portal-groups");
     spaceLinks.forEach((link) => {
