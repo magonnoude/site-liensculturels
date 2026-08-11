@@ -114,10 +114,74 @@ window.LCPayment = (function () {
             formsEl.style.display = "block";
 
             const cotisationType = document.getElementById("member-cotisation-type");
+
+            // ---- Pack famille (B10) : mêmes lignes dynamiques que adhesion.html,
+            // dupliquées ici (IDs member-family-*) plutôt que partagées entre les
+            // deux pages — main.js reste dédié au formulaire d'adhésion.
+            const familySection = document.getElementById("member-family-section");
+            const familyList = document.getElementById("member-family-list");
+            const addFamilyMemberBtn = document.getElementById("member-add-family-btn");
+
+            function addFamilyMemberRow() {
+                const row = document.createElement("div");
+                row.className = "family-member-row";
+                row.innerHTML = `
+                    <div class="fm-line">
+                        <input type="text" class="fm-prenom" placeholder="Prénom">
+                        <input type="text" class="fm-nom" placeholder="Nom">
+                        <select class="fm-lien">
+                            <option value="conjoint">Conjoint(e)</option>
+                            <option value="enfant">Enfant</option>
+                            <option value="parent">Parent</option>
+                            <option value="autre">Autre</option>
+                        </select>
+                        <button type="button" class="fm-remove">&times;</button>
+                    </div>
+                    <div class="fm-line">
+                        <input type="email" class="fm-email" placeholder="Email">
+                        <input type="tel" class="fm-telephone" placeholder="Téléphone">
+                        <input type="text" class="fm-adresse" placeholder="Adresse (si différente)">
+                    </div>
+                `;
+                row.querySelector(".fm-remove").addEventListener("click", () => row.remove());
+                familyList.appendChild(row);
+            }
+
+            function toggleFamilySection() {
+                if (!familySection) return;
+                const isFamille = cotisationType.value === "famille";
+                familySection.style.display = isFamille ? "block" : "none";
+                if (isFamille && familyList.children.length === 0) addFamilyMemberRow();
+            }
+
+            function collectFamilyMembers() {
+                if (!familySection || familySection.style.display === "none") return [];
+                return Array.from(familyList.querySelectorAll(".family-member-row"))
+                    .map((row) => ({
+                        prenom: row.querySelector(".fm-prenom").value.trim(),
+                        nom: row.querySelector(".fm-nom").value.trim(),
+                        lien: row.querySelector(".fm-lien").value,
+                        email: row.querySelector(".fm-email").value.trim(),
+                        telephone: row.querySelector(".fm-telephone").value.trim(),
+                        adresse: row.querySelector(".fm-adresse").value.trim(),
+                    }))
+                    .filter((m) => m.prenom || m.nom);
+            }
+
+            if (addFamilyMemberBtn) addFamilyMemberBtn.addEventListener("click", addFamilyMemberRow);
+            cotisationType.addEventListener("change", toggleFamilySection);
+            toggleFamilySection();
+
             renderButtons(
                 document.getElementById("member-cotisation-buttons"),
                 config,
-                () => ({ type: cotisationType.value, email, nom, returnPage: "espace-membre.html" }),
+                () => ({
+                    type: cotisationType.value,
+                    email,
+                    nom,
+                    returnPage: "espace-membre.html",
+                    ...(cotisationType.value === "famille" ? { familyMembers: collectFamilyMembers() } : {}),
+                }),
                 (msg) => showFeedback(msg, "error")
             );
 
