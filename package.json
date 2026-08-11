@@ -1,0 +1,11 @@
+{
+  "name": "site-liensculturels-smoke-tests",
+  "private": true,
+  "description": "Suite de smoke tests CI (B15) — vérifications réelles, non mutantes, exécutées après chaque déploiement.",
+  "scripts": {
+    "smoke": "node tests/smoke.js"
+  },
+  "dependencies": {
+    "playwright": "^1.62.1"
+  }
+}

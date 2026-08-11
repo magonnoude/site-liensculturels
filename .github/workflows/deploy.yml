@@ -46,6 +46,10 @@ jobs:
             --exclude "*.sh" \
             --exclude "*:Zone.Identifier" \
             --exclude "*.Zone.Identifier" \
+            --exclude "package.json" \
+            --exclude "package-lock.json" \
+            --exclude "node_modules/*" \
+            --exclude "tests/*" \
             --region ${{ secrets.AWS_REGION }}
 
       # Cache court sur le HTML pour que les mises à jour de contenu soient visibles vite
@@ -101,3 +105,34 @@ jobs:
           echo "📅 $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
           echo "📦 Commit: ${{ github.sha }}"
           echo "👤 Actor:  ${{ github.actor }}"
+
+  # Smoke tests (B15) — vérifications réelles, non mutantes, sur le site déployé.
+  # Un échec ici n'annule PAS le déploiement (aucun rollback automatique n'existe
+  # sur ce site) : c'est une alerte rapide, pas un gate. Portée volontairement
+  # limitée à la connexion + au chargement des pages membre gated — jamais de
+  # soumission d'adhésion ni de paiement réel (Stripe est en mode LIVE).
+  smoke-test:
+    name: Smoke tests (post-deploy)
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Run smoke tests
+        env:
+          SITE_URL: https://www.liensculturels.org
+          SMOKE_TEST_EMAIL: ${{ secrets.SMOKE_TEST_EMAIL }}
+          SMOKE_TEST_PASSWORD: ${{ secrets.SMOKE_TEST_PASSWORD }}
+        run: npm run smoke
