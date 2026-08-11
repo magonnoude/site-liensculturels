@@ -6,11 +6,11 @@
 
 Dépôt du site officiel **et** de la plateforme numérique de l'association **Liens
 Culturels** (loi 1901, Nogent-l'Artaud — France, Antilles, Bénin) : vitrine publique
-bilingue FR/EN, adhésion et paiement en ligne, et quatre espaces internes authentifiés
-(membre, admin, secrétariat, trésorerie, gouvernance).
+bilingue FR/EN installable en PWA, adhésion et paiement en ligne, et cinq espaces internes
+authentifiés (membre, admin, secrétariat, trésorerie, gouvernance, communication).
 
-**Version 1.00 — Release Candidate, 10 août 2026.** Voir `ROADMAP.md` pour l'historique
-complet des rounds de développement et le backlog des points ouverts après cette version.
+**Version 1.01, 11 août 2026.** Voir `ROADMAP.md` pour l'historique complet des rounds de
+développement et le backlog des points ouverts.
 
 ---
 
@@ -26,32 +26,46 @@ complet des rounds de développement et le backlog des points ouverts après cet
 
 ## ✨ Fonctionnalités principales
 
-* **Site public bilingue** (FR/EN, 29 pages) : présentation de l'association, projets,
-  bourse scolaire "Avenir Partagé" (avec don en ligne), agenda, médiathèque, vie
-  associative, mentions légales/CGU/confidentialité, guide d'utilisation + FAQ.
+* **Site public bilingue** (FR/EN, 30 pages, installable comme PWA — icône sur l'écran
+  d'accueil, mode plein écran) : présentation de l'association, projets, bourse scolaire
+  "Avenir Partagé" (avec don en ligne), agenda, médiathèque, mentions légales/CGU/
+  confidentialité.
 * **Adhésion et paiement en ligne** : fiche d'adhésion (individuelle ou pack famille),
   paiement de la cotisation ou don libre par carte bancaire via **Stripe** (mode
-  **production**, FedaPay/Mobile Money prévu pour le Bénin, pas encore activé).
+  **production**, FedaPay/Mobile Money prévu pour le Bénin, pas encore activé). Un pack
+  famille payé depuis l'espace membre crée aussi les comptes des membres de la famille.
 * **Espace membre authentifié** (Amazon Cognito) : profil, statut de cotisation, photo,
-  historique des paiements, agenda personnalisé.
-* **Quatre espaces internes**, selon le rôle du compte connecté :
+  historique des paiements avec certificat de cotisation PDF téléchargeable, export RGPD de
+  ses propres données, agenda personnalisé, trombinoscope du bureau, vie associative
+  (réunions/comptes-rendus/décisions — réservée aux membres connectés), guide d'utilisation
+  + FAQ. Rappel automatique de renouvellement de cotisation (e-mail annuel).
+* **Cinq espaces internes**, selon le rôle du compte connecté :
   * **Admin** — membres, rôles, documents, agenda, médiathèque, newsletter.
-  * **Secrétariat** — réunions, comptes-rendus, décisions (alimente la page publique
-    "Vie associative").
+  * **Secrétariat** — réunions, comptes-rendus, décisions (alimentent la page "Vie
+    associative" de l'espace membre).
   * **Trésorerie** — cotisations, dons, dépenses (catégorisées), export CSV.
   * **Gouvernance** — tableau de bord de pilotage pour le Conseil d'Administration :
-    adhérents, point financier, dépenses par type et catégorie.
+    adhérents, point financier, dépenses par type et catégorie. Volontairement sans accès
+    admin automatique (rôle technique distinct).
+  * **Communication** — newsletter (abonnés, envoi), à l'inverse de Gouvernance : accès
+    admin automatique.
 * **Conformité RGPD** : bannière de consentement avant tout chargement de Google
-  Analytics 4, politique de confidentialité à jour.
+  Analytics 4, politique de confidentialité à jour, export de ses données en libre-service.
+* **Fiabilité** : sauvegarde continue (PITR) sur les données membres/cotisations/dépenses,
+  alarmes CloudWatch sur les 13 Lambdas, throttling anti-abus sur les formulaires publics,
+  smoke tests automatiques après chaque déploiement.
 
 ## 🛠️ Technologies utilisées
 
 * **Frontend** : HTML5 / CSS3 / JavaScript vanilla (aucun framework, aucun build),
   Font Awesome, Lightbox2.
 * **Backend serverless** (AWS, non versionné dans ce dépôt — voir
-  `DOCUMENTATION-TECHNIQUE.md`) : API Gateway (HTTP API), 8 fonctions Lambda
+  `DOCUMENTATION-TECHNIQUE.md`) : API Gateway (HTTP API), 13 fonctions Lambda
   (Python 3.11), DynamoDB, Amazon Cognito (authentification), Amazon SES (e-mails
-  transactionnels), Stripe (paiements).
+  transactionnels), Stripe (paiements), EventBridge (rappel de cotisation planifié).
+* **PWA** : manifest + service worker (`sw.js`), installable sur PC/Android/iOS.
+* **CI** : validation HTML + liens cassés à chaque PR (`lint.yml`), smoke tests Playwright
+  après chaque déploiement (`deploy.yml`).
 
 ## 🚀 Installation et déploiement
 
@@ -81,10 +95,12 @@ cd ~/RMS_Projects/www.liensculturels.org
 │   ├── img/                 # images, identité visuelle (assets/img/brand/)
 │   └── js/                  # main.js, auth.js, payment.js, consent.js, espace-membre.js, ...
 ├── documents/                # PDFs publics (statuts, PV d'AG)
-├── index.html, a-propos.html, ... # 29 pages HTML à la racine (pas de sous-dossiers de pages)
-├── admin.html, secretariat.html, tresorerie.html, gouvernance.html, espace-membre.html
-│                              # espaces internes — hors nav publique et sitemap.xml
+├── index.html, a-propos.html, ... # 30 pages HTML à la racine (pas de sous-dossiers de pages)
+├── admin.html, secretariat.html, tresorerie.html, gouvernance.html, communication.html,
+│   espace-membre.html         # espaces internes — hors nav publique et sitemap.xml
 ├── sitemap.xml / robots.txt  # SEO
+├── sw.js                      # service worker (PWA)
+├── package.json / tests/      # smoke tests CI (jamais synchronisés vers le bucket public)
 ├── deploy.sh                  # déploiement manuel (miroir du workflow GitHub Actions)
 ├── CLAUDE.md                  # règles de travail pour Claude Code sur ce dépôt
 ├── DOCUMENTATION-TECHNIQUE.md  # référence technique complète (architecture, Lambdas, pièges connus)
@@ -94,7 +110,7 @@ cd ~/RMS_Projects/www.liensculturels.org
 
 ## 📚 Pour aller plus loin
 
-- **`DOCUMENTATION-TECHNIQUE.md`** — architecture complète, les 8 Lambdas et leurs routes,
+- **`DOCUMENTATION-TECHNIQUE.md`** — architecture complète, les 13 Lambdas et leurs routes,
   schéma DynamoDB, Cognito, et une section "pièges connus" tirée d'incidents réels.
   Document de référence pour toute personne qui reprend la maintenance technique.
 - **`ROADMAP.md`** — historique complet des demandes traitées, round par round, plus le

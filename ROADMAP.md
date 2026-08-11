@@ -1,5 +1,27 @@
 # ROADMAP — www.liensculturels.org
 
+## 🏷️ Version 1.01, 11 août 2026
+
+Depuis le gel de la Version 1.00 (tag `v1.00-rc`, voir plus bas), **10 items du backlog ont
+été livrés et vérifiés en conditions réelles** : B7 (trombinoscope), B8 (site installable en
+PWA), B10 (pack famille + comptes Cognito au paiement — non vérifié par un vrai paiement,
+voir le détail), B12 (vie associative déplacée vers l'espace membre), B13 (rôle
+Communication), B14 (certificat de paiement PDF), B15 (smoke tests CI), B16 (PITR), B17
+(alarmes CloudWatch), B18 (anti-abus), B19 (rappel de cotisation), B20 (export RGPD). Trois
+bugs réels trouvés et corrigés au passage (webhook non idempotent avait déjà été traité en
+v1.00 ; cette fois : encodeur Decimal manquant, wheels Lambda incompatibles, service worker
+cassant Font Awesome). Détail complet de chaque item dans le tableau
+[Backlog](#backlog-après-la-version-100) plus bas. Tag Git `v1.01`, sauvegarde à la demande
+des tables DynamoDB critiques (`members`/`cotisations`/`depenses`) prise le même jour, en
+plus du PITR déjà actif.
+
+**Reste ouvert** : B2 et B3 (différés par l'association), B9 (chat interne, laissé de côté à
+la demande de l'association — WhatsApp suffit pour l'instant), et un point de vérification
+pour B10 (pack famille au paiement — jamais testé par un vrai paiement réel, carte
+indisponible en session).
+
+---
+
 ## 🏷️ Version 1.00 — Release Candidate, 10 août 2026, 06h30
 
 Ce document (rounds 1 à 11, items 1 à 55) documente la construction complète de la
@@ -300,22 +322,31 @@ CloudFront invalidé et 404 vérifiée sur chacun de ces chemins.
 
 Ouvert le 10 août 2026, à la suite du gel de la Version 1.00 (tag `v1.00-rc`). Tout nouveau
 problème, incident ou évolution se documente ici — pas de nouveau "round" ajouté à
-l'historique ci-dessus, qui reste figé comme référence de la v1.00.
+l'historique ci-dessus, qui reste figé comme référence de la v1.00. **Étape suivante figée
+le 11/08/2026, tag `v1.01`** (voir bannière en haut de ce document) — les items marqués
+`fait` ci-dessous ont été livrés à cette occasion ; seuls B2, B3, B9 restent ouverts.
 
 **Légende** : `🐛` bug/incident · `✨` évolution/nouvelle fonctionnalité · `🔧` dette
 technique/maintenance · statut `ouvert` / `en cours` / `fait`.
 
+### Ouvert
+
+| # | Type | Sujet | Statut | Détail |
+|---|---|---|---|---|
+| B2 | ✨ | Bourse scolaire v2 : suivi des dons par campagne (au lieu d'un don générique indifférencié) | ouvert | Explicitement repoussé par l'association — priorité donnée à la validation du contrat de prestation RMS avant nouvelle évolution. |
+| B3 | ✨ | Catégories de dépenses liées à un local (électricité, eau, internet, achat PC/imprimante) | ouvert | Conditionné à l'existence d'un local, pas encore le cas. "Autre" couvre le besoin en attendant. |
+| B9 | ✨ | Chat interne entre membres | ouvert | Demandé le 10/08/2026, question de faisabilité posée. Discuté le 11/08/2026 : WhatsApp couvre déjà ce besoin pour l'association, le coût de construction (temps réel, modération, notifications) est disproportionné par rapport au gain réel — **laissé de côté à la demande de l'association**, pas de plan d'implémentation. |
+
+### Fait
+
 | # | Type | Sujet | Statut | Détail |
 |---|---|---|---|---|
 | B1 | 🔧 | `README.md` était périmé (mentionnait encore Brevo, 2 Lambdas sur 8) | fait | Réécrit le 10/08/2026 pour refléter l'état réel de la v1.00. |
-| B2 | ✨ | Bourse scolaire v2 : suivi des dons par campagne (au lieu d'un don générique indifférencié) | ouvert | Explicitement repoussé par l'association — priorité donnée à la validation du contrat de prestation RMS avant nouvelle évolution. |
-| B3 | ✨ | Catégories de dépenses liées à un local (électricité, eau, internet, achat PC/imprimante) | ouvert | Conditionné à l'existence d'un local, pas encore le cas. "Autre" couvre le besoin en attendant. |
 | B4 | 🔧 | Modalités de transfert des données en cas de résiliation du contrat RMS ↔ Association | fait | Fixé à 30 jours dans le contrat (voir dossier administratif, hors dépôt public). |
 | B5 | 🐛 | Cotisation comptabilisée deux fois pour un paiement réel | fait | Suite directe du bug de mauvaise URL webhook (round 11, item 55) : une fois l'URL corrigée, Stripe a renvoyé automatiquement la notification en échec, recréant le même paiement en base. `_record_cotisation()` n'était pas idempotent. Corrigé : nouveau champ `externalId`, vérifié avant tout enregistrement ; permission `dynamodb:Scan` ajoutée au rôle Lambda (manquante, la vérification aurait échoué silencieusement sans elle). Doublon supprimé, enregistrement existant rétro-tagué. |
 | B6 | 🐛 | Lien cassé dans un message WhatsApp envoyé aux membres (404) | fait | Le brouillon utilisait la syntaxe Markdown `[texte](url)`, non supportée par WhatsApp — le crochet fermant se retrouvait collé à l'URL réelle, donnant un vrai 404 (le site répondait correctement à une URL qui, elle, n'existait pas). Corrigé : liens bruts sans syntaxe Markdown dans toute future communication WhatsApp. |
 | B7 | ✨ | Trombinoscope des membres dans l'espace membre | fait (v1, bureau uniquement) | Fait le 11/08/2026 — scope choisi : uniquement le bureau pour commencer (pas tous les membres). Nouvelle page `trombinoscope.html`, gating 3 blocs identique à `guide-utilisation.html`/`vie-associative.html`, réutilise telle quelle la grille des 10 postes du bureau déjà publique sur `bureau.html` (photos/noms/rôles statiques) — aucun backend, aucun changement IAM. Lien ajouté dans le hub `espace-membre.html`. **Testé en conditions réelles (Playwright)** : accès refusé déconnecté, 10 cartes affichées une fois connecté (compte jetable, supprimé après vérification). **v2 possible** : synchroniser les vraies photos de profil uploadées par les membres du bureau (2 comptes sur 7 en ont une aujourd'hui) au lieu des photos statiques du dépôt. |
 | B8 | ✨ | Liens vers Android (Play Store) et Apple (App Store) depuis le site | fait (PWA, pas d'app native) | Fait le 11/08/2026. Choix confirmé avec vous : PWA installable plutôt qu'app native + fiches Store (aucun compte développeur, aucun coût, réalisable dans la session). `assets/img/site.webmanifest` existait déjà et était référencé sur les 30 pages — juste ajouté `start_url`/`scope`. Nouveau `sw.js` minimal (réseau d'abord, cache uniquement en secours hors-ligne, jamais le HTML — cohérent avec le `no-cache` déjà choisi côté déploiement). Enregistrement du service worker + bouton "Installer l'app" injectés depuis `assets/js/header.js` (déjà chargé sur les 30 pages) — aucune page HTML modifiée individuellement. **Bug réel trouvé par le smoke test (B15) lui-même, dans la minute suivant le premier déploiement** : le `fetch` handler du service worker interceptait aussi les requêtes cross-origin (Font Awesome sur cdnjs), provoquant `net::ERR_FAILED` en conditions réelles — corrigé (le service worker ignore désormais tout ce qui n'est pas same-origin), redéployé, smoke test repassé au vert. **Vérifié en conditions réelles** : service worker actif (scope correct), manifest accessible et valide, zéro erreur console, bouton "Installer l'app" apparaît et réagit correctement. **Limite assumée** : Chrome headless ne déclenche pas son propre événement d'installation de façon scriptable — vérification manuelle recommandée (icône d'installation dans Chrome desktop, ou audit Lighthouse PWA) pour confirmer le déclenchement réel par Chrome. **Bug réel signalé par vous après déploiement** : le bouton fonctionnait sur PC/Android mais pas sur iPhone — cause identifiée : Safari (iOS) ne déclenche jamais `beforeinstallprompt` (choix d'Apple, aucun bug possible à corriger côté site). Corrigé en détectant iOS séparément (UA + heuristique iPad 13+, qui se présente comme un Mac tactile) : le bouton s'affiche directement et ouvre une modale expliquant la manip manuelle (Partager → "Sur l'écran d'accueil", déjà fonctionnelle grâce à l'`apple-touch-icon` déjà en place, juste jamais expliquée jusque-là). Réutilise le style `.modal` déjà existant (vidéothèque). Testé avec un user-agent iPhone émulé (Playwright) : bouton visible, modale correcte en FR, zéro erreur console, comportement PC/Android inchangé. |
-| B9 | ✨ | Chat interne entre membres | ouvert | Demandé le 10/08/2026, question de faisabilité posée. C'est faisable techniquement (ex. WebSocket API Gateway + DynamoDB, ou service tiers) mais représente un chantier de fond nettement plus lourd que les fonctionnalités existantes (temps réel, modération, notifications) — à cadrer précisément (chat de groupe ou 1-à-1 ? tout le monde ou juste le bureau ?) avant de chiffrer. |
 | B10 | 🐛 | Pack famille : le paiement depuis l'espace membre ne permet pas d'ajouter les membres de la famille (contrairement à la fiche d'adhésion) | fait, non vérifié par un paiement réel | Codé et déployé le 11/08/2026. `espace-membre.html` a désormais le même bloc dynamique "membres de la famille" que `adhesion.html` (`assets/js/payment.js`). Les membres déclarés sont encodés dans les metadata Stripe/FedaPay (chunkés sur plusieurs clés `fm_0`, `fm_1`... — limite 500 caractères/valeur du prestataire) ; à la confirmation du paiement, `liensCulturels-payment` crée un compte Cognito + une fiche `liensculturels-members` par personne avec e-mail (logique dupliquée de `liensCulturels-adhesion-form`, jamais bloquante pour l'enregistrement du paiement lui-même — encapsulée dans son propre try/except). IAM étendu (`cognito-idp:AdminCreateUser`/`AdminAddUserToGroup`, `dynamodb:PutItem` sur members). **Vérifié** : syntaxe, tests unitaires du chunking metadata (round-trip jusqu'à 10 personnes), non-régression de `/payment/config`. **Non vérifié** : aucun paiement réel de bout en bout — la carte réelle nécessaire n'était pas disponible dans cette session, et un test par webhook signé synthétique a été bloqué par le classifieur de sécurité de l'environnement (action jugée sensible : forger une signature de webhook de paiement). À vérifier lors du premier vrai paiement "pack famille" réel, ou lors d'une prochaine session avec une carte disponible. |
 | B11 | 🔧 | Avertissement de doublon par téléphone sur la fiche d'adhésion | fait | Incident réel : un membre (Gaëlle Massenon, déjà inscrite) a pu recréer un second compte via une faute de frappe dans son e-mail — même téléphone dans les deux fiches. La détection par e-mail exact existait déjà et fonctionne (`UsernameExistsException` gérée proprement) ; ce qui manquait était de détecter deux e-mails différents pour la même personne. Ajouté : `_find_member_by_phone()` compare les téléphones normalisés (chiffres uniquement) et ajoute un avertissement **dans l'e-mail interne à contact@ uniquement** (jamais montré au public, pour ne pas laisser deviner qu'un numéro correspond déjà à quelqu'un d'inscrit) si une correspondance est trouvée — pour le demandeur principal et chaque membre de la famille. Testé en conditions réelles (Playwright + vérification par journalisation temporaire), doublon de test nettoyé. |
 | B12 | ✨ | Déplacer le contenu de "Vie Associative" (comptes-rendus, etc.) vers l'espace membre | fait | Fait le 11/08/2026 — **inverse la décision du round 2 (item 14)**. `GET /public/vie-associative` (`liensCulturels-secretariat-api`) exige désormais `claims.sub` (autorizer JWT attaché côté API Gateway, plus de bypass) — n'importe quel membre connecté, pas besoin du groupe secrétariat. `vie-associative.html` reprend le même gating 3 blocs (chargement/refusé/contenu) que `guide-utilisation.html`. Lien retiré du menu public "L'Association" sur les 22 pages concernées et de `sitemap.xml`, ajouté dans le hub `espace-membre.html`. **Testé en conditions réelles (Playwright)** : déconnecté → écran "accès refusé" + `curl` direct sur l'API sans JWT → 401 ; connecté (compte jetable) → contenu réel visible, compte supprimé après vérification. |
