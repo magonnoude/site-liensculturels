@@ -56,44 +56,90 @@ document.addEventListener("DOMContentLoaded", () => {
         navigator.serviceWorker.register("/sw.js").catch(() => {});
     }
 
+    // Insère un bouton dans la barre utilitaire, juste avant la bascule de langue
+    // (même emplacement que les autres boutons de cette barre).
+    function insertUtilityButton(id, innerHtml, onClick) {
+        const utility = document.querySelector(".header-utility .container");
+        if (!utility || document.getElementById(id)) return null;
+
+        const divider = document.createElement("span");
+        divider.className = "utility-divider";
+        divider.setAttribute("aria-hidden", "true");
+
+        const btn = document.createElement("a");
+        btn.href = "#";
+        btn.id = id;
+        btn.className = "utility-link";
+        btn.innerHTML = innerHtml;
+        btn.addEventListener("click", (evt) => {
+            evt.preventDefault();
+            onClick(btn, divider);
+        });
+
+        const langToggle = utility.querySelector(".lang-toggle");
+        if (langToggle) {
+            utility.insertBefore(divider, langToggle);
+            utility.insertBefore(btn, langToggle);
+        } else {
+            utility.appendChild(divider);
+            utility.appendChild(btn);
+        }
+        return btn;
+    }
+
     const isStandalone = window.matchMedia("(display-mode: standalone)").matches
-        || window.navigator.standalone === true; // iOS Safari
-    if (!isStandalone) {
+        || window.navigator.standalone === true; // iOS Safari, déjà installé
+    // iPadOS 13+ se présente comme "Mac" avec écran tactile — seul moyen fiable de le
+    // distinguer d'un vrai Mac.
+    const isIOS = /iP(hone|od|ad)/.test(navigator.userAgent)
+        || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+    if (!isStandalone && isIOS) {
+        // Safari (iPhone/iPad) ne déclenche JAMAIS beforeinstallprompt — Apple ne supporte
+        // pas cet événement standard. Seule option : expliquer la manip manuelle
+        // (Partager → Sur l'écran d'accueil), qui elle fonctionne déjà.
+        insertUtilityButton(
+            "pwa-install-btn",
+            '<i class="fas fa-download"></i> <span class="lang-fr">Installer l\'app</span><span class="lang-en">Install app</span>',
+            () => {
+                let modal = document.getElementById("pwa-ios-modal");
+                if (!modal) {
+                    modal = document.createElement("div");
+                    modal.id = "pwa-ios-modal";
+                    modal.className = "modal";
+                    modal.innerHTML = `
+                        <div class="modal-content" style="text-align:center; max-width:420px;">
+                            <span class="modal-close">&times;</span>
+                            <i class="fas fa-square-arrow-up" style="font-size:2rem; color:var(--primary-color);"></i>
+                            <p style="margin-top:1rem;">
+                                <span class="lang-fr">Pour installer le site sur votre écran d'accueil : appuyez sur l'icône <strong>Partager</strong> de Safari, puis choisissez <strong>« Sur l'écran d'accueil »</strong>.</span>
+                                <span class="lang-en">To install the site on your home screen: tap the Safari <strong>Share</strong> icon, then choose <strong>"Add to Home Screen"</strong>.</span>
+                            </p>
+                        </div>`;
+                    document.body.appendChild(modal);
+                    modal.querySelector(".modal-close").addEventListener("click", () => { modal.style.display = "none"; });
+                    modal.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
+                }
+                modal.style.display = "block";
+            }
+        );
+    } else if (!isStandalone) {
         let deferredPrompt = null;
         window.addEventListener("beforeinstallprompt", (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            const utility = document.querySelector(".header-utility .container");
-            if (!utility || document.getElementById("pwa-install-btn")) return;
-
-            const divider = document.createElement("span");
-            divider.className = "utility-divider";
-            divider.setAttribute("aria-hidden", "true");
-
-            const btn = document.createElement("a");
-            btn.href = "#";
-            btn.id = "pwa-install-btn";
-            btn.className = "utility-link";
-            btn.innerHTML = '<i class="fas fa-download"></i> <span class="lang-fr">Installer l\'app</span><span class="lang-en">Install app</span>';
-            btn.addEventListener("click", async (evt) => {
-                evt.preventDefault();
-                if (!deferredPrompt) return;
-                deferredPrompt.prompt();
-                await deferredPrompt.userChoice;
-                deferredPrompt = null;
-                btn.remove();
-                divider.remove();
-            });
-
-            // Juste avant la bascule de langue, comme les autres boutons de cette barre.
-            const langToggle = utility.querySelector(".lang-toggle");
-            if (langToggle) {
-                utility.insertBefore(divider, langToggle);
-                utility.insertBefore(btn, langToggle);
-            } else {
-                utility.appendChild(divider);
-                utility.appendChild(btn);
-            }
+            insertUtilityButton(
+                "pwa-install-btn",
+                '<i class="fas fa-download"></i> <span class="lang-fr">Installer l\'app</span><span class="lang-en">Install app</span>',
+                async (btn, divider) => {
+                    if (!deferredPrompt) return;
+                    deferredPrompt.prompt();
+                    await deferredPrompt.userChoice;
+                    deferredPrompt = null;
+                    btn.remove();
+                    divider.remove();
+                }
+            );
         });
 
         window.addEventListener("appinstalled", () => {
