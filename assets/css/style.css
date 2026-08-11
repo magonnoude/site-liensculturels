@@ -787,6 +787,8 @@ footer{background:var(--primary-deep);color:#E8EAE0;padding:40px 0 0 0;margin-to
 .admin-tab { background: none; border: none; padding: 0.6rem 1rem; cursor: pointer; font-size: 0.92rem; color: var(--text-dim); border-bottom: 3px solid transparent; border-radius: 6px 6px 0 0; font-family: inherit; }
 .admin-tab:hover { background: var(--surface-deep); color: var(--primary-color); }
 .admin-tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); font-weight: 600; background: var(--background-color); }
+.admin-panel { display: none; }
+.admin-panel.active { display: block; }
 .admin-card { background: var(--white); border-radius: 8px; border-top: 4px solid var(--secondary-color); padding: 1.2rem 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 1.2rem; }
 .admin-card h3 { margin-top: 0; }
 table.admin-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
