@@ -24,8 +24,9 @@ certificat ACM du domaine nu (us-east-1, obligatoire pour CloudFront).
 
 ## 2. Frontend
 
-- 28 pages HTML à la racine du dépôt, pas de sous-dossiers de pages (dont `guide-utilisation.html`,
-  réservé aux membres connectés — voir §2 fin de section).
+- 29 pages HTML à la racine du dépôt, pas de sous-dossiers de pages (dont `guide-utilisation.html`,
+  `vie-associative.html` et `trombinoscope.html`, réservées aux membres connectés — voir §2 fin
+  de section).
 - Bilingue FR/EN **sans pages séparées** : chaque texte existe deux fois, dans
   `<span class="lang-fr">…</span>` et `<span class="lang-en">…</span>`, basculées en JS
   (`main.js` → `switchLanguage()`), préférence persistée en `localStorage`. **Ne jamais**

@@ -26,7 +26,7 @@ complet des rounds de développement et le backlog des points ouverts après cet
 
 ## ✨ Fonctionnalités principales
 
-* **Site public bilingue** (FR/EN, 28 pages) : présentation de l'association, projets,
+* **Site public bilingue** (FR/EN, 29 pages) : présentation de l'association, projets,
   bourse scolaire "Avenir Partagé" (avec don en ligne), agenda, médiathèque, vie
   associative, mentions légales/CGU/confidentialité, guide d'utilisation + FAQ.
 * **Adhésion et paiement en ligne** : fiche d'adhésion (individuelle ou pack famille),
@@ -81,7 +81,7 @@ cd ~/RMS_Projects/www.liensculturels.org
 │   ├── img/                 # images, identité visuelle (assets/img/brand/)
 │   └── js/                  # main.js, auth.js, payment.js, consent.js, espace-membre.js, ...
 ├── documents/                # PDFs publics (statuts, PV d'AG)
-├── index.html, a-propos.html, ... # 28 pages HTML à la racine (pas de sous-dossiers de pages)
+├── index.html, a-propos.html, ... # 29 pages HTML à la racine (pas de sous-dossiers de pages)
 ├── admin.html, secretariat.html, tresorerie.html, gouvernance.html, espace-membre.html
 │                              # espaces internes — hors nav publique et sitemap.xml
 ├── sitemap.xml / robots.txt  # SEO
