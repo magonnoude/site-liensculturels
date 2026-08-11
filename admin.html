@@ -15,26 +15,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/solid.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        .admin-wrap { max-width: 960px; margin: 2.5rem auto; padding: 0 1rem; }
-        .admin-tabs { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 1.5rem; border-bottom: 2px solid #eee; }
-        .admin-tab { padding: 0.6rem 1.1rem; cursor: pointer; border: none; background: none; font-size: 0.95rem; color: #555; border-bottom: 3px solid transparent; border-radius: 6px 6px 0 0; transition: background-color .15s ease, color .15s ease; }
-        .admin-tab:hover { background: #f2f6fa; color: var(--primary-color); }
-        .admin-tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); font-weight: 600; background: #eaf2f8; }
-        .admin-panel { display: none; }
-        .admin-panel.active { display: block; }
-        .admin-card { background: var(--white); border-radius: 8px; border-top: 4px solid var(--secondary-color); padding: 1.2rem 1.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 1.2rem; }
-        table.admin-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        table.admin-table th, table.admin-table td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid #eee; vertical-align: middle; }
-        table.admin-table select, table.admin-table input { padding: 0.3rem; font-size: 0.85rem; }
-        .admin-form-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.6rem; align-items: center; }
-        .admin-form-row input, .admin-form-row select, .admin-form-row textarea { padding: 0.5rem; border: 1px solid #ccc; border-radius: 5px; font-size: 0.9rem; }
-        .admin-btn { background: var(--primary-color); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; font-size: 0.9rem; transition: transform .15s ease, box-shadow .15s ease; }
-        .admin-btn:hover { transform: translateY(-2px); box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
-        .admin-btn.danger { background: #c0392b; }
-        .admin-btn.small { padding: 0.3rem 0.6rem; font-size: 0.8rem; }
-        .admin-msg { padding: 0.6rem 0.9rem; border-radius: 6px; margin: 0.6rem 0; display: none; font-size: 0.9rem; }
-        .admin-msg.success { background: #d4edda; color: #155724; display: block; }
-        .admin-msg.error { background: #f8d7da; color: #721c24; display: block; }
+        /* Styles partagés (.admin-wrap/.admin-tabs/.admin-card/.admin-table/.admin-btn/
+           .admin-msg/.admin-panel) consolidés dans assets/css/style.css le 12/08/2026 —
+           ne reste ici que ce qui est propre à cette page. */
         #admin-denied, #admin-loading { text-align: center; padding: 4rem 0; }
         .gallery-admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap: 0.8rem; }
         .gallery-admin-item { position: relative; }
