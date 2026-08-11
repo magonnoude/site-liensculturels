@@ -20,6 +20,11 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
     if (event.request.method !== "GET") return;
+    // Ne jamais intercepter le cross-origin (Font Awesome sur cdnjs, API Gateway, Cognito
+    // Hosted UI...) : re-fetch depuis le service worker cassait leur chargement
+    // (net::ERR_FAILED constaté en conditions réelles) — laisser le navigateur les gérer
+    // exactement comme sans service worker.
+    if (new URL(event.request.url).origin !== self.location.origin) return;
 
     event.respondWith(
         fetch(event.request)

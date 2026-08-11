@@ -83,6 +83,9 @@ async function checkGatedPage(page, path, contentSelector, deniedSelector) {
 
         if (loginOk) {
             check("Aucune erreur console sur espace-membre.html", consoleErrors.length === 0);
+            if (consoleErrors.length) {
+                consoleErrors.forEach((e) => console.log(`       ↳ ${e}`));
+            }
 
             // ---- 3. Pages membres gated : contenu visible une fois connecté ----
             const gatedPages = [
