@@ -81,6 +81,18 @@ jobs:
               --region ${{ secrets.AWS_REGION }}
           done
 
+      # Le service worker (B8) doit toujours être revalidé — sinon un navigateur peut
+      # garder une ancienne version en cache bien après un déploiement.
+      - name: Set revalidate cache on service worker
+        run: |
+          if [ -f sw.js ]; then
+            aws s3 cp sw.js \
+              "s3://${{ secrets.S3_BUCKET_NAME }}/sw.js" \
+              --cache-control "no-cache, must-revalidate" \
+              --content-type "application/javascript" \
+              --region ${{ secrets.AWS_REGION }}
+          fi
+
       - name: Set short cache on SEO files
         run: |
           for file in sitemap.xml robots.txt; do

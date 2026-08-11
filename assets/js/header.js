@@ -48,4 +48,57 @@ document.addEventListener("DOMContentLoaded", () => {
             applyLanguage(lang);
         });
     });
+
+    // ---- PWA (B8) : enregistrement du service worker + bouton d'installation ----
+    // Injecté en JS plutôt que dans le HTML de chaque page : header.js est déjà chargé
+    // partout, ça évite de toucher les 30 pages du dépôt individuellement.
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js").catch(() => {});
+    }
+
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches
+        || window.navigator.standalone === true; // iOS Safari
+    if (!isStandalone) {
+        let deferredPrompt = null;
+        window.addEventListener("beforeinstallprompt", (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            const utility = document.querySelector(".header-utility .container");
+            if (!utility || document.getElementById("pwa-install-btn")) return;
+
+            const divider = document.createElement("span");
+            divider.className = "utility-divider";
+            divider.setAttribute("aria-hidden", "true");
+
+            const btn = document.createElement("a");
+            btn.href = "#";
+            btn.id = "pwa-install-btn";
+            btn.className = "utility-link";
+            btn.innerHTML = '<i class="fas fa-download"></i> <span class="lang-fr">Installer l\'app</span><span class="lang-en">Install app</span>';
+            btn.addEventListener("click", async (evt) => {
+                evt.preventDefault();
+                if (!deferredPrompt) return;
+                deferredPrompt.prompt();
+                await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                btn.remove();
+                divider.remove();
+            });
+
+            // Juste avant la bascule de langue, comme les autres boutons de cette barre.
+            const langToggle = utility.querySelector(".lang-toggle");
+            if (langToggle) {
+                utility.insertBefore(divider, langToggle);
+                utility.insertBefore(btn, langToggle);
+            } else {
+                utility.appendChild(divider);
+                utility.appendChild(btn);
+            }
+        });
+
+        window.addEventListener("appinstalled", () => {
+            const btn = document.getElementById("pwa-install-btn");
+            if (btn) btn.remove();
+        });
+    }
 });
