@@ -210,4 +210,30 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.target.value = "";
         }
     });
+
+    // ---- Export RGPD (mes données) ----
+    document.getElementById("portal-export-btn").addEventListener("click", async () => {
+        const btn = document.getElementById("portal-export-btn");
+        btn.disabled = true;
+        try {
+            const resp = await window.LCAuth.apiFetch("/me/export");
+            if (!resp.ok) throw new Error("Échec de l'export.");
+            const data = await resp.json();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            const dateStr = new Date().toISOString().slice(0, 10);
+            a.href = url;
+            a.download = `mes-donnees-liensculturels-${dateStr}.json`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            showMessage("Export téléchargé.", "success");
+        } catch (err) {
+            showMessage("Une erreur est survenue lors de l'export de vos données.", "error");
+        } finally {
+            btn.disabled = false;
+        }
+    });
 });
