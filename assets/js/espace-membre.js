@@ -147,8 +147,35 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const type = c.type === "don" ? "Don" : "Cotisation";
                 const montant = typeof c.montant === "number" ? c.montant : parseFloat(c.montant) || 0;
                 if (c.type === "don") donsTotal += montant;
-                tr.innerHTML = `<td>${c.date || ""}</td><td>${type}</td><td>${montant} €</td><td>${c.methode || ""}</td>`;
+                // Certificat : uniquement pour les cotisations, jamais les dons
+                // (pas un reçu fiscal, voir B14).
+                const certCell = c.type !== "don" && c.cotisationId
+                    ? `<td><button type="button" class="btn" data-cert-id="${c.cotisationId}" style="padding:0.25rem 0.6rem; font-size:0.8rem;"><i class="fas fa-file-pdf"></i> <span class="lang-fr">Certificat</span><span class="lang-en">Certificate</span></button></td>`
+                    : "<td></td>";
+                tr.innerHTML = `<td>${c.date || ""}</td><td>${type}</td><td>${montant} €</td><td>${c.methode || ""}</td>${certCell}`;
                 tbody.appendChild(tr);
+            });
+            tbody.querySelectorAll("button[data-cert-id]").forEach((btn) => {
+                btn.addEventListener("click", async () => {
+                    btn.disabled = true;
+                    try {
+                        const certResp = await window.LCAuth.apiFetch(`/me/certificate/${btn.dataset.certId}`);
+                        if (!certResp.ok) throw new Error("Échec du téléchargement du certificat.");
+                        const blob = await certResp.blob();
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = `certificat-cotisation-${btn.dataset.certId}.pdf`;
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                        URL.revokeObjectURL(url);
+                    } catch (e) {
+                        alert("Une erreur est survenue lors du téléchargement du certificat.");
+                    } finally {
+                        btn.disabled = false;
+                    }
+                });
             });
             if (donsTotal > 0) {
                 donsTotalAmountEl.textContent = `${donsTotal} €`;
