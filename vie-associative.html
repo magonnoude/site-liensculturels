@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vie Associative - Association Liens Culturels</title>
     <meta name="description" content="Transparence sur la vie de l'association Liens Culturels : réunions, ordre du jour, comptes-rendus et décisions du bureau.">
+    <meta name="robots" content="noindex, nofollow">
     <link rel="canonical" href="https://www.liensculturels.org/vie-associative.html">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Vie Associative - Association Liens Culturels">
@@ -65,13 +66,7 @@
             <button type="button" class="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false"><i class="fas fa-bars"></i></button>
             <nav>
                 <ul>
-                    <li class="dropdown"><a href="#"><span class="lang-fr">L'Association ▼</span><span class="lang-en">The Association ▼</span></a><ul class="dropdown-menu"><li><a href="a-propos.html"><span class="lang-fr">Qui sommes-nous ?</span><span class="lang-en">About Us</span></a></li><li><a href="bureau.html"><span class="lang-fr">Le Bureau</span><span class="lang-en">The Board</span></a></li><li><a href="mot-des-dirigeants.html"><span class="lang-fr">Mot des Dirigeants</span><span class="lang-en">Word from the Leaders</span></a></li><li><a href="vie-associative.html"><span class="lang-fr">Vie Associative</span><span class="lang-en">Association Life</span></a></li></ul></li>
-                    <li><a href="projets.html"><span class="lang-fr">Nos Projets</span><span class="lang-en">Our Projects</span></a></li>
-                    <li><a href="bourse-scolaire.html"><span class="lang-fr">Bourse Scolaire</span><span class="lang-en">School Scholarship</span></a></li>
-                    <li><a href="agenda.html"><span class="lang-fr">Agenda</span><span class="lang-en">Events</span></a></li>
-                    <li><a href="blog.html">Blog</a></li>
-                    <li class="dropdown"><a href="#"><span class="lang-fr">Médiathèque ▼</span><span class="lang-en">Media Library ▼</span></a><ul class="dropdown-menu"><li><a href="phototheque.html"><span class="lang-fr">Photothèque</span><span class="lang-en">Photo Gallery</span></a></li><li><a href="videotheque.html"><span class="lang-fr">Vidéothèque</span><span class="lang-en">Video Gallery</span></a></li></ul></li>
-                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="index.html"><span class="lang-fr">Accueil</span><span class="lang-en">Home</span></a></li>
                 </ul>
             </nav>
         </div>
@@ -79,29 +74,39 @@
     </div>
 
     <main class="container" style="padding-top: 2rem;">
-        <div style="text-align:center; max-width:820px; margin:0 auto 2.5rem;">
-            <h1><span class="lang-fr">Vie Associative</span><span class="lang-en">Association Life</span></h1>
-            <p><span class="lang-fr">En toute transparence : les réunions du bureau, leurs ordres du jour, les comptes-rendus et les décisions prises pour faire vivre l'association.</span><span class="lang-en">In full transparency: board meetings, their agendas, meeting minutes and the decisions taken to run the association.</span></p>
-            <p class="lang-en" style="font-size:0.85rem; color:#999;">Meeting and decision content is currently only available in French.</p>
+        <div id="va-loading" style="text-align:center; padding:4rem 0; color:#888;">Chargement…</div>
+
+        <div id="va-denied" style="display:none; text-align:center; padding:4rem 0;">
+            <i class="fas fa-lock" style="font-size:2.5rem; color:#c0392b;"></i>
+            <h1><span class="lang-fr">Accès refusé</span><span class="lang-en">Access denied</span></h1>
+            <p><span class="lang-fr">La vie associative est réservée aux membres connectés.</span><span class="lang-en">Association life is reserved for logged-in members.</span> <a href="espace-membre.html"><span class="lang-fr">Se connecter</span><span class="lang-en">Log in</span></a>.</p>
         </div>
 
-        <section class="va-section">
-            <h2><i class="fas fa-users-rectangle"></i> <span class="lang-fr">Réunions du bureau</span><span class="lang-en">Board meetings</span></h2>
-            <div id="va-reunions"></div>
-            <p class="va-empty" id="va-reunions-empty" style="display:none;"><span class="lang-fr">Aucune réunion publiée pour le moment.</span><span class="lang-en">No meetings published yet.</span></p>
-        </section>
+        <div id="va-content" style="display:none;">
+            <div style="text-align:center; max-width:820px; margin:0 auto 2.5rem;">
+                <h1><span class="lang-fr">Vie Associative</span><span class="lang-en">Association Life</span></h1>
+                <p><span class="lang-fr">En toute transparence : les réunions du bureau, leurs ordres du jour, les comptes-rendus et les décisions prises pour faire vivre l'association.</span><span class="lang-en">In full transparency: board meetings, their agendas, meeting minutes and the decisions taken to run the association.</span></p>
+                <p class="lang-en" style="font-size:0.85rem; color:#999;">Meeting and decision content is currently only available in French.</p>
+            </div>
 
-        <section class="va-section">
-            <h2><i class="fas fa-file-lines"></i> <span class="lang-fr">Comptes-rendus</span><span class="lang-en">Meeting minutes</span></h2>
-            <div id="va-cr"></div>
-            <p class="va-empty" id="va-cr-empty" style="display:none;"><span class="lang-fr">Aucun compte-rendu publié pour le moment.</span><span class="lang-en">No minutes published yet.</span></p>
-        </section>
+            <section class="va-section">
+                <h2><i class="fas fa-users-rectangle"></i> <span class="lang-fr">Réunions du bureau</span><span class="lang-en">Board meetings</span></h2>
+                <div id="va-reunions"></div>
+                <p class="va-empty" id="va-reunions-empty" style="display:none;"><span class="lang-fr">Aucune réunion publiée pour le moment.</span><span class="lang-en">No meetings published yet.</span></p>
+            </section>
 
-        <section class="va-section">
-            <h2><i class="fas fa-gavel"></i> <span class="lang-fr">Décisions du bureau</span><span class="lang-en">Board decisions</span></h2>
-            <div id="va-decisions"></div>
-            <p class="va-empty" id="va-decisions-empty" style="display:none;"><span class="lang-fr">Aucune décision publiée pour le moment.</span><span class="lang-en">No decisions published yet.</span></p>
-        </section>
+            <section class="va-section">
+                <h2><i class="fas fa-file-lines"></i> <span class="lang-fr">Comptes-rendus</span><span class="lang-en">Meeting minutes</span></h2>
+                <div id="va-cr"></div>
+                <p class="va-empty" id="va-cr-empty" style="display:none;"><span class="lang-fr">Aucun compte-rendu publié pour le moment.</span><span class="lang-en">No minutes published yet.</span></p>
+            </section>
+
+            <section class="va-section">
+                <h2><i class="fas fa-gavel"></i> <span class="lang-fr">Décisions du bureau</span><span class="lang-en">Board decisions</span></h2>
+                <div id="va-decisions"></div>
+                <p class="va-empty" id="va-decisions-empty" style="display:none;"><span class="lang-fr">Aucune décision publiée pour le moment.</span><span class="lang-en">No decisions published yet.</span></p>
+            </section>
+        </div>
     </main>
 
     <div class="footer-photo-band" aria-hidden="true">
@@ -109,52 +114,6 @@
         <div class="band-save" title="Savè, Bénin"></div>
     </div>
     <footer>
-        <div class="footer-container">
-            <div class="footer-column">
-                <img src="assets/img/brand/logo-icone.svg" alt="Liens Culturels" class="footer-logo">
-                <h4>Liens Culturels</h4>
-                <p><span class="lang-fr">Association loi 1901 pour la promotion des échanges culturels entre la France, les Antilles et l'Afrique.</span><span class="lang-en">A French non-profit association (loi 1901) promoting cultural exchange between France, the Caribbean and Africa.</span></p>
-                <p><i class="fas fa-map-marker-alt"></i> CHEMIN DE L'ERMITAGE<br>02310 NOGENT-L'ARTAUD</p>
-                <div class="footer-contacts">
-                    <a href="tel:+33674437609">🇫🇷 +33 6 74 43 76 09</a>
-                    <a href="tel:+2290161950415">🇧🇯 +229 01 61 95 04 15</a>
-                    <a href="mailto:contact@liensculturels.org"><i class="fas fa-envelope"></i> contact@liensculturels.org</a>
-                </div>
-            </div>
-
-            <div class="footer-column">
-                <h4><span class="lang-fr">Navigation</span><span class="lang-en">Navigation</span></h4>
-                <ul>
-                    <li><a href="a-propos.html"><span class="lang-fr">Qui sommes-nous ?</span><span class="lang-en">About Us</span></a></li>
-                    <li><a href="projets.html"><span class="lang-fr">Nos Projets</span><span class="lang-en">Our Projects</span></a></li>
-                    <li><a href="agenda.html"><span class="lang-fr">Agenda</span><span class="lang-en">Events</span></a></li>
-                    <li><a href="adhesion.html"><span class="lang-fr">Devenir Membre</span><span class="lang-en">Join Us</span></a></li>
-                </ul>
-            </div>
-
-            <div class="footer-column">
-                <div class="newsletter-box">
-                    <h4>📬 <span class="lang-fr">Restez Informé</span><span class="lang-en">Stay Informed</span></h4>
-                    <p style="font-size: 0.9rem; color: #bdc3c7;"><span class="lang-fr">Actualités, événements et projets de l'association.</span><span class="lang-en">News, events and projects from the association.</span></p>
-                    <form id="newsletterForm" class="newsletter-form">
-                        <input type="email" id="newsletterEmail" name="email" placeholder="Votre adresse email" required>
-                        <button type="submit" aria-label="S'abonner">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    <div class="form-feedback newsletter-feedback"></div>
-                    </form>
-                </div>
-
-                <h4 style="margin-top:20px;"><span class="lang-fr">Suivez-nous</span><span class="lang-en">Follow Us</span></h4>
-                <div class="social-links">
-                    <a href="https://web.facebook.com/profile.php?id=61579109620455" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://www.instagram.com/liensculturels/" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="https://www.linkedin.com/company/liens-culturels" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="https://twitter.com/LCulturels" target="_blank" title="X (Twitter)"><i class="fab fa-twitter"></i></a>
-                    <a href="https://www.youtube.com/@LiensCulturels" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-        </div>
         <div class="footer-bottom">
             <div class="footer-bottom-row">
                 <p><strong>&copy; 2025–2026 Liens Culturels (LC).</strong> <span class="lang-fr">Tous droits réservés.</span><span class="lang-en">All rights reserved.</span></p>
@@ -170,9 +129,8 @@
         </div>
     </footer>
 
+    <script src="assets/js/auth.js"></script>
     <script src="assets/js/vie-associative.js"></script>
-    <script src="assets/js/consent.js"></script>
-    <script src="assets/js/main.js"></script>
     <script src="assets/js/header.js"></script>
 </body>
 </html>

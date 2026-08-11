@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const API_BASE_URL = "https://8igk1o6vw4.execute-api.eu-west-3.amazonaws.com";
-
     const STATUS_LABELS = {
         planifiee: "Planifiée", terminee: "Terminée", annulee: "Annulée",
         en_cours: "En cours", appliquee: "Appliquée", abandonnee: "Abandonnée",
@@ -69,8 +67,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    // B12 (11/08/2026) : "Vie associative" est passée de public à réservée aux
+    // membres connectés — même gating 3 blocs que guide-utilisation.html.
     try {
-        const resp = await fetch(`${API_BASE_URL}/public/vie-associative`);
+        await window.LCAuth.handleRedirect();
+    } catch (e) {
+        console.error(e);
+    }
+
+    const loadingEl = document.getElementById("va-loading");
+    const deniedEl = document.getElementById("va-denied");
+    const contentEl = document.getElementById("va-content");
+    loadingEl.style.display = "none";
+
+    if (!window.LCAuth.isLoggedIn()) {
+        deniedEl.style.display = "block";
+        return;
+    }
+    contentEl.style.display = "block";
+
+    try {
+        const resp = await window.LCAuth.apiFetch("/public/vie-associative");
+        if (!resp.ok) throw new Error("Erreur de chargement.");
         const data = await resp.json();
         renderReunions(data.reunions || []);
         renderComptesRendus(data.comptesRendus || []);
