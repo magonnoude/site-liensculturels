@@ -16,7 +16,7 @@ paiements en ligne.
 Navigateur
   ├─ Pages statiques ──────────► CloudFront (E27Z3FWSMEYT5U) ──► S3 (www.liensculturels.org)
   ├─ Connexion (Hosted UI) ────► Cognito (pool eu-west-3_nG1lWCmJK)
-  └─ Appels API (fetch) ───────► API Gateway (8igk1o6vw4) ──► 11 Lambdas ──► DynamoDB / SES / S3
+  └─ Appels API (fetch) ───────► API Gateway (8igk1o6vw4) ──► 13 Lambdas ──► DynamoDB / SES / S3
 ```
 
 Compte AWS `928883700132`, région `eu-west-3` (Paris) pour toutes les ressources sauf le
@@ -61,10 +61,12 @@ certificat ACM du domaine nu (us-east-1, obligatoire pour CloudFront).
 
 - User pool `eu-west-3_nG1lWCmJK`, client `757mjbo05rlabup4kkai470d86`, domaine Hosted UI
   `https://liensculturels-membres.auth.eu-west-3.amazoncognito.com`.
-- 5 groupes : `admin` (gestion technique du site : documents, agenda, galerie, newsletter,
+- 6 groupes : `admin` (gestion technique du site : documents, agenda, galerie, newsletter,
   invitation de membres), `secretaire`, `tresorier`, `gouvernance` (tableau de bord
   stratégique du CA, créé le 9 août 2026 — **volontairement séparé d'`admin`**, aucune des
-  Lambdas ne fait de bypass "admin voit tout" pour ce groupe), `membre` (par défaut).
+  Lambdas ne fait de bypass "admin voit tout" pour ce groupe), `communication` (newsletter/RS/
+  blog, créé le 11/08/2026 — **à l'inverse de `gouvernance`** : `admin` a accès par bypass),
+  `membre` (par défaut).
 - **Un compte peut appartenir à plusieurs groupes.** ⚠️ Voir §7 "Pièges connus" — le format
   de sérialisation de `cognito:groups` côté API Gateway a été une source de bug réel.
 - Création de compte : soit via le formulaire d'adhésion public (`POST /adhesion`, groupe
@@ -75,7 +77,7 @@ certificat ACM du domaine nu (us-east-1, obligatoire pour CloudFront).
   fiable (adresse générique, souvent filtré en spam). À la place : `MessageAction=SUPPRESS`
   + mot de passe temporaire généré côté serveur, transmis par un autre canal.
 
-## 4. Les 11 Lambdas (Python 3.11, hors dépôt Git)
+## 4. Les 13 Lambdas (Python 3.11, hors dépôt Git)
 
 Aucune n'est versionnée dans ce dépôt — leur code vit uniquement dans AWS. Toujours
 `aws lambda get-function --query Code.Location` pour récupérer la source déployée avant de la
@@ -94,6 +96,8 @@ modifier, ne jamais deviner l'état actuel à partir d'une ancienne copie locale
 | `liensCulturels-newsletter` | Inscription/confirmation/désinscription newsletter (double opt-in) | `POST /newsletter/subscribe`, `GET /newsletter/confirm`, `GET /newsletter/unsubscribe` |
 | `liensCulturels-public-content` | Contenu public en lecture seule (agenda, galerie) consommé par le site sans authentification | `GET /agenda`, `GET /gallery` |
 | `liensCulturels-cotisation-reminder` | **Nouvelle (11/08/2026)**, pas de route API — déclenchée uniquement par EventBridge (règle `liensculturels-cotisation-reminder-annuel`, 1er novembre 8h UTC). Rappelle par e-mail aux membres dont la cotisation la plus récente n'est pas celle de l'année en cours. | — (invocation planifiée uniquement) |
+| `liensCulturels-communication-api` | **Nouvelle (11/08/2026)**, mirroring de `gouvernance-api` — newsletter (lecture/envoi/suppression), même table que `admin-api`. Autorisation `admin` **OU** `communication` (bypass admin volontaire, à l'opposé de `gouvernance-api`) | `GET /communication/newsletter`, `POST /communication/newsletter/send`, `DELETE /communication/newsletter/{email}` |
+| `liensCulturels-payment-certificate` | **Nouvelle (11/08/2026)** — génère à la demande un PDF de certificat de cotisation (`reportlab` vendorisé, logo rasterisé embarqué dans le paquet). Cotisations uniquement, jamais les dons. Première Lambda du projet à utiliser `isBase64Encoded` | `GET /me/certificate/{cotisationId}` |
 
 Les deux avant-dernières manquaient à une version antérieure de ce document (10 Lambdas
 réellement déployées à l'époque, pas 8) — corrigé le 11/08/2026 en vérifiant
@@ -142,6 +146,15 @@ rafale 5) via `RouteSettings` du stage `$default` — anti-abus, testé en condi
 
 ## 7. Pièges connus (vécus, pas hypothétiques)
 
+- **Vendoring d'une dépendance tierce dans une Lambda : toujours forcer la plateforme/version
+  Python cible.** `pip install <pkg> --target .` sans contrainte installe les wheels compilés
+  pour l'environnement LOCAL (ex. Python 3.12 sur cette machine), pas pour le runtime Lambda
+  (Python 3.11, Amazon Linux). Un `.so` `cp312` ne se charge pas sous Python 3.11 — échec au
+  premier import, silencieux jusqu'à l'invocation réelle. Rencontré en vendorisant
+  `reportlab`/Pillow pour `liensCulturels-payment-certificate` (11/08/2026), détecté avant
+  déploiement en inspectant les fichiers (`file *.so`). Toujours utiliser
+  `pip install <pkg> --target . --platform manylinux2014_x86_64 --implementation cp
+  --python-version 3.11 --only-binary=:all:`.
 - **`cognito:groups` arrive à l'autorizer JWT sous forme de chaîne séparée par des ESPACES**
   (`"[admin secretaire]"`), **pas des virgules.** Toute Lambda qui parse cette chaîne doit
   splitter sur `[,\s]+`, jamais juste `,`. Bug réel : un compte dans 2+ groupes se voyait
@@ -151,6 +164,12 @@ rafale 5) via `RouteSettings` du stage `$default` — anti-abus, testé en condi
 - **Permissions Lambda scopées par route** (voir §5) — une nouvelle route sur
   `member-profile`/`adhesion-form`/`gouvernance-api` a besoin de son propre
   `aws lambda add-permission`, sinon 500 silencieux côté navigateur.
+- **Toute réponse JSON qui renvoie un item DynamoDB brut a besoin de `cls=_DecimalEncoder`**
+  (`json.dumps` plante sur un `Decimal`, type natif de `boto3` pour les nombres DynamoDB).
+  Bug réel : première version de `liensCulturels-communication-api` (11/08/2026) copiait le
+  code de `send_newsletter()`/`list_newsletter_subscribers()` sans l'encodeur — 500 silencieux
+  sur `GET /communication/newsletter` dès qu'un item avait un champ numérique
+  (`subscribedAt`), détecté en testant en conditions réelles, pas en relecture de code.
 - **`put-role-policy` remplace tout le document, pas seulement le statement qu'on modifie.**
   Ne jamais construire la nouvelle version d'une policy à partir d'une lecture *filtrée*
   (`--query "PolicyDocument.Statement[?Sid==...]"`) — ça tronque silencieusement tous les
