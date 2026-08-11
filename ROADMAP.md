@@ -1,5 +1,38 @@
 # ROADMAP — www.liensculturels.org
 
+## 🎨 Refonte visuelle, 12 août 2026
+
+Après plusieurs demandes d'amélioration du design traitées jusque-là par retouches
+ponctuelles, un vrai benchmark de sites d'associations/ONG bien conçues (charity: water,
+Équiterre, Wenner-Gren, The Circle) a débouché sur une maquette concrète, construite avec le
+contenu réel du site, validée avant tout déploiement
+([artefact](https://claude.ai/code/artifact/6f47428a-da1d-4a2b-9d00-aab9dc9014be)), puis
+appliquée en 3 phases séparées (commit + déploiement + vérification réelle après chacune) :
+
+- **Palette et typographie** : indigo/forêt/or sur fond pierre chaud (remplace le bleu/vert/
+  jaune plats sur fond gris), titres en Georgia (police système, aucun fichier à charger,
+  aucun impact sur la vitesse). Mêmes noms de variables CSS qu'avant dans
+  `assets/css/style.css` — seules les valeurs changent.
+- **Espaces internes** (membre/admin/secrétariat/trésorerie/gouvernance/communication) :
+  héritent la même palette/typographie mais restent des interfaces fonctionnelles, pas de
+  traitement éditorial. Leurs styles `.admin-*`/`.summary-*`, dupliqués dans 5-6 `<style>`
+  différents, ont été consolidés dans la feuille partagée — **ce qui a corrigé au passage une
+  vraie dérive trouvée par la recherche** : `communication.html` avait perdu le survol animé
+  des boutons et le liseré de couleur des cartes que les 5 autres pages avaient déjà.
+- **3 pages vitrines restructurées** avec le vrai contenu déjà présent (aucun texte inventé) :
+  `index.html` (bandeau plein écran avec photo de Savè), `a-propos.html` (section texte +
+  photo de l'église de Nogent-l'Artaud), `bourse-scolaire.html` (cartes à liseré de couleur +
+  encart de don sur fond indigo — tous les `id` ciblés par `assets/js/payment.js` conservés
+  à l'identique, testé en conditions réelles après coup, aucune régression du flux de don).
+
+**Garde-fou de retour en arrière** : tag Git `pre-redesign-2026-08-12` posé avant la première
+modification (état identique à `v1.01`) — un `git revert` ciblé ou un retour à ce tag suffit
+à tout moment. Chaque phase vérifiée par capture d'écran réelle (desktop + mobile) et, pour
+les espaces internes, par connexion réelle avec un compte jetable — pas seulement une
+relecture de code.
+
+---
+
 ## 🏷️ Version 1.01, 11 août 2026
 
 Depuis le gel de la Version 1.00 (tag `v1.00-rc`, voir plus bas), **10 items du backlog ont

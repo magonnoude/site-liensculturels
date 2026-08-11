@@ -34,9 +34,16 @@ certificat ACM du domaine nu (us-east-1, obligatoire pour CloudFront).
   utiliser deux `<select>` séparés par langue quand le choix est fait via une liste
   déroulante (voir `adhesion.html` pour l'exemple : `#civilite`/`#civiliteEn`,
   `#membershipType`/`#membershipTypeEn`).
-- `assets/css/style.css` : une seule feuille de style pour tout le site public. Variables de
-  marque : `--primary-color: #005A9C` (bleu), `--secondary-color: #8BC34A` (vert),
-  `--accent-color: #FFC107` (jaune), fond crème de l'identité `#F6F0E2`.
+- `assets/css/style.css` : une seule feuille de style pour **tout** le site, public ET les 6
+  espaces internes (voir plus bas) — aucune page n'a de CSS totalement indépendant. Palette
+  refondue le 12/08/2026 (mêmes noms de variables qu'avant, seules les valeurs ont changé) :
+  `--primary-color: #1B4B6B` (indigo, texte/accents), `--primary-deep: #123449` (indigo
+  profond, grandes surfaces — bandeau utilitaire, pied de page, `.page-header`, bannière
+  cookies, carte contact), `--secondary-color: #35583F` (forêt), `--accent-color: #C68A1F`
+  (or), `--background-color: #EEF0E6` (pierre). Titres en `--heading-font` (Georgia + repli
+  système, aucun fichier à charger). Composants `.admin-*`/`.summary-*` des espaces internes
+  et `.hero`/`.split-section`/`.impact-card`/`.donation-panel` des pages vitrines vivent aussi
+  dans ce fichier — voir §7 pour le piège de dérive déjà rencontré sur ces classes.
 - `assets/img/brand/` : SVG de l'identité visuelle actuelle (logo-principal, logo-horizontal,
   logo-icone, logo-monochrome — ce dernier utilisé uniquement en CSS `@media print`).
   `assets/img/logo.png` (ancien logo carré) conservé pour compatibilité avec d'anciens
@@ -151,6 +158,14 @@ rafale 5) via `RouteSettings` du stage `$default` — anti-abus, testé en condi
 
 ## 7. Pièges connus (vécus, pas hypothétiques)
 
+- **Les classes `.admin-*`/`.portal-*`/`.summary-*` des espaces internes vivaient dupliquées
+  dans 5-6 `<style>` inline différents** (un par page : admin/secrétariat/trésorerie/
+  gouvernance/communication) plutôt que dans `assets/css/style.css` — trouvé lors de la
+  refonte du 12/08/2026, avec une vraie dérive déjà en place : `communication.html` avait un
+  rayon de bordure différent (6px au lieu de 5px) et avait perdu le survol animé de
+  `.admin-btn` que les autres pages avaient. Consolidé dans le fichier partagé depuis —
+  **toute nouvelle classe partagée entre plusieurs de ces pages doit aller dans
+  `style.css`, jamais dans un `<style>` par page**, sous peine de revivre cette dérive.
 - **Un service worker ne doit intercepter que le same-origin.** Un `fetch` handler qui
   ré-émet aussi les requêtes cross-origin (ex. Font Awesome sur cdnjs) peut casser leur
   chargement (`net::ERR_FAILED`) — constaté en conditions réelles (le smoke test B15 l'a
