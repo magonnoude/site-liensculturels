@@ -811,6 +811,12 @@ table.admin-table th, table.admin-table td { text-align: left; padding: 0.5rem 0
 table.admin-table select, table.admin-table input { padding: 0.3rem; font-size: 0.85rem; }
 .admin-form-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.7rem; }
 .admin-form-row input, .admin-form-row textarea, .admin-form-row select { padding: 0.5rem 0.7rem; border: 1px solid #ccc; border-radius: 5px; font-size: 0.9rem; font-family: inherit; }
+/* Même trio de couleurs que .va-status (vie-associative.html) / .portal-badge (espace membre) —
+   convention déjà établie sur le site pour planifiée/terminée/annulée, appliquée ici au menu
+   de statut des réunions dans l'espace secrétariat. */
+select.reunion-statut.planifiee { background-color: #fff3cd; color: #856404; border-color: #ffe8a1; }
+select.reunion-statut.terminee { background-color: #d4edda; color: #155724; border-color: #b7e4c7; }
+select.reunion-statut.annulee { background-color: #f8d7da; color: #721c24; border-color: #f1b0b7; }
 .admin-btn { background: var(--primary-color); color: #fff; border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; font-size: 0.9rem; text-decoration: none; display: inline-block; transition: transform .15s ease, box-shadow .15s ease; }
 .admin-btn:hover { transform: translateY(-2px); box-shadow: 0 3px 8px rgba(0,0,0,0.15); }
 .admin-btn:disabled { opacity: 0.6; cursor: default; transform: none; box-shadow: none; }

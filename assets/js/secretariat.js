@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <td>${r.titre}</td>
                 <td>${r.lieu || ""}</td>
                 <td>
-                    <select data-reunion="${r.reunionId}">
+                    <select data-reunion="${r.reunionId}" class="reunion-statut ${r.statut}">
                         <option value="planifiee" ${r.statut === "planifiee" ? "selected" : ""}>Planifiée</option>
                         <option value="terminee" ${r.statut === "terminee" ? "selected" : ""}>Terminée</option>
                         <option value="annulee" ${r.statut === "annulee" ? "selected" : ""}>Annulée</option>
@@ -85,6 +85,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
         tbody.querySelectorAll("select[data-reunion]").forEach((sel) => {
             sel.addEventListener("change", async () => {
+                sel.className = `reunion-statut ${sel.value}`;
                 try {
                     await api(`/secretariat/reunions/${sel.dataset.reunion}`, {
                         method: "PUT", headers: { "Content-Type": "application/json" },
