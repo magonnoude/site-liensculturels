@@ -1,5 +1,20 @@
 # ROADMAP — www.liensculturels.org
 
+## 🟢🟠🔴 Code couleur des réunions (espace secrétariat), 12 août 2026
+
+Demande : distinguer visuellement réunions passées/à venir (vert/rouge, ou l'inverse si plus
+cohérent). Trouvé un précédent déjà en place : `vie-associative.html` colore déjà ses badges
+de statut de réunion (vert = Terminée, orange = Planifiée, rouge = Annulée). Utiliser le rouge
+pour "à venir" aurait créé une contradiction avec le rouge déjà affecté à "Annulée" sur la même
+page — signalé à l'utilisateur, qui a choisi de réutiliser telle quelle la palette déjà en
+place (vert = passées/Terminée, orange = à venir/Planifiée). `secretariat.html` (le tableau de
+gestion interne) n'avait aucune couleur ; ajoutée sur le menu déroulant de statut lui-même
+(`assets/css/style.css`, `assets/js/secretariat.js`), avec mise à jour immédiate de la couleur
+au changement de statut, pas seulement au chargement de la page. `vie-associative.html`
+n'a nécessité aucun changement — il satisfaisait déjà la demande. Vérifié en production avec
+un compte secrétaire jetable : création réelle d'une réunion, couleur orange confirmée,
+réunion de test supprimée après vérification.
+
 ## 📊 Espace membre v2 et statistiques d'en-tête, 12 août 2026
 
 Trois demandes groupées, exécutées en 4 phases séparées (chacune commit + déploiement +
