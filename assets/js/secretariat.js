@@ -48,9 +48,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         return resp.status === 200 || resp.status === 201 ? resp.json() : null;
     }
 
+    // ---- résumé (statistiques d'en-tête) ----
+    async function loadSummary() {
+        const s = await api("/secretariat/summary");
+        document.getElementById("sec-sum-adherents").textContent = s.nombreAdherents;
+    }
+
     // ---- réunions ----
     async function loadReunions() {
         const items = await api("/secretariat/reunions");
+        const today = new Date().toISOString().slice(0, 10);
+        const prochaine = items
+            .filter((r) => r.statut === "planifiee" && r.date >= today)
+            .sort((a, b) => a.date.localeCompare(b.date))[0];
+        document.getElementById("sec-sum-prochaine-reunion").textContent = prochaine
+            ? new Date(prochaine.date).toLocaleDateString("fr-FR")
+            : "Aucune";
         const tbody = document.querySelector("#reunions-table tbody");
         tbody.innerHTML = "";
         items.forEach((r) => {
@@ -225,7 +238,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     try {
-        await Promise.all([loadReunions(), loadComptesRendus(), loadDecisions()]);
+        await Promise.all([loadReunions(), loadComptesRendus(), loadDecisions(), loadSummary()]);
     } catch (e) {
         showMessage(e.message, "error");
     }

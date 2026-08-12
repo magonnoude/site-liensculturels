@@ -40,6 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("gouv-statut-a-jour").textContent = statuts.a_jour ?? 0;
         document.getElementById("gouv-statut-impaye").textContent = statuts.impaye ?? 0;
         document.getElementById("gouv-statut-inconnu").textContent = statuts.inconnu ?? 0;
+        document.getElementById("gouv-sum-newsletter").textContent = data.newsletterInscrits ?? "—";
 
         document.getElementById("gouv-cotisations").textContent = euros(data.totalCotisations);
         document.getElementById("gouv-dons").textContent = euros(data.totalDons);
