@@ -167,11 +167,21 @@
                         <p style="font-size:0.9rem; color:#555;"><span class="lang-fr">Le guide d'utilisation du site : comment payer sa cotisation, à quoi servent les différents espaces, questions fréquentes.</span><span class="lang-en">The site's user guide: how to pay your dues, what each space is for, frequently asked questions.</span></p>
                         <p><a href="guide-utilisation.html"><span class="lang-fr">Consulter</span><span class="lang-en">See more</span> →</a></p>
                     </div>
+                    <div class="promo-card impact-card">
+                        <h3><i class="fas fa-calendar-days"></i> <span class="lang-fr">Prochains événements</span><span class="lang-en">Upcoming events</span></h3>
+                        <p style="font-size:0.9rem; color:#555;"><span class="lang-fr">Les prochaines réunions, sorties et activités de l'association.</span><span class="lang-en">The association's upcoming meetings, outings and activities.</span></p>
+                        <p><a href="#portal-agenda-section"><span class="lang-fr">Voir</span><span class="lang-en">See more</span> →</a></p>
+                    </div>
+                    <div class="promo-card impact-card">
+                        <h3><i class="fas fa-clock-rotate-left"></i> <span class="lang-fr">Historique de paiement</span><span class="lang-en">Payment history</span></h3>
+                        <p style="font-size:0.9rem; color:#555;"><span class="lang-fr">Vos cotisations et dons passés, avec vos certificats de paiement.</span><span class="lang-en">Your past dues and donations, with your payment certificates.</span></p>
+                        <p><a href="#portal-history-section"><span class="lang-fr">Voir</span><span class="lang-en">See more</span> →</a></p>
+                    </div>
                 </div>
             </div>
 
             <!-- Agenda -->
-            <div class="portal-card">
+            <div class="portal-card" id="portal-agenda-section">
                 <h2><i class="fas fa-calendar-days"></i> <span class="lang-fr">Prochains événements</span><span class="lang-en">Upcoming events</span></h2>
                 <ul class="portal-agenda-list" id="portal-agenda-list"></ul>
                 <p class="portal-agenda-empty" id="portal-agenda-empty" style="display:none;"><span class="lang-fr">Aucun événement à venir pour le moment.</span><span class="lang-en">No upcoming events for now.</span></p>
@@ -220,7 +230,7 @@
             </div>
 
             <!-- Historique -->
-            <div class="portal-card">
+            <div class="portal-card" id="portal-history-section">
                 <h2><i class="fas fa-clock-rotate-left"></i> <span class="lang-fr">Historique de mes paiements</span><span class="lang-en">My payment history</span></h2>
                 <p id="portal-dons-total" style="display:none; font-size:0.9rem; color:#555;"><i class="fas fa-heart" style="color:var(--secondary-color, #8BC34A);"></i> <span class="lang-fr">Total de mes dons :</span><span class="lang-en">Total donated:</span> <strong id="portal-dons-total-amount"></strong></p>
                 <table class="portal-history-table" id="portal-history-table" style="display:none;">

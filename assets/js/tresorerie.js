@@ -79,6 +79,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         membersById = Object.fromEntries(members.map((m) => [m.memberId, m]));
         const select = document.getElementById("cotisation-membre");
         select.innerHTML = members.map((m) => `<option value="${m.memberId}">${m.nom || m.email}</option>`).join("");
+        const aJourCount = members.filter((m) => m.statutCotisation === "a_jour").length;
+        document.getElementById("sum-adherents").textContent = members.length;
+        document.getElementById("sum-a-jour").textContent = aJourCount;
+        document.getElementById("sum-non-a-jour").textContent = members.length - aJourCount;
     }
 
     // ---- cotisations ----

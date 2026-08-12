@@ -53,6 +53,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function loadMembers() {
         const members = await api("/admin/members");
+        const aJourCount = members.filter((m) => m.statutCotisation === "a_jour").length;
+        document.getElementById("admin-sum-adherents").textContent = members.length;
+        document.getElementById("admin-sum-a-jour").textContent = aJourCount;
+        document.getElementById("admin-sum-non-a-jour").textContent = members.length - aJourCount;
         const tbody = document.querySelector("#members-table tbody");
         tbody.innerHTML = "";
         members.forEach((m) => {
@@ -320,8 +324,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ---- newsletter ----
     async function loadNewsletter() {
         const items = await api("/admin/newsletter");
+        const confirmedCount = items.filter((s) => s.status === "confirmed").length;
         document.getElementById("newsletter-count").textContent =
-            `${items.filter((s) => s.status === "confirmed").length} confirmé(s) sur ${items.length} inscription(s).`;
+            `${confirmedCount} confirmé(s) sur ${items.length} inscription(s).`;
+        document.getElementById("admin-sum-newsletter").textContent = confirmedCount;
         const tbody = document.querySelector("#newsletter-table tbody");
         tbody.innerHTML = "";
         items.forEach((s) => {

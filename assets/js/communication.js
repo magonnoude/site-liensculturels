@@ -44,8 +44,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function loadNewsletter() {
         const items = await api("/communication/newsletter");
+        const confirmedCount = items.filter((s) => s.status === "confirmed").length;
         document.getElementById("newsletter-count").textContent =
-            `${items.filter((s) => s.status === "confirmed").length} confirmé(s) sur ${items.length} inscription(s).`;
+            `${confirmedCount} confirmé(s) sur ${items.length} inscription(s).`;
+        document.getElementById("comm-sum-newsletter").textContent = confirmedCount;
         const tbody = document.querySelector("#newsletter-table tbody");
         tbody.innerHTML = "";
         items.forEach((s) => {
