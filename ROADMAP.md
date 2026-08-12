@@ -1,5 +1,39 @@
 # ROADMAP — www.liensculturels.org
 
+## 📊 Espace membre v2 et statistiques d'en-tête, 12 août 2026
+
+Trois demandes groupées, exécutées en 4 phases séparées (chacune commit + déploiement +
+vérification réelle) :
+
+- **Bug agenda** : les boutons de navigation FullCalendar (`agenda.html`) n'avaient jamais eu
+  de traitement responsive — ajout d'une media query sous 700px (`assets/css/style.css`).
+- **Espace membre — bandeau de statut de cotisation** (benchmark préalable : Kanopi, BackOffice
+  Thinking, Associations Online, Wild Apricot — répondre à "quel est mon statut, que dois-je
+  faire" dès l'écran d'accueil est le facteur le plus corrélé à la rétention) : remplace le
+  badge passif par un bandeau vert/orange actionnable, avec bouton "Régler ma cotisation"
+  ancré vers le formulaire de paiement.
+- **Espace membre — 6 tuiles "Accès rapides"** : ajout de "Prochains événements" et
+  "Historique de paiement" (ancres vers les blocs existants, même pattern que le bandeau de
+  statut) aux 4 tuiles déjà là.
+- **Statistiques dans l'entête des 5 espaces internes** — Admin (adhérents, à jour/non à jour,
+  newsletter), Trésorier (à jour/non à jour, adhérents, en plus du solde déjà affiché),
+  Secrétaire (adhérents, prochaine réunion), Communication (newsletter), Gouvernance
+  (newsletter, en plus de l'existant). Sur Admin/Trésorerie/Communication : entièrement
+  gratuit, toutes les données étaient déjà chargées au chargement de la page, juste jamais
+  affichées. Sur Secrétariat et Gouvernance : changement backend réel, justifié explicitement
+  avant exécution (règle du CLAUDE.md de ce dépôt) —
+  - `liensCulturels-secretariat-api` : nouvelle route `GET /secretariat/summary`, nouveau
+    statement IAM en lecture seule sur `liensculturels-members` (aucun droit d'écriture
+    ajouté), nouvelle route API Gateway (déjà couverte par la permission Lambda wildcard
+    `/secretariat/*` existante, aucune permission supplémentaire nécessaire).
+  - `liensCulturels-gouvernance-api` : `/gouvernance/summary` lit désormais aussi
+    `liensculturels-newsletter` (ARN ajouté au statement IAM déjà existant), renvoie
+    `newsletterInscrits`.
+  - Vérifié en réel avec un compte jetable secrétaire+gouvernance : nouvelle route 200,
+    aucune régression sur les routes existantes des deux Lambdas, chiffres cohérents avec ceux
+    déjà affichés sur admin/trésorerie/communication (13 adhérents, 3 inscrits newsletter
+    partout).
+
 ## 🎨 Refonte visuelle, 12 août 2026
 
 Après plusieurs demandes d'amélioration du design traitées jusque-là par retouches
