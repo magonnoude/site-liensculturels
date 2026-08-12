@@ -83,7 +83,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const msgEl = document.getElementById("portal-msg");
-    const badgeEl = document.getElementById("portal-cotisation-badge");
+    const statusBannerEl = document.getElementById("portal-status-banner");
+    const statusTitleEl = document.getElementById("portal-status-title");
+    const statusSubEl = document.getElementById("portal-status-sub");
+    const statusCtaEl = document.getElementById("portal-status-cta");
     const emailEl = document.getElementById("portal-email");
     const telEl = document.getElementById("portal-telephone");
     const addrEl = document.getElementById("portal-adresse");
@@ -103,9 +106,35 @@ document.addEventListener("DOMContentLoaded", async () => {
         addrEl.value = profile.adresse || "";
         setAvatar(profile.photoUrl || null);
         const statut = profile.statutCotisation || "inconnu";
-        const icon = statut === "a_jour" ? '<i class="fas fa-circle-check"></i> ' : '<i class="fas fa-triangle-exclamation"></i> ';
-        badgeEl.innerHTML = icon + (statut === "a_jour" ? "À jour de cotisation" : statut === "impaye" ? "Cotisation impayée" : "Statut non renseigné");
-        badgeEl.className = `portal-badge ${statut === "a_jour" ? "a-jour" : statut === "impaye" ? "impaye" : "inconnu"}`;
+        const STATUS_CONTENT = {
+            a_jour: {
+                cls: "a-jour",
+                icon: '<i class="fas fa-circle-check"></i> ',
+                title: "Cotisation à jour",
+                sub: "Merci pour votre engagement.",
+                cta: false,
+            },
+            impaye: {
+                cls: "impaye",
+                icon: '<i class="fas fa-triangle-exclamation"></i> ',
+                title: "Cotisation impayée",
+                sub: "Réglez-la en un instant pour rester à jour.",
+                cta: true,
+            },
+            inconnu: {
+                cls: "inconnu",
+                icon: '<i class="fas fa-triangle-exclamation"></i> ',
+                title: "Statut non renseigné",
+                sub: "Réglez votre cotisation pour la mettre à jour.",
+                cta: true,
+            },
+        };
+        const info = STATUS_CONTENT[statut] || STATUS_CONTENT.inconnu;
+        statusTitleEl.innerHTML = info.icon + info.title;
+        statusSubEl.textContent = info.sub;
+        statusCtaEl.style.display = info.cta ? "inline-block" : "none";
+        statusBannerEl.className = `portal-status-banner ${info.cls}`;
+        statusBannerEl.style.display = "flex";
     } catch (e) {
         showMessage("Erreur lors du chargement de votre profil.", "error");
     }

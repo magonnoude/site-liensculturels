@@ -25,6 +25,15 @@
         .portal-badge { display: inline-flex; align-items:center; gap:0.4rem; padding: 0.3rem 0.9rem; border-radius: 100px; font-size: 0.85rem; font-weight: 700; }
         .portal-badge.a-jour { background: linear-gradient(135deg,#d4edda,#b7e4c7); color: #155724; }
         .portal-badge.inconnu, .portal-badge.impaye { background: linear-gradient(135deg,#fff3cd,#ffe8a1); color: #856404; }
+        .portal-status-banner { border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: 1.3rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+        .portal-status-banner.a-jour { background: linear-gradient(135deg,#d4edda,#b7e4c7); }
+        .portal-status-banner.inconnu, .portal-status-banner.impaye { background: linear-gradient(135deg,#fff3cd,#ffe8a1); }
+        .portal-status-banner.a-jour .portal-status-txt strong, .portal-status-banner.a-jour .portal-status-txt span { color: #155724; }
+        .portal-status-banner.inconnu .portal-status-txt strong, .portal-status-banner.inconnu .portal-status-txt span,
+        .portal-status-banner.impaye .portal-status-txt strong, .portal-status-banner.impaye .portal-status-txt span { color: #856404; }
+        .portal-status-banner .portal-status-txt strong { display: block; font-size: 0.98rem; }
+        .portal-status-banner .portal-status-txt span { font-size: 0.85rem; opacity: 0.85; }
+        .portal-status-banner .portal-status-cta { margin-top: 0; white-space: nowrap; }
         .portal-msg { margin-top: 1rem; padding: 0.7rem 1rem; border-radius: 6px; display: none; }
         .portal-msg.success { background: #d4edda; color: #155724; }
         .portal-msg.error { background: #f8d7da; color: #721c24; }
@@ -118,12 +127,20 @@
                 </div>
                 <div>
                     <h1>Bonjour <span id="portal-name"></span></h1>
-                    <p><span class="lang-fr">Statut de cotisation :</span><span class="lang-en">Membership status:</span> <span class="portal-badge" id="portal-cotisation-badge"></span></p>
                     <label class="portal-avatar-upload-btn" for="portal-photo-input" id="portal-avatar-upload-label">
                         <i class="fas fa-camera"></i> <span class="lang-fr">Changer ma photo</span><span class="lang-en">Change my photo</span>
                     </label>
                     <input type="file" id="portal-photo-input" accept="image/jpeg,image/png,image/webp" style="display:none;">
                 </div>
+            </div>
+
+            <!-- Bandeau de statut de cotisation, actionnable -->
+            <div class="portal-status-banner" id="portal-status-banner" style="display:none;">
+                <div class="portal-status-txt">
+                    <strong id="portal-status-title"></strong>
+                    <span id="portal-status-sub"></span>
+                </div>
+                <a href="#member-payment-section" class="btn portal-status-cta" id="portal-status-cta" style="display:none;">Régler ma cotisation →</a>
             </div>
 
             <!-- Accès rapides -->
