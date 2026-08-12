@@ -7,6 +7,17 @@ vérification réelle) :
 
 - **Bug agenda** : les boutons de navigation FullCalendar (`agenda.html`) n'avaient jamais eu
   de traitement responsive — ajout d'une media query sous 700px (`assets/css/style.css`).
+  **Correctif complété le même jour** : le vrai bug visuel signalé (flèches précédent/suivant
+  invisibles, desktop **et** mobile) n'était pas résolu par la media query — cause réelle
+  trouvée par inspection directe de `document.fonts` : la police d'icônes de FullCalendar
+  (`fcicons`, encodée en `data:` URI) et Bootstrap Icons (`cdn.jsdelivr.net`) étaient bloquées
+  par le CSP du site (`font-src 'self' https://cdnjs.cloudflare.com` — jamais élargi quand ces
+  librairies ont été ajoutées à `agenda.html`, alors que `script-src`/`style-src` autorisaient
+  déjà jsdelivr). Corrigé en élargissant uniquement `font-src` sur la CloudFront Response
+  Headers Policy `liensculturels-security-headers` (`data:` + `https://cdn.jsdelivr.net`
+  ajoutés, rien retiré) — même famille de bug que le CSP GA4 déjà rencontré. Vérifié en
+  production : `fcicons` passe à `loaded`, flèches visibles, clic "suivant" avance
+  réellement le calendrier (août → septembre 2026), zéro erreur console, desktop et mobile.
 - **Espace membre — bandeau de statut de cotisation** (benchmark préalable : Kanopi, BackOffice
   Thinking, Associations Online, Wild Apricot — répondre à "quel est mon statut, que dois-je
   faire" dès l'écran d'accueil est le facteur le plus corrélé à la rétention) : remplace le
