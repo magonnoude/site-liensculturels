@@ -1,5 +1,32 @@
 # ROADMAP — www.liensculturels.org
 
+## 📧 Guides à jour + correctif invitation membre, 13 août 2026
+
+En préparant une communication de lancement de l'espace membre vers tous les membres et
+sympathisants, deux choses ont été traitées :
+
+1. **`guide-utilisation.html` et `DOCUMENTATION-TECHNIQUE.md` mis à jour** pour refléter tout
+   ce qui a changé depuis la v1.01 (11/08) : espace Communication (manquait entièrement du
+   guide), nouvelle structure de l'espace membre (Accès rapides 6 tuiles, bandeau de statut de
+   cotisation actionnable, "Autres espaces" en bas), statistiques d'en-tête sur les 5 espaces
+   internes, réunions colorées, boutons "Retour à l'espace membre", leçon CSP `font-src`.
+2. **Vrai bug trouvé en relisant l'email de communication avant envoi** : la fonction
+   "Inviter un membre" de l'espace Admin (`liensCulturels-admin-api`, `invite_member()`) ne
+   délivrait pas de mot de passe fiable — elle comptait sur l'e-mail d'invitation par défaut
+   de Cognito, qui utilise `EmailSendingAccount=COGNITO_DEFAULT` (service email par défaut
+   d'AWS, peu fiable). Au moins 3 comptes bureau provisionnés par ce chemin (dont celui du
+   Président) n'avaient jamais pu se connecter faute d'avoir reçu leur mot de passe.
+   `liensCulturels-adhesion-form` (fiche d'adhésion publique), lui, faisait déjà ça
+   correctement : mot de passe généré côté serveur, `MessageAction=SUPPRESS`, e-mail envoyé
+   soi-même via SES (domaine vérifié, DKIM actif, hors sandbox). `invite_member()` a été
+   aligné sur ce même schéma — aucune nouvelle permission IAM nécessaire (le rôle avait déjà
+   `ses:SendEmail` pour `contact@liensculturels.org`). Vérifié en conditions réelles : compte
+   admin jetable → invitation d'un second compte jetable → mot de passe récupéré depuis les
+   logs CloudWatch (trace de debug temporaire, retirée après le test) → connexion réelle
+   confirmée, redirection correcte vers l'écran de changement de mot de passe obligatoire.
+   Les 3 comptes bureau déjà bloqués restent à régénérer/transmettre à la main par
+   l'utilisateur — hors périmètre de ce correctif, qui ne concerne que les futures invitations.
+
 ## 🟢🟠🔴 Code couleur des réunions (espace secrétariat), 12 août 2026
 
 Demande : distinguer visuellement réunions passées/à venir (vert/rouge, ou l'inverse si plus
