@@ -131,7 +131,7 @@ modifier, ne jamais deviner l'état actuel à partir d'une ancienne copie locale
 | `liensCulturels-adhesion-form` | Formulaire d'adhésion — crée directement le compte Cognito + la fiche membre (groupe `membre`), envoie 2 e-mails (confirmation + notification trésorerie). Depuis le 10/08/2026, avertit aussi contact@ (dans le corps de l'e-mail admin uniquement, jamais montré au public) si le téléphone saisi correspond déjà à un membre existant — signal utile quand la même personne se réinscrit avec un e-mail différent, ce que la détection par e-mail exact ne peut pas voir | `POST /adhesion` |
 | `liensCulturels-payment` | Paiement Stripe/FedaPay (cotisation ou don), webhooks, e-mails de confirmation. Depuis le 11/08/2026, un paiement "pack famille" crée aussi un compte Cognito + une fiche membre par personne de la famille avec e-mail (metadata Stripe/FedaPay chunkées sur plusieurs clés `fm_N`, limite 500 car./valeur) — **non vérifié par un paiement réel**, voir ROADMAP.md B10 | `GET /payment/config`, `POST /payment/create-intent`, `POST /webhook/stripe`, `POST /webhook/fedapay` |
 | `liensCulturels-member-profile` | Profil du membre connecté (lecture seule côté membre pour téléphone/adresse — gérés par le secrétariat), photo de profil, historique de paiements, export RGPD | `GET/PUT /me`, `GET /me/cotisations`, `POST /me/photo-upload-url`, `GET /me/export` |
-| `liensCulturels-admin-api` | Gestion technique : membres (statut cotisation, rôles), documents, agenda, galerie, newsletter | `GET/PUT /admin/members`, `PUT /admin/members/{id}/groups`, `.../documents`, `.../agenda`, `.../gallery`, `.../newsletter` |
+| `liensCulturels-admin-api` | Gestion technique : membres (statut cotisation, rôles), documents, agenda, galerie, newsletter. Depuis le 13/08/2026, `invite_member()` génère le mot de passe temporaire côté serveur et l'envoie par e-mail via SES (même schéma qu'`adhesion-form`) au lieu de laisser Cognito gérer l'invitation par défaut — corrige un vrai trou de délivrabilité (`EmailSendingAccount=COGNITO_DEFAULT` du pool, peu fiable), responsable d'au moins 3 comptes bureau jamais activés | `GET/PUT /admin/members`, `PUT /admin/members/{id}/groups`, `POST /admin/members/invite`, `.../documents`, `.../agenda`, `.../gallery`, `.../newsletter` |
 | `liensCulturels-secretariat-api` | Réunions, comptes-rendus, décisions ; alimente aussi `vie-associative.html` (réservée aux membres connectés depuis le 11/08/2026 — round 2 puis B12). Depuis le 12/08/2026, lecture seule supplémentaire sur `liensculturels-members` (`dynamodb:Scan`, statement IAM dédié `SecretariatMembersReadOnly`) pour la tuile "Adhérents" affichée dans l'entête | `.../secretariat/reunions`, `.../comptes-rendus`, `.../decisions`, `GET /secretariat/summary` (nouveau, `{nombreAdherents}`), `GET /public/vie-associative` (autorizer JWT, n'importe quel membre connecté) |
 | `liensCulturels-tresorerie-api` | Cotisations, dépenses (avec champ `type` Fixe/Exceptionnelle depuis le 9 août 2026), export CSV, synthèse | `.../tresorerie/cotisations`, `.../depenses`, `GET /tresorerie/summary`, `GET /tresorerie/membres` |
 | `liensCulturels-gouvernance-api` | **Nouvelle (9 août 2026), lecture seule** — tableau de bord agrégé pour le CA. Depuis le 12/08/2026, lit aussi `liensculturels-newsletter` (ARN ajouté au statement IAM `GouvernanceReadOnly` existant) pour inclure le nombre d'inscrits newsletter confirmés dans la réponse | `GET /gouvernance/summary` (champ `newsletterInscrits` ajouté) |
@@ -300,6 +300,18 @@ rafale 5) via `RouteSettings` du stage `$default` — anti-abus, testé en condi
   CSP jamais auditée pour elle. Si un rendu (icône, embed) échoue silencieusement sans erreur
   visible dans la page elle-même, vérifier `document.fonts`/la console DevTools avant de
   chercher une cause CSS/layout.
+- **`admin_create_user` sans `MessageAction`/`TemporaryPassword` explicites compte sur l'envoi
+  automatique de Cognito** — qui passe par `EmailSendingAccount=COGNITO_DEFAULT` (service email
+  par défaut d'AWS, quota faible, mauvaise délivrabilité, souvent filtré en spam). Le pool a
+  bien un `InviteMessageTemplate` correctement rédigé, mais ça ne sert à rien si l'e-mail
+  n'arrive jamais. Trouvé le 13/08/2026 en préparant une campagne d'e-mail vers les
+  membres/sympathisants : `invite_member()` dans `admin-api` utilisait ce chemin non fiable
+  (au moins 3 comptes bureau provisionnés ainsi jamais activés), alors que
+  `create_member_account()` dans `adhesion-form` faisait déjà ça bien — mot de passe généré
+  côté serveur + `MessageAction=SUPPRESS` + envoi d'un e-mail maison via SES (domaine vérifié,
+  DKIM actif, hors sandbox). `invite_member()` a été aligné sur ce même schéma. **Toute
+  nouvelle création de compte Cognito dans ce projet doit suivre ce pattern** — ne jamais
+  compter sur l'e-mail d'invitation par défaut de Cognito.
 
 ## 8. Déploiement
 
