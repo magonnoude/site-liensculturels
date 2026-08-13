@@ -1,5 +1,14 @@
 # ROADMAP — www.liensculturels.org
 
+## 📅 Deux événements ajoutés à l'agenda, 13 août 2026
+
+Salon des associations (10 septembre 2026) et Salon de l'Afrique (4 octobre 2026), tous deux
+organisés par la mairie de Nogent-l'Artaud — ajoutés via l'interface Admin réelle (onglet
+Agenda), pas d'écriture directe en base. Aucun fichier du dépôt concerné (contenu dynamique,
+table `liensculturels-agenda`) — vérifié en production sur `agenda.html` (calendrier réel,
+bonnes dates) après ajout. Lieu et heure exacts pas encore précisés par l'association ; les
+deux fiches sont modifiables à tout moment depuis l'espace Admin.
+
 ## 📄 Documents administratifs + réactivation du bureau + vision V2.0, 13 août 2026
 
 - **Procuration Qonto** (ouverture/gestion du compte bancaire de l'association) remplie à
