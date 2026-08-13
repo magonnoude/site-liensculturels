@@ -1,5 +1,39 @@
 # ROADMAP — www.liensculturels.org
 
+## 📄 Documents administratifs + réactivation du bureau + vision V2.0, 13 août 2026
+
+- **Procuration Qonto** (ouverture/gestion du compte bancaire de l'association) remplie à
+  partir du modèle déposé par l'utilisateur — Mandant : Judicaël Sènan BONI (Président,
+  représentant légal) ; Mandataire : Modeste AGONNOUDE (Trésorier). Fichier original et
+  version remplie volontairement gardés **hors du dépôt Git** (public), déplacés vers
+  `~/Downloads` dès réception — données personnelles.
+- **Plan d'affaires prévisionnel** demandé par Qonto — produit en PDF (reportlab) et Word
+  (`python-docx`), tous deux avec en-tête (logo réel) et pied de page (coordonnées légales +
+  numéro de page), repris de l'identité visuelle du site. Contenu : deux scénarios de
+  croissance des adhésions (50-60 / ~100 membres), produits (cotisations, subvention mairie
+  confirmée, subvention département/région non confirmée), charges (IT/plateforme estimé,
+  Qonto Standard 11 €/mois, assurance RC associative estimée, aucun salaire), solde
+  prévisionnel positif dans les deux scénarios. Chaque estimation est explicitement étiquetée
+  comme telle dans le document — notamment le poste IT, non isolable précisément d'une facture
+  cloud mutualisée entre plusieurs projets de l'organisation. Complété ensuite avec une section
+  « Une plateforme numérique désormais opérationnelle » (résumé business de tout ce qui a été
+  construit) et une section « Vision d'évolution — Plateforme V2.0 » reprenant le compte-rendu
+  de réunion du 12/08/2026 (rubriques de découverte territoriale).
+- **Modèle de document Word réutilisable** (`modele-document-liens-culturels.docx`) produit à
+  la même occasion — même en-tête/pied de page, styles nommés (TitreLC, SousTitreLC,
+  TitreSectionLC, Normal, NoteLC) pour tout futur document de l'association.
+- **Les 3 comptes bureau bloqués depuis leur provisionnement initial** (Judicaël Sènan BONI/
+  Président, Stéphane ANAKPO/Trésorier Adjoint, François DREMONT/Chargé de Mission — voir le
+  correctif `invite_member()` ci-dessous) ont été réactivés : mot de passe temporaire
+  régénéré individuellement pour chacun (`admin-set-user-password`, toujours en attente de
+  première connexion), envoyé par e-mail réel via SES avec `contact@liensculturels.org` en
+  copie, après validation explicite du contenu par l'utilisateur avant envoi.
+- **Vision V2.0 actée** : compte-rendu de la réunion en ligne du 12/08/2026 (Modeste, Deen,
+  Gaëlle, Franck Olivier) intégré au plan d'affaires — nouvelles rubriques de découverte
+  territoriale (gastronomie, culture, art, accueil, liste à enrichir) pour Savè, Nogent-l'Artaud
+  et la région des Caraïbes. Voir aussi B22 ci-dessous pour le suivi et les pistes
+  complémentaires proposées le même jour.
+
 ## 📧 Guides à jour + correctif invitation membre, 13 août 2026
 
 En préparant une communication de lancement de l'espace membre vers tous les membres et
@@ -456,6 +490,9 @@ technique/maintenance · statut `ouvert` / `en cours` / `fait`.
 | B2 | ✨ | Bourse scolaire v2 : suivi des dons par campagne (au lieu d'un don générique indifférencié) | ouvert | Explicitement repoussé par l'association — priorité donnée à la validation du contrat de prestation RMS avant nouvelle évolution. |
 | B3 | ✨ | Catégories de dépenses liées à un local (électricité, eau, internet, achat PC/imprimante) | ouvert | Conditionné à l'existence d'un local, pas encore le cas. "Autre" couvre le besoin en attendant. |
 | B9 | ✨ | Chat interne entre membres | ouvert | Demandé le 10/08/2026, question de faisabilité posée. Discuté le 11/08/2026 : WhatsApp couvre déjà ce besoin pour l'association, le coût de construction (temps réel, modération, notifications) est disproportionné par rapport au gain réel — **laissé de côté à la demande de l'association**, pas de plan d'implémentation. |
+| B21 | ✨ | Activer FedaPay (Mobile Money) pour le Bénin | ouvert | Proposé le 13/08/2026. Le site annonce déjà "Mobile Money arrivera prochainement" (guide, `adhesion.html`) mais aucune clé FedaPay (test ou live) n'est configurée à ce jour — seul Stripe (carte bancaire) fonctionne. Frein réel au paiement pour les sympathisants sans carte bancaire française, notamment autour de Savè. Code déjà prêt côté `liensCulturels-payment` (prévu dès l'origine, jamais branché en pratique) — il manque un compte marchand FedaPay réel au nom de l'association et ses clés API. |
+| B22 | ✨ | Plateforme V2.0 — rubriques de découverte territoriale + pistes complémentaires | ouvert, en réflexion | Issu du compte-rendu de réunion du 12/08/2026 (Modeste, Deen, Gaëlle, Franck Olivier) : nouvelles rubriques pour mieux faire découvrir Savè, Nogent-l'Artaud et la région des Caraïbes (gastronomie, culture, art, accueil, liste à enrichir — M. Deen doit transmettre la liste détaillée). Intégré au plan d'affaires le 13/08/2026. **Pistes complémentaires proposées le même jour**, à soumettre au bureau : réseau de membres géolocalisé par ville/région (faciliter rencontres réelles et accueil de visiteurs), espace "échanges" participatif (les membres proposent eux-mêmes des opportunités, pas seulement du contenu piloté par le bureau), cartographie interactive des 3 territoires, témoignages vidéo de membres (réutilise la médiathèque déjà en place), page "partenaires institutionnels" (mairies de Nogent-l'Artaud et Savè — utile aussi pour les dossiers de subvention). Stade préliminaire, aucun périmètre ni budget arrêté. |
+| B23 | 🐛 | Finaliser la vérification de B10 (pack famille) par un paiement réel | ouvert | Proposé le 13/08/2026, complète B10 (déjà "fait" ci-dessous mais explicitement non vérifié de bout en bout). À faire dès qu'une carte réelle est disponible en session : un vrai paiement pack famille, confirmation de la création des comptes famille. |
 
 ### Fait
 
