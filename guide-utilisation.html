@@ -93,6 +93,7 @@
                     <li><a href="#guide-admin">Espace Admin</a></li>
                     <li><a href="#guide-secretariat">Espace Secrétariat</a></li>
                     <li><a href="#guide-tresorerie">Espace Trésorerie</a></li>
+                    <li><a href="#guide-communication">Espace Communication</a></li>
                     <li><a href="#guide-gouvernance">Espace Gouvernance</a></li>
                     <li><a href="#guide-adhesion">Fiche d'adhésion</a></li>
                     <li><a href="#guide-faq">FAQ</a></li>
@@ -109,22 +110,24 @@
             <div class="admin-card" id="guide-membre">
                 <span class="guide-role role-all">Tous les membres</span>
                 <h3>Espace Membre</h3>
-                <p>C'est votre tableau de bord personnel, visible juste après connexion :</p>
+                <p>C'est votre tableau de bord personnel, visible juste après connexion, organisé en 3 zones :</p>
                 <ul>
-                    <li><strong>Statut de cotisation</strong> — un badge vert « à jour » ou orange « impayée / non renseignée ».</li>
-                    <li><strong>Prochains événements</strong> — un aperçu de l'agenda de l'association.</li>
-                    <li><strong>Cotisation &amp; dons</strong> — payez votre cotisation (individuelle ou pack famille) ou faites un don, par carte bancaire. Le paiement Mobile Money (FedaPay) pour le Bénin arrivera prochainement.</li>
-                    <li><strong>Historique de mes paiements</strong> — la liste de vos cotisations et dons déjà enregistrés, avec le total de vos dons.</li>
+                    <li><strong>En haut — Accès rapides</strong> : 6 raccourcis en un coup d'œil — Vie associative, Télécharger mes données (export RGPD), Trombinoscope, Besoin d'aide (ce guide), Prochains événements et Historique de paiement (ces deux derniers renvoient plus bas sur la même page).</li>
+                    <li><strong>Bandeau de statut de cotisation</strong>, juste sous votre nom : vert « Cotisation à jour » si tout est réglé, ou orange avec un bouton <strong>« Régler ma cotisation »</strong> qui vous amène directement au formulaire de paiement si ce n'est pas le cas.</li>
+                    <li><strong>Au milieu — Cotisation &amp; dons</strong> : payez votre cotisation (individuelle ou pack famille) ou faites un don, par carte bancaire. Le paiement Mobile Money (FedaPay) pour le Bénin n'est pas encore activé.</li>
+                    <li><strong>Historique de mes paiements</strong> — la liste de vos cotisations et dons déjà enregistrés, avec le total de vos dons et, pour chaque cotisation, un bouton pour télécharger votre certificat de paiement en PDF.</li>
                     <li><strong>Mon profil</strong> — votre e-mail, téléphone et adresse. Ces deux derniers champs sont gérés par le secrétariat et ne peuvent pas être modifiés directement : passez par la page <a href="contact.html">Contact</a> pour toute mise à jour.</li>
                     <li><strong>Photo de profil</strong> — cliquez sur « Changer ma photo » en haut du tableau de bord.</li>
+                    <li><strong>En bas — Autres espaces</strong> : si vous avez un rôle supplémentaire (Admin, Secrétariat, Trésorerie, Communication ou Gouvernance), une carte vers chaque espace correspondant apparaît tout en bas de la page — rien ne s'affiche ici si vous n'avez que le rôle Membre.</li>
                 </ul>
-                <p>Si vous avez un rôle supplémentaire (Admin, Secrétariat, Trésorerie ou Gouvernance), un bouton vers l'espace correspondant apparaît automatiquement sous votre nom.</p>
             </div>
+
+            <p style="font-size:0.9rem; color:#666; margin: 1.5rem 0 -0.3rem;">Chacun des 5 espaces ci-dessous affiche votre nom en haut de page et un bouton <strong>« Retour à l'espace membre »</strong> juste sous le bandeau de titre.</p>
 
             <div class="admin-card" id="guide-admin">
                 <span class="guide-role role-restricted">Réservé : groupe Admin</span>
                 <h3>Espace Admin</h3>
-                <p>Gestion technique et administrative du site :</p>
+                <p>Gestion technique et administrative du site. Un bandeau de chiffres clés (adhérents, cotisations à jour/non à jour, inscrits newsletter) s'affiche en haut de page :</p>
                 <ul>
                     <li><strong>Membres</strong> — inviter un nouveau membre, consulter la liste, changer les rôles d'un compte existant (case à cocher par rôle), voir la cotisation et les dons de chacun.</li>
                     <li><strong>Documents</strong> — publier des PDF publics (statuts, comptes-rendus d'AG…).</li>
@@ -138,19 +141,25 @@
             <div class="admin-card" id="guide-secretariat">
                 <span class="guide-role role-restricted">Réservé : groupe Secrétariat (ou Admin)</span>
                 <h3>Espace Secrétariat</h3>
-                <p>Planification des réunions du bureau et du conseil d'administration : ordre du jour, compte-rendu (texte, et PDF scanné réservé aux personnes connectées), décisions prises. Le texte des réunions (hors PDF) est automatiquement repris sur la page <a href="vie-associative.html">Vie Associative</a>, réservée aux membres connectés, pour les informer de l'activité de l'association.</p>
+                <p>Un bandeau en haut de page indique le nombre d'adhérents et la date de la prochaine réunion planifiée. Planification des réunions du bureau et du conseil d'administration : ordre du jour, compte-rendu (texte, et PDF scanné réservé aux personnes connectées), décisions prises. Le statut de chaque réunion est mis en couleur (vert = Terminée, orange = Planifiée, rouge = Annulée) pour un repérage visuel rapide. Le texte des réunions (hors PDF) est automatiquement repris sur la page <a href="vie-associative.html">Vie Associative</a>, réservée aux membres connectés, pour les informer de l'activité de l'association.</p>
             </div>
 
             <div class="admin-card" id="guide-tresorerie">
                 <span class="guide-role role-restricted">Réservé : groupe Trésorerie (ou Admin)</span>
                 <h3>Espace Trésorerie</h3>
-                <p>Suivi financier de l'association : enregistrement manuel des cotisations et dons reçus (par virement, chèque, espèces…), enregistrement des dépenses avec leur catégorie et leur type (Fixe ou Exceptionnelle), export CSV, et un résumé des totaux.</p>
+                <p>Suivi financier de l'association : enregistrement manuel des cotisations et dons reçus (par virement, chèque, espèces…), enregistrement des dépenses avec leur catégorie et leur type (Fixe ou Exceptionnelle), export CSV, et un résumé des totaux en haut de page (cotisations reçues, dépenses, solde, adhérents, à jour / non à jour).</p>
+            </div>
+
+            <div class="admin-card" id="guide-communication">
+                <span class="guide-role role-restricted">Réservé : groupe Communication (ou Admin)</span>
+                <h3>Espace Communication</h3>
+                <p>Un bandeau en haut de page indique le nombre d'inscrits newsletter confirmés. Composer et envoyer un message aux abonnés confirmés de la newsletter, consulter et gérer la liste des abonnés (même fonctionnement que l'onglet Newsletter de l'espace Admin, mais accessible sans le rôle Admin).</p>
             </div>
 
             <div class="admin-card" id="guide-gouvernance">
                 <span class="guide-role role-restricted">Réservé : groupe Gouvernance</span>
                 <h3>Espace Gouvernance</h3>
-                <p>Tableau de bord de pilotage réservé au Conseil d'Administration : nombre d'adhérents et répartition de leur statut de cotisation, point financier (cotisations, dons, dépenses, solde), dépenses par type (charges fixes / exceptionnelles) et par catégorie.</p>
+                <p>Tableau de bord de pilotage réservé au Conseil d'Administration : nombre d'adhérents et répartition de leur statut de cotisation, point financier (cotisations, dons, dépenses, solde), dépenses par type (charges fixes / exceptionnelles) et par catégorie, et nombre d'inscrits newsletter confirmés.</p>
                 <p style="font-size:0.88rem; color:#888;">Gouvernance est un rôle distinct d'Admin — avoir le rôle Admin ne donne pas automatiquement accès à cet espace, c'est volontaire : Admin est un rôle technique, Gouvernance est réservé au pilotage stratégique.</p>
             </div>
 
@@ -169,8 +178,8 @@
                 </details>
 
                 <details class="faq-item">
-                    <summary>Je suis connecté mais je ne vois aucun lien vers Admin / Secrétariat / Trésorerie / Gouvernance — pourquoi ?</summary>
-                    <p>Ces boutons n'apparaissent que si votre compte a le rôle correspondant. Si vous pensez devoir y avoir accès, contactez un administrateur pour qu'il vérifie ou ajuste vos rôles depuis l'espace Admin (page Membres, colonne Rôles).</p>
+                    <summary>Je suis connecté mais je ne vois aucune carte « Autres espaces » (Admin / Secrétariat / Trésorerie / Communication / Gouvernance) — pourquoi ?</summary>
+                    <p>Cette section, tout en bas de l'espace membre, ne s'affiche que si votre compte a au moins un rôle supplémentaire. Si vous pensez devoir y avoir accès, contactez un administrateur pour qu'il vérifie ou ajuste vos rôles depuis l'espace Admin (page Membres, colonne Rôles).</p>
                 </details>
 
                 <details class="faq-item">

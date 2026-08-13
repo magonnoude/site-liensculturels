@@ -1,9 +1,11 @@
 # Documentation technique — www.liensculturels.org
 
 Document de référence pour toute personne qui reprend la maintenance technique du site.
-Décrit l'état réel de l'infrastructure au 10 août 2026 (**Version 1.00 — Release
-Candidate**, tag Git `v1.00-rc`). `README.md` a été réécrit le 10 août 2026 et reflète
-maintenant aussi l'état courant.
+Décrit l'état réel de l'infrastructure au 13 août 2026, après la **Version 1.01** (tag Git
+`v1.01`, 11 août 2026) et le lot d'évolutions livré les 12-13 août 2026 (refonte visuelle,
+réorganisation de l'espace membre, statistiques d'en-tête sur les 5 espaces internes,
+correctifs agenda) — voir `ROADMAP.md` pour le détail round par round. `README.md` a été
+réécrit le 10 août 2026 et reflète l'état d'ensemble.
 
 ## 1. Vue d'ensemble
 
@@ -49,10 +51,38 @@ certificat ACM du domaine nu (us-east-1, obligatoire pour CloudFront).
   `assets/img/logo.png` (ancien logo carré) conservé pour compatibilité avec d'anciens
   partages sociaux, ne plus l'utiliser pour du nouveau contenu.
 - Espaces privés (`admin.html`, `secretariat.html`, `tresorerie.html`, `gouvernance.html`,
-  `espace-membre.html`) : **volontairement absents** du nav public et de `sitemap.xml` —
-  accès uniquement par lien direct ou depuis le tableau de bord `espace-membre.html`, qui
-  construit dynamiquement les liens visibles selon les groupes Cognito du compte connecté
-  (`assets/js/espace-membre.js`, tableau `spaceLinks`).
+  `communication.html`, `espace-membre.html`) : **volontairement absents** du nav public et de
+  `sitemap.xml` — accès uniquement par lien direct ou depuis le tableau de bord
+  `espace-membre.html`, qui construit dynamiquement les liens visibles selon les groupes
+  Cognito du compte connecté (`assets/js/espace-membre.js`, tableau `spaceLinks`).
+- **`espace-membre.html` réorganisé le 12/08/2026** en 3 zones : "Accès rapides" (6 tuiles
+  `.promo-card.impact-card` en haut — Vie associative, export RGPD, Trombinoscope, Besoin
+  d'aide, Prochains événements, Historique de paiement, ces deux derniers en ancre `#` vers
+  les blocs plus bas sur la même page), bloc "Cotisation & dons" au centre (précédé d'un
+  bandeau de statut `#portal-status-banner` actionnable — vert si à jour, orange avec bouton
+  "Régler ma cotisation" sinon, ancré vers ce même bloc), et "Autres espaces" en bas
+  (`#portal-groups-card`, masqué entièrement si aucun rôle supplémentaire — remplace
+  l'ancienne liste de simples liens texte, désormais des cartes à icône).
+- **Bandeau utilisateur** (`.utility-user` dans `.header-utility`) sur les 6 pages gated
+  (espace-membre + les 5 espaces internes) : affiche le nom du compte connecté
+  (`window.LCAuth.getDisplayName()`, ajouté à `assets/js/auth.js` le 12/08/2026), à gauche du
+  reste du bandeau utilitaire (`margin-right:auto` sur `.utility-user`). Les 5 espaces internes
+  ont aussi un bouton "Retour à l'espace membre" (`.admin-btn.secondary.small`) juste sous leur
+  `.page-header.with-photo`, visible dans le contenu autorisé (pas seulement l'écran "accès
+  refusé" comme avant).
+- **Statistiques d'en-tête sur les 5 espaces internes** (12/08/2026), toutes via le composant
+  déjà existant `.admin-card` + `.summary-grid`/`.summary-tile` : Admin (adhérents, à jour/non
+  à jour, newsletter — calculées côté client à partir de données déjà chargées, zéro appel
+  réseau supplémentaire), Trésorerie (à jour/non à jour/adhérents ajoutés au résumé existant,
+  `statutCotisation` était déjà dans la réponse `/tresorerie/membres` mais jamais lu côté
+  front), Communication (newsletter confirmés), Secrétariat (adhérents — nouvelle route
+  backend, voir §4 — et prochaine réunion, calculée côté client), Gouvernance (newsletter
+  confirmés ajouté au résumé existant — nouveau champ backend, voir §4).
+- **Réunions colorées sur `secretariat.html`** (12/08/2026) : le `<select>` de statut de
+  chaque réunion porte une classe `.reunion-statut.{planifiee,terminee,annulee}` (vert/orange/
+  rouge, mêmes teintes que `.va-status` sur `vie-associative.html` et `.portal-badge` sur
+  l'espace membre — convention de couleur déjà établie, pas de nouvelle teinte introduite),
+  mise à jour immédiatement au changement de statut, pas seulement au chargement de la page.
 - `assets/js/auth.js` expose `window.LCAuth` (login/logout/handleRedirect/isLoggedIn/
   getClaims/hasGroup/apiFetch) — flux OAuth2 Authorization Code + PKCE contre le Hosted UI
   Cognito. **Stocke les tokens en `sessionStorage`**, pas `localStorage` — donc pas partagé
@@ -256,6 +286,20 @@ rafale 5) via `RouteSettings` du stage `$default` — anti-abus, testé en condi
   (`region1.google-analytics.com/g/collect`) bloqué par `connect-src` — corrigé en ajoutant
   `https://www.googletagmanager.com` à `script-src` et `https://www.google-analytics.com
   https://analytics.google.com https://*.google-analytics.com` à `connect-src`.
+- **Même piège CSP, cette fois `font-src`, sur une intégration déjà en place depuis longtemps
+  (pas une nouveauté)** : les boutons de navigation FullCalendar sur `agenda.html`
+  s'affichaient comme des rectangles vides (icônes chevron invisibles), sur desktop et mobile.
+  Diagnostiqué via `document.fonts` dans un vrai navigateur (`fcicons` — la police d'icônes
+  propre à FullCalendar, encodée en `data:` URI dans son bundle JS — avait le statut `error`)
+  et les messages de violation CSP en console. Deux polices bloquées par `font-src 'self'
+  https://cdnjs.cloudflare.com` : la police `data:` de FullCalendar, et Bootstrap Icons
+  (`cdn.jsdelivr.net`, déjà autorisé en `script-src`/`style-src` mais jamais en `font-src`).
+  Corrigé le 12/08/2026 en ajoutant `data:` et `https://cdn.jsdelivr.net` à `font-src`
+  uniquement. Leçon générale : ce piège n'est pas réservé aux *nouvelles* intégrations — une
+  page qui charge une librairie externe depuis longtemps peut quand même avoir un directive
+  CSP jamais auditée pour elle. Si un rendu (icône, embed) échoue silencieusement sans erreur
+  visible dans la page elle-même, vérifier `document.fonts`/la console DevTools avant de
+  chercher une cause CSS/layout.
 
 ## 8. Déploiement
 
