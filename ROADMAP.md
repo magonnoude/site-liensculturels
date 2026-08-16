@@ -1,5 +1,42 @@
 # ROADMAP — www.liensculturels.org
 
+## 🏷️ Renommage "Qui sommes-nous ?" → "A propos", 16 août 2026
+
+Libellé de navigation FR changé sur les 22 pages du site (menu déroulant "L'Association" +
+lien footer), ainsi que `<title>`/`og:title`/`twitter:title` de `a-propos.html` pour rester
+cohérent. Version anglaise ("About Us") inchangée. Commit + déploiement + smoke tests
+post-déploiement vérifiés verts.
+
+## 💳 Compte Stripe suspendu — vérification KYC en cours, 16 août 2026
+
+**Blocage actif sur la collecte de paiements réels** (cotisations, dons, bourse scolaire).
+Stripe a suspendu le compte de l'association le 16/08/2026 pour vérification renforcée,
+motif : usage identifié comme "collecte de fonds" (dons/cotisations). Traité pas à pas avec
+vous, réponses au questionnaire de conformité :
+
+- **Catégorie d'activité** : association immatriculée (loi 1901, RNA + SIREN 988 913 364)
+  collectant des fonds pour son propre compte.
+- **Pays d'établissement** : France (siège) + Bénin (terrain d'activité, Savè).
+- **Pays destinataires des dons transférés** : 100 % France à ce jour — le programme de
+  bourse scolaire au Bénin n'a **pas encore démarré financièrement**, aucun transfert
+  international réalisé pour l'instant. Signalé proactivement à Stripe pour ne pas provoquer
+  un nouveau blocage le jour où ce transfert deviendra réel.
+- **Modèle tarifaire** : tarif fixe, paiement unique (`Checkout` — formulaire préconfiguré),
+  **pas d'abonnement/prélèvement automatique** — chaque membre repaie manuellement chaque
+  année. Deux produits créés côté Stripe : Cotisation individuelle 30 €, Cotisation pack
+  famille 50 €.
+- **Vérification d'identité bloquante** : la pièce d'identité liée au compte (celle de
+  Judicaël Sènan BONI, Président) a expiré en juillet 2026 ; un premier message expliquant
+  le renouvellement en cours (sans justificatif joint) a été **refusé par Stripe**. Stripe
+  exige désormais **passeport + récépissé de demande de renouvellement de carte de séjour**
+  — les deux documents ensemble, aucune alternative acceptée. En attente que M. Boni
+  transmette ces deux pièces ; le message de transmission à Stripe est déjà rédigé, prêt à
+  être envoyé dès réception (jamais stocké dans ce dépôt public — données personnelles).
+
+**Impact concret tant que non résolu** : les paiements Stripe (cartes bancaires, l'essentiel
+des adhésions/dons aujourd'hui) sont bloqués. FedaPay (Bénin, non encore activé — voir B21)
+n'est pas une solution de repli, il n'est pas en production.
+
 ## 📅 Deux événements ajoutés à l'agenda, 13 août 2026
 
 Salon des associations (10 septembre 2026) et Salon de l'Afrique (4 octobre 2026), tous deux
@@ -502,6 +539,7 @@ technique/maintenance · statut `ouvert` / `en cours` / `fait`.
 | B21 | ✨ | Activer FedaPay (Mobile Money) pour le Bénin | ouvert | Proposé le 13/08/2026. Le site annonce déjà "Mobile Money arrivera prochainement" (guide, `adhesion.html`) mais aucune clé FedaPay (test ou live) n'est configurée à ce jour — seul Stripe (carte bancaire) fonctionne. Frein réel au paiement pour les sympathisants sans carte bancaire française, notamment autour de Savè. Code déjà prêt côté `liensCulturels-payment` (prévu dès l'origine, jamais branché en pratique) — il manque un compte marchand FedaPay réel au nom de l'association et ses clés API. |
 | B22 | ✨ | Plateforme V2.0 — rubriques de découverte territoriale + pistes complémentaires | ouvert, en réflexion | Issu du compte-rendu de réunion du 12/08/2026 (Modeste, Deen, Gaëlle, Franck Olivier) : nouvelles rubriques pour mieux faire découvrir Savè, Nogent-l'Artaud et la région des Caraïbes (gastronomie, culture, art, accueil, liste à enrichir — M. Deen doit transmettre la liste détaillée). Intégré au plan d'affaires le 13/08/2026. **Pistes complémentaires proposées le même jour**, à soumettre au bureau : réseau de membres géolocalisé par ville/région (faciliter rencontres réelles et accueil de visiteurs), espace "échanges" participatif (les membres proposent eux-mêmes des opportunités, pas seulement du contenu piloté par le bureau), cartographie interactive des 3 territoires, témoignages vidéo de membres (réutilise la médiathèque déjà en place), page "partenaires institutionnels" (mairies de Nogent-l'Artaud et Savè — utile aussi pour les dossiers de subvention). Stade préliminaire, aucun périmètre ni budget arrêté. |
 | B23 | 🐛 | Finaliser la vérification de B10 (pack famille) par un paiement réel | ouvert | Proposé le 13/08/2026, complète B10 (déjà "fait" ci-dessous mais explicitement non vérifié de bout en bout). À faire dès qu'une carte réelle est disponible en session : un vrai paiement pack famille, confirmation de la création des comptes famille. |
+| B24 | 🐛 | Compte Stripe suspendu — vérification KYC en cours | bloquant | Ouvert le 16/08/2026. Stripe bloque la collecte de paiements (cotisations/dons/bourse scolaire) tant que le dossier de conformité n'est pas validé. Questionnaire d'activité déjà répondu (voir détail ci-dessus). Point bloquant restant : pièce d'identité expirée de Judicaël Sènan BONI (Président) — Stripe exige passeport + récépissé de renouvellement de titre de séjour, en attente que ces documents soient transmis par l'intéressé. |
 
 ### Fait
 
