@@ -1,5 +1,15 @@
 # ROADMAP — www.liensculturels.org
 
+## 👥 Attribution du rôle Escales + correctif Admin, 17 août 2026
+
+Rôle Cognito `escales` attribué à 4 comptes existants : Samse-Deen RADJI, Gaëlle Sylviane
+Massenon, Elie Smith, Modeste AGONNOUDE. En l'attribuant, **vrai bug trouvé** : le rôle
+"Escales" n'apparaissait dans aucun des deux sélecteurs de rôles de l'espace Admin (liste
+`GROUP_LABELS` d'`assets/js/admin.js` pour la colonne "Rôles" du tableau des membres, et la
+liste statique du formulaire "Inviter un membre" d'`admin.html`) — oubli lors de la création
+du groupe la veille, les deux endroits n'avaient pas été mis à jour. Corrigé aux deux
+endroits, vérifié en production (contenu déployé confirmé par requête directe).
+
 ## 🗺️ Rubrique "Escales Jumelles" livrée (B22) + nav restructurée, 16 août 2026
 
 Premier lot construit de la Vision V2.0 (voir B22 dans le Backlog pour le détail complet).
