@@ -66,6 +66,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Communication, à l'inverse de Gouvernance : bypass "admin" autorisé
         // (décision B13 confirmée avec l'association).
         { visible: isAdmin || groups.includes("communication"), href: "communication.html", label: "Espace Communication", icon: "fa-bullhorn" },
+        // Escales, comme Communication : bypass "admin" autorisé (décision confirmée
+        // avec l'association).
+        { visible: isAdmin || groups.includes("escales"), href: "escales.html", label: "Espace Escales Jumelles", icon: "fa-earth-americas" },
     ];
     const groupsEl = document.getElementById("portal-groups");
     const groupsCardEl = document.getElementById("portal-groups-card");

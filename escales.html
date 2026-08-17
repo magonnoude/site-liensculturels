@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Escales Jumelles - Association Liens Culturels</title>
+    <meta name="description" content="Espace Escales Jumelles de l'association Liens Culturels : gestion des fiches de découverte territoriale.">
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="assets/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="assets/img/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+    <link rel="manifest" href="assets/img/site.webmanifest">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/solid.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        #escales-denied, #escales-loading { text-align: center; padding: 4rem 0; }
+    </style>
+</head>
+<body>    <div class="site-header">
+    <div class="header-utility">
+        <div class="container">
+            <span class="utility-user" id="topbar-user" style="display:none;"><i class="fas fa-circle-user"></i> <span id="topbar-user-name"></span></span>
+            <a href="espace-membre.html" class="utility-link"><i class="fas fa-user-lock"></i> <span class="lang-fr">Accès Membre</span><span class="lang-en">Member Access</span></a>
+            <span class="utility-divider" aria-hidden="true"></span>
+            <div class="utility-contacts">
+                <a href="mailto:contact@liensculturels.org"><i class="fas fa-envelope"></i> contact@liensculturels.org</a>
+            </div>
+            <span class="utility-divider" aria-hidden="true"></span>
+            <a href="adhesion.html" class="cta-pill"><i class="fas fa-user-plus"></i> <span class="lang-fr">Devenir Membre</span><span class="lang-en">Join Us</span></a>
+            <span class="utility-divider" aria-hidden="true"></span>
+            <div class="lang-toggle">
+                <button type="button" data-lang="fr" class="active">FR</button>
+                <span style="color:rgba(255,255,255,0.3)">|</span>
+                <button type="button" data-lang="en">EN</button>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <a href="index.html"><img src="assets/img/brand/logo-horizontal.svg" alt="Liens Culturels — France, Antilles, Bénin" class="logo"></a>
+            <button type="button" class="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false"><i class="fas fa-bars"></i></button>
+            <nav>
+                <ul>
+                    <li><a href="index.html"><span class="lang-fr">Accueil</span><span class="lang-en">Home</span></a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    </div>
+
+    <main class="admin-wrap">
+        <div id="escales-loading" style="text-align:center; padding:4rem 0; color:#888;">Chargement…</div>
+
+        <div id="escales-denied" style="display:none;">
+            <i class="fas fa-lock" style="font-size:2.5rem; color:#c0392b;"></i>
+            <h1>Accès refusé</h1>
+            <p>Cette section est réservée à l'équipe Escales Jumelles (ou aux administrateurs). <a href="espace-membre.html">Retour à l'espace membre</a>.</p>
+        </div>
+
+        <div id="escales-content" style="display:none;">
+            <div class="page-header with-photo photo-caraibes">
+                <h1><i class="fas fa-earth-americas"></i> Espace Escales Jumelles</h1>
+                <p>Gestion des fiches de découverte pour Nogent-l'Artaud, Savè et les Caraïbes.</p>
+                <span class="page-header-credit">Photo : Pointe des Châteaux, Guadeloupe — Bgabel, <a href="https://creativecommons.org/licenses/by-sa/3.0/" target="_blank" rel="noopener">CC BY-SA 3.0</a></span>
+            </div>
+
+            <p style="margin: 1rem 0;"><a href="espace-membre.html" class="admin-btn secondary small"><i class="fas fa-arrow-left"></i> Retour à l'espace membre</a></p>
+
+            <div id="escales-msg" class="admin-msg"></div>
+
+            <div class="admin-card">
+                <h3 id="escales-form-title">Ajouter une fiche</h3>
+                <div class="admin-form-row">
+                    <select id="escales-territoire" style="flex:1; min-width:180px;">
+                        <option value="nogent-artaud">Nogent-l'Artaud</option>
+                        <option value="save">Savè</option>
+                        <option value="caraibes">Caraïbes</option>
+                    </select>
+                    <select id="escales-rubrique" style="flex:1; min-width:220px;">
+                        <option value="lieux-paysages">Lieux &amp; Paysages</option>
+                        <option value="savoir-faire-saveurs">Savoir-faire &amp; Saveurs</option>
+                        <option value="vivre-celebrer">Vivre &amp; Célébrer</option>
+                        <option value="visages-jumelage">Visages du Jumelage</option>
+                    </select>
+                </div>
+                <div class="admin-form-row">
+                    <input type="text" id="escales-titre" placeholder="Titre" style="flex:1; min-width:260px;">
+                </div>
+                <div class="admin-form-row">
+                    <textarea id="escales-texte" placeholder="Texte" style="flex:1; min-height:100px;"></textarea>
+                </div>
+                <div class="admin-form-row">
+                    <input type="file" id="escales-file" accept="image/jpeg,image/png,image/webp">
+                    <span id="escales-file-hint" style="font-size:0.82rem; color:#777;">Photo requise à la création.</span>
+                </div>
+                <button class="admin-btn" id="escales-submit-btn">Ajouter la fiche</button>
+                <button class="admin-btn secondary" id="escales-cancel-edit-btn" style="display:none;">Annuler la modification</button>
+            </div>
+
+            <div class="admin-card">
+                <h3>Fiches existantes</h3>
+                <div class="admin-form-row">
+                    <select id="escales-filter-territoire" style="flex:1; min-width:180px;">
+                        <option value="">Tous les territoires</option>
+                        <option value="nogent-artaud">Nogent-l'Artaud</option>
+                        <option value="save">Savè</option>
+                        <option value="caraibes">Caraïbes</option>
+                    </select>
+                </div>
+                <div class="gallery-admin-grid" id="escales-grid"></div>
+            </div>
+        </div>
+    </main>
+
+    <div class="footer-photo-band" aria-hidden="true">
+        <div class="band-nogent" title="Nogent-l'Artaud, France"></div>
+        <div class="band-save" title="Savè, Bénin"></div>
+        <div class="band-caraibes" title="Guadeloupe, Caraïbes"></div>
+    </div>
+    <footer>
+        <div class="footer-bottom">
+            <div class="footer-bottom-row">
+                <p><strong>&copy; 2025–2026 Liens Culturels (LC).</strong> <span class="lang-fr">Espace Escales Jumelles.</span><span class="lang-en">Twin Territories area.</span></p>
+                <p class="footer-legal-links">
+            <a href="mentions-legales.html"><span class="lang-fr">Mentions Légales</span><span class="lang-en">Legal Notice</span></a>
+            <span aria-hidden="true"> · </span>
+            <a href="cgu.html"><span class="lang-fr">CGU</span><span class="lang-en">Terms of Use</span></a>
+            <span aria-hidden="true"> · </span>
+            <a href="confidentialite.html"><span class="lang-fr">Confidentialité</span><span class="lang-en">Privacy Policy</span></a>
+        </p>
+            </div>
+            <p class="footer-credit"><span class="lang-fr">Site conçu, développé et maintenu par</span><span class="lang-en">Site designed, developed and maintained by</span> <strong>® RMS International Group</strong></p>
+        </div>
+    </footer>
+
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/escales.js"></script>
+    <script src="assets/js/header.js"></script>
+</body>
+</html>

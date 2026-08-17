@@ -394,6 +394,7 @@ header nav ul li.dropdown .dropdown-menu a:hover {
 }
 .page-header.photo-nogent { background-image: url('../img/nogent-artaud-eglise.jpg'); }
 .page-header.photo-save { background-image: url('../img/save-benin.jpg'); }
+.page-header.photo-caraibes { background-image: url('../img/caraibes-guadeloupe.jpg'); }
 
 .page-header-credit {
     display: block;
@@ -423,8 +424,73 @@ header nav ul li.dropdown .dropdown-menu a:hover {
 }
 .footer-photo-band .band-nogent { background-image: url('../img/nogent-artaud-eglise-band.jpg'); }
 .footer-photo-band .band-save { background-image: url('../img/save-benin-band.jpg'); }
+.footer-photo-band .band-caraibes { background-image: url('../img/caraibes-guadeloupe-band.jpg'); }
 @media (max-width: 600px) {
     .footer-photo-band { height: 90px; }
+}
+
+/* ---- Escales Jumelles (découverte territoriale) ---- */
+.escale-territory-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    justify-content: center;
+    margin: 0 0 2rem;
+}
+.escale-territory-nav button {
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.6rem 1.4rem;
+    border-radius: 100px;
+    border: 1px solid rgba(30, 42, 56, 0.15);
+    background: #fff;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.escale-territory-nav button:hover { border-color: var(--primary-color); }
+.escale-territory-nav button.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: #fff;
+}
+.escale-rubrique-block { margin-bottom: 2.5rem; }
+.escale-rubrique-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--primary-deep);
+    border-bottom: 2px solid var(--accent-color);
+    padding-bottom: 0.4rem;
+    margin-bottom: 1rem;
+}
+.escale-fiche-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.2rem;
+}
+.escale-fiche-card {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+}
+.escale-fiche-card img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+}
+.escale-fiche-card .escale-fiche-body { padding: 0.9rem 1rem 1.1rem; }
+.escale-fiche-card h4 { margin: 0 0 0.4rem; font-size: 1rem; }
+.escale-fiche-card p { margin: 0; font-size: 0.88rem; color: var(--text-dim); line-height: 1.5; }
+.escale-empty {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    font-style: italic;
+    padding: 1rem 0;
 }
 
 /* --- Amélioration des cartes --- */

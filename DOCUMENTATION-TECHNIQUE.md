@@ -18,7 +18,7 @@ paiements en ligne.
 Navigateur
   ├─ Pages statiques ──────────► CloudFront (E27Z3FWSMEYT5U) ──► S3 (www.liensculturels.org)
   ├─ Connexion (Hosted UI) ────► Cognito (pool eu-west-3_nG1lWCmJK)
-  └─ Appels API (fetch) ───────► API Gateway (8igk1o6vw4) ──► 13 Lambdas ──► DynamoDB / SES / S3
+  └─ Appels API (fetch) ───────► API Gateway (8igk1o6vw4) ──► 14 Lambdas ──► DynamoDB / SES / S3
 ```
 
 Compte AWS `928883700132`, région `eu-west-3` (Paris) pour toutes les ressources sauf le
@@ -26,9 +26,9 @@ certificat ACM du domaine nu (us-east-1, obligatoire pour CloudFront).
 
 ## 2. Frontend
 
-- 30 pages HTML à la racine du dépôt, pas de sous-dossiers de pages (dont `guide-utilisation.html`,
-  `vie-associative.html`, `trombinoscope.html` et `communication.html`, réservées aux comptes
-  connectés — voir §2 fin de section).
+- 32 pages HTML à la racine du dépôt, pas de sous-dossiers de pages (dont `guide-utilisation.html`,
+  `vie-associative.html`, `trombinoscope.html`, `communication.html` et `escales.html`,
+  réservées aux comptes connectés — voir §2 fin de section).
 - Bilingue FR/EN **sans pages séparées** : chaque texte existe deux fois, dans
   `<span class="lang-fr">…</span>` et `<span class="lang-en">…</span>`, basculées en JS
   (`main.js` → `switchLanguage()`), préférence persistée en `localStorage`. **Ne jamais**
@@ -103,12 +103,14 @@ certificat ACM du domaine nu (us-east-1, obligatoire pour CloudFront).
 
 - User pool `eu-west-3_nG1lWCmJK`, client `757mjbo05rlabup4kkai470d86`, domaine Hosted UI
   `https://liensculturels-membres.auth.eu-west-3.amazoncognito.com`.
-- 6 groupes : `admin` (gestion technique du site : documents, agenda, galerie, newsletter,
+- 7 groupes : `admin` (gestion technique du site : documents, agenda, galerie, newsletter,
   invitation de membres), `secretaire`, `tresorier`, `gouvernance` (tableau de bord
   stratégique du CA, créé le 9 août 2026 — **volontairement séparé d'`admin`**, aucune des
   Lambdas ne fait de bypass "admin voit tout" pour ce groupe), `communication` (newsletter/RS/
   blog, créé le 11/08/2026 — **à l'inverse de `gouvernance`** : `admin` a accès par bypass),
-  `membre` (par défaut).
+  `escales` (fiches de découverte territoriale "Escales Jumelles", créé le 16/08/2026 —
+  **délibérément séparé de `communication`**, pas forcément les mêmes personnes ; bypass
+  `admin` autorisé, comme `communication`), `membre` (par défaut).
 - **Un compte peut appartenir à plusieurs groupes.** ⚠️ Voir §7 "Pièges connus" — le format
   de sérialisation de `cognito:groups` côté API Gateway a été une source de bug réel.
 - Création de compte : soit via le formulaire d'adhésion public (`POST /adhesion`, groupe
@@ -119,7 +121,7 @@ certificat ACM du domaine nu (us-east-1, obligatoire pour CloudFront).
   fiable (adresse générique, souvent filtré en spam). À la place : `MessageAction=SUPPRESS`
   + mot de passe temporaire généré côté serveur, transmis par un autre canal.
 
-## 4. Les 13 Lambdas (Python 3.11, hors dépôt Git)
+## 4. Les 14 Lambdas (Python 3.11, hors dépôt Git)
 
 Aucune n'est versionnée dans ce dépôt — leur code vit uniquement dans AWS. Toujours
 `aws lambda get-function --query Code.Location` pour récupérer la source déployée avant de la
@@ -140,6 +142,7 @@ modifier, ne jamais deviner l'état actuel à partir d'une ancienne copie locale
 | `liensCulturels-cotisation-reminder` | **Nouvelle (11/08/2026)**, pas de route API — déclenchée uniquement par EventBridge (règle `liensculturels-cotisation-reminder-annuel`, 1er novembre 8h UTC). Rappelle par e-mail aux membres dont la cotisation la plus récente n'est pas celle de l'année en cours. | — (invocation planifiée uniquement) |
 | `liensCulturels-communication-api` | **Nouvelle (11/08/2026)**, mirroring de `gouvernance-api` — newsletter (lecture/envoi/suppression), même table que `admin-api`. Autorisation `admin` **OU** `communication` (bypass admin volontaire, à l'opposé de `gouvernance-api`) | `GET /communication/newsletter`, `POST /communication/newsletter/send`, `DELETE /communication/newsletter/{email}` |
 | `liensCulturels-payment-certificate` | **Nouvelle (11/08/2026)** — génère à la demande un PDF de certificat de cotisation (`reportlab` vendorisé, logo rasterisé embarqué dans le paquet). Cotisations uniquement, jamais les dons. Première Lambda du projet à utiliser `isBase64Encoded` | `GET /me/certificate/{cotisationId}` |
+| `liensCulturels-escales-api` | **Nouvelle (16/08/2026)** — fiches de découverte territoriale "Escales Jumelles" (titre, texte, une photo), classées par territoire (`nogent-artaud`/`save`/`caraibes`) et rubrique (`lieux-paysages`/`savoir-faire-saveurs`/`vivre-celebrer`/`visages-jumelage`). Lecture publique sans authentification ; écriture réservée au groupe `escales` (bypass `admin` autorisé). Upload photo en 2 étapes (URL S3 présignée retournée à la création/édition, même schéma que `admin-api`'s galerie), préfixe S3 dédié `assets/escales/*` sur le bucket `www.liensculturels.org` | `GET /escales`, `POST /escales/fiches`, `PUT /escales/fiches/{id}`, `DELETE /escales/fiches/{id}` |
 
 Les deux avant-dernières manquaient à une version antérieure de ce document (10 Lambdas
 réellement déployées à l'époque, pas 8) — corrigé le 11/08/2026 en vérifiant
@@ -158,8 +161,8 @@ Une seule API HTTP `liensCulturels-API` (id `8igk1o6vw4`), CORS restreint à
 
 **Permissions Lambda ⇄ API Gateway** : deux styles coexistent selon la Lambda —
 `admin-api`/`secretariat-api`/`tresorerie-api` ont une permission **wildcard** sur tout leur
-préfixe (`/admin/*`, etc.), tandis que `member-profile`, `adhesion-form` et
-`gouvernance-api` ont des permissions **scopées route par route** (`add-permission` avec un
+préfixe (`/admin/*`, etc.), tandis que `member-profile`, `adhesion-form`,
+`gouvernance-api` et `escales-api` ont des permissions **scopées route par route** (`add-permission` avec un
 `--source-arn` précis). **Toute nouvelle route sur une Lambda à permissions scopées a besoin
 de son propre `add-permission`, sinon 500 silencieux** — piège déjà rencontré deux fois cette
 session, voir §7.
@@ -185,6 +188,7 @@ rafale 5) via `RouteSettings` du stage `$default` — anti-abus, testé en condi
 | `liensculturels-gallery` | `itemId` | Photothèque/vidéothèque |
 | `liensculturels-newsletter` | `email` | `status` (`pending`/`confirmed`/`unsubscribed`), double opt-in |
 | `liensculturels-reunions` / `-comptes-rendus` / `-decisions` | id dédié | Secrétariat — voir aussi `GET /public/vie-associative` pour la vue publique (texte seulement, jamais les PDF scannés) |
+| `liensculturels-escales` | `ficheId` | Fiches "Escales Jumelles" (`territoire`, `rubrique`, `titre`, `texte`, `imageUrl`, `s3Key`, `createdAt`). Pas de PITR (contenu éditorial recréable, comme `-gallery`/`-agenda`/`-newsletter`) |
 
 ## 7. Pièges connus (vécus, pas hypothétiques)
 

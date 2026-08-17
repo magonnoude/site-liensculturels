@@ -6,8 +6,8 @@
 
 Dépôt du site officiel **et** de la plateforme numérique de l'association **Liens
 Culturels** (loi 1901, Nogent-l'Artaud — France, Antilles, Bénin) : vitrine publique
-bilingue FR/EN installable en PWA, adhésion et paiement en ligne, et cinq espaces internes
-authentifiés (membre, admin, secrétariat, trésorerie, gouvernance, communication).
+bilingue FR/EN installable en PWA, adhésion et paiement en ligne, et six espaces internes
+authentifiés (membre, admin, secrétariat, trésorerie, gouvernance, communication, escales).
 
 **Version 1.01, 11 août 2026.** Voir `ROADMAP.md` pour l'historique complet des rounds de
 développement et le backlog des points ouverts.
@@ -26,10 +26,10 @@ développement et le backlog des points ouverts.
 
 ## ✨ Fonctionnalités principales
 
-* **Site public bilingue** (FR/EN, 30 pages, installable comme PWA — icône sur l'écran
+* **Site public bilingue** (FR/EN, 32 pages, installable comme PWA — icône sur l'écran
   d'accueil, mode plein écran) : présentation de l'association, projets, bourse scolaire
-  "Avenir Partagé" (avec don en ligne), agenda, médiathèque, mentions légales/CGU/
-  confidentialité.
+  "Avenir Partagé" (avec don en ligne), agenda, médiathèque, "Escales Jumelles" (découverte
+  territoriale de nos communes jumelées), mentions légales/CGU/confidentialité.
 * **Adhésion et paiement en ligne** : fiche d'adhésion (individuelle ou pack famille),
   paiement de la cotisation ou don libre par carte bancaire via **Stripe** (mode
   **production**, FedaPay/Mobile Money prévu pour le Bénin, pas encore activé). Un pack
@@ -39,7 +39,7 @@ développement et le backlog des points ouverts.
   ses propres données, agenda personnalisé, trombinoscope du bureau, vie associative
   (réunions/comptes-rendus/décisions — réservée aux membres connectés), guide d'utilisation
   + FAQ. Rappel automatique de renouvellement de cotisation (e-mail annuel).
-* **Cinq espaces internes**, selon le rôle du compte connecté :
+* **Six espaces internes**, selon le rôle du compte connecté :
   * **Admin** — membres, rôles, documents, agenda, médiathèque, newsletter.
   * **Secrétariat** — réunions, comptes-rendus, décisions (alimentent la page "Vie
     associative" de l'espace membre).
@@ -49,10 +49,12 @@ développement et le backlog des points ouverts.
     admin automatique (rôle technique distinct).
   * **Communication** — newsletter (abonnés, envoi), à l'inverse de Gouvernance : accès
     admin automatique.
+  * **Escales** — fiches de découverte territoriale "Escales Jumelles" (Nogent-l'Artaud,
+    Savè, Caraïbes), volontairement séparé de Communication ; accès admin automatique.
 * **Conformité RGPD** : bannière de consentement avant tout chargement de Google
   Analytics 4, politique de confidentialité à jour, export de ses données en libre-service.
 * **Fiabilité** : sauvegarde continue (PITR) sur les données membres/cotisations/dépenses,
-  alarmes CloudWatch sur les 13 Lambdas, throttling anti-abus sur les formulaires publics,
+  alarmes CloudWatch sur les 14 Lambdas, throttling anti-abus sur les formulaires publics,
   smoke tests automatiques après chaque déploiement.
 
 ## 🛠️ Technologies utilisées
@@ -95,7 +97,7 @@ cd ~/RMS_Projects/www.liensculturels.org
 │   ├── img/                 # images, identité visuelle (assets/img/brand/)
 │   └── js/                  # main.js, auth.js, payment.js, consent.js, espace-membre.js, ...
 ├── documents/                # PDFs publics (statuts, PV d'AG)
-├── index.html, a-propos.html, ... # 30 pages HTML à la racine (pas de sous-dossiers de pages)
+├── index.html, a-propos.html, ... # 32 pages HTML à la racine (pas de sous-dossiers de pages)
 ├── admin.html, secretariat.html, tresorerie.html, gouvernance.html, communication.html,
 │   espace-membre.html         # espaces internes — hors nav publique et sitemap.xml
 ├── sitemap.xml / robots.txt  # SEO
