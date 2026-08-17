@@ -304,6 +304,18 @@ rafale 5) via `RouteSettings` du stage `$default` — anti-abus, testé en condi
   CSP jamais auditée pour elle. Si un rendu (icône, embed) échoue silencieusement sans erreur
   visible dans la page elle-même, vérifier `document.fonts`/la console DevTools avant de
   chercher une cause CSS/layout.
+- **Même piège CSP une 3ᵉ fois, `script-src` cette fois, sur lightbox2 (`cdnjs.cloudflare.com`)
+  — utilisé depuis `phototheque.html`/`videotheque.html` sans jamais avoir été audité.**
+  Trouvé le 16/08/2026 en vérifiant la nouvelle page `escales-jumelles.html` (elle aussi
+  chargeait lightbox2) via un test Playwright qui capture les erreurs console — `script-src`
+  n'autorisait que `cdn.jsdelivr.net`/`js.stripe.com`/`googletagmanager.com`, jamais
+  `cdnjs.cloudflare.com` (présent en `style-src`/`font-src`, jamais en `script-src`). Bug
+  **pré-existant**, pas introduit par la nouvelle page — l'agrandissement photo en
+  lightbox était donc déjà cassé sur la photothèque/vidéothèque publiques. Corrigé en
+  ajoutant `https://cdnjs.cloudflare.com` à `script-src` uniquement (rien retiré). Confirme
+  la leçon du piège précédent : auditer `script-src`/`style-src`/`font-src`/`connect-src`
+  **séparément** pour chaque domaine externe, l'autorisation d'un directive ne dit rien des
+  autres.
 - **`admin_create_user` sans `MessageAction`/`TemporaryPassword` explicites compte sur l'envoi
   automatique de Cognito** — qui passe par `EmailSendingAccount=COGNITO_DEFAULT` (service email
   par défaut d'AWS, quota faible, mauvaise délivrabilité, souvent filtré en spam). Le pool a
