@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // ---- membres ----
-    const GROUP_LABELS = { admin: "Admin", secretaire: "Secrétaire", tresorier: "Trésorier", gouvernance: "Gouvernance", communication: "Communication", membre: "Membre" };
+    const GROUP_LABELS = { admin: "Admin", secretaire: "Secrétaire", tresorier: "Trésorier", gouvernance: "Gouvernance", communication: "Communication", escales: "Escales", membre: "Membre" };
 
     async function loadMembers() {
         const members = await api("/admin/members");
