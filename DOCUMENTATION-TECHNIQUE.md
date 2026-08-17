@@ -328,6 +328,20 @@ rafale 5) via `RouteSettings` du stage `$default` — anti-abus, testé en condi
   DKIM actif, hors sandbox). `invite_member()` a été aligné sur ce même schéma. **Toute
   nouvelle création de compte Cognito dans ce projet doit suivre ce pattern** — ne jamais
   compter sur l'e-mail d'invitation par défaut de Cognito.
+- **Créer un nouveau groupe Cognito ne suffit pas à le rendre utilisable depuis l'espace
+  Admin.** Trouvé le 17/08/2026 en attribuant le rôle `escales` à 4 comptes existants : le
+  groupe fonctionnait déjà côté backend (Lambda, autorizer) mais restait invisible dans
+  l'interface — deux listes codées en dur dans le frontend n'avaient pas été mises à jour lors
+  de sa création la veille. **Checklist complète pour tout nouveau rôle Cognito** :
+  1. `aws cognito-idp create-group` (le groupe lui-même).
+  2. `GROUP_LABELS` dans `assets/js/admin.js` (colonne "Rôles" du tableau des membres).
+  3. Le `<select id="invite-groups">` statique dans `admin.html` (formulaire "Inviter un
+     membre").
+  4. Le tableau `spaceLinks` dans `assets/js/espace-membre.js` ("Autres espaces").
+  5. La fonction `_is_authorized()` de la Lambda dédiée au rôle (bypass admin ou non — décision
+     à trancher explicitement, voir le précédent Communication vs Gouvernance).
+  Les points 2 et 3 avaient été oubliés pour `escales` ; seul le point 4 avait été fait dans le
+  même lot que sa création.
 
 ## 8. Déploiement
 
