@@ -1,5 +1,16 @@
 # ROADMAP — www.liensculturels.org
 
+## 📞 Correctif contenu + pause développement, 18-19 août 2026
+
+- Numéro de téléphone Bénin corrigé sur les 23 pages publiques concernées :
+  +229 01 61 95 04 15 → **+229 01 52 48 45 62**.
+- Suivi administratif hors dépôt (dossiers Stripe/Qonto/FedaPay, tous bloqués par la même
+  cause racine — titre de séjour du Président en cours de renouvellement ; assurance RC
+  associative en cours d'étude) — voir le dossier administratif privé, pas de changement
+  technique sur le site pour ces sujets.
+- **Pause décidée sur tout nouveau développement** (au-delà des correctifs de contenu comme
+  celui-ci) en attendant la signature du contrat de prestation RMS ↔ Association.
+
 ## 👥 Attribution du rôle Escales + correctif Admin, 17 août 2026
 
 Rôle Cognito `escales` attribué à 4 comptes existants : Samse-Deen RADJI, Gaëlle Sylviane
