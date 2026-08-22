@@ -768,6 +768,15 @@ footer{background:var(--primary-deep);color:#E8EAE0;padding:40px 0 0 0;margin-to
     padding-left: 1.5rem;
     margin: 0;
     font-style: italic;
+    text-align: justify;
+}
+
+.leader-word blockquote p {
+    margin: 0 0 1rem;
+}
+
+.leader-word blockquote p:last-child {
+    margin-bottom: 0;
 }
 
 .leader-word .author {
