@@ -1,5 +1,47 @@
 # ROADMAP — www.liensculturels.org
 
+## 🎪 Kit de communication imprimé + corrections de contenu + photos bureau, 26 août – 14 septembre 2026
+
+Pause de développement toujours active (voir section ci-dessous) — ce lot ne contient que des
+corrections de contenu déjà en cours et des livrables imprimés/print produits hors dépôt
+(`~/Downloads/`, pas de code site pour eux-mêmes), plus les photos bureau habituelles.
+
+- **Campagne imprimée pour deux événements de recrutement** — Carrefour des associations
+  (Nogent-l'Artaud, 5 septembre 2026) et Salon de l'Afrique et des Îles d'Outre-Mer (Salle des
+  Longs, 3-4 octobre 2026, 4e édition) : 2 flyers, une fiche d'adhésion avec QR code, et un
+  document 2 pages "Vision & Feuille de route 2026-2027". **Bug de rendu réel trouvé et
+  corrigé** : le moteur `wkhtmltopdf` installé sur cette machine (build "Qt non patché")
+  ignorait silencieusement `--disable-smart-shrinking`/`--print-media-type` et rendait tout
+  contenu A4 à ~77% de la largeur, non centré ("décalé", signalé par l'utilisateur) — remplacé
+  intégralement par Chromium headless (Playwright, déjà présent dans `node_modules/` du
+  dépôt) pour tout rendu PDF futur sur cette machine.
+- **Corrections factuelles** après transmission de vrais flyers officiels de la mairie :
+  "Carrefour des associations" (pas "Forum"), samedi (pas vendredi) 5 septembre, "Salon de
+  l'Afrique et des Îles d'Outre-Mer" avec ses horaires/lieu réels — propagées dans tous les
+  documents concernés, y compris le plan stratégique.
+- **Document "Qui sommes-nous ?"** (identité / activités au quotidien / projets en
+  préparation / comment s'investir) créé et transmis au Bureau pour amendement, à la suite
+  d'une remarque du Secrétaire sur le séquencement gouvernance vs communication — document
+  stratégique = feuille de route interne, "Qui sommes-nous" = texte membres/communication.
+- **Retour de la mairie (via Christelle)** : remplacer "Guadeloupe" par "les Antilles" partout
+  où le mot désignait un territoire de l'association (pas les légendes photo, qui citent le
+  lieu réel d'une photo, ni la liste des indicatifs téléphoniques). Corrigé sur le site
+  (`index.html`, `escales-jumelles.html`, `escales.html`) et dans tous les documents imprimés
+  — y compris un oubli initial dans le bandeau photo partagé des deux flyers (composant
+  commun du kit d'impression, pas repéré au premier passage de correction).
+- **Kit grand format** (kakémonos, banderoles, drapeaux) : 7 déclinaisons initiales
+  (kakémono identité/adhésion/bourse scolaire, banderole identité/événementiel, drapeau
+  identité/adhésion), puis versions fond clair du kakémono et de la banderole identité +
+  ajout de l'adresse postale, à la suite d'un retour du Secrétaire sur la lisibilité à
+  distance et le contenu obligatoire (nom, site, adresse, téléphone).
+- **Photos bureau ajoutées** sur `bureau.html`/`trombinoscope.html` : Samse-Deen RADJI, Ronel
+  Jethem ATINDEHOU, Stéphane ANAKPO (coquille de nom de fichier "ANATO" corrigée après
+  confirmation de l'utilisateur). Reste en placeholder : **François DREMONT**.
+- **Nettoyage** : 12 photos résiduelles de FBTT, supprimées intentionnellement par
+  l'utilisateur, confirmées et committées.
+- **Nouvelle demande en attente** : fiches de poste + recrutement, avec candidature en ligne
+  (voir B25 dans le Backlog) — bloquée par la pause de développement ci-dessous.
+
 ## 📞 Correctif contenu + pause développement, 18-19 août 2026
 
 - Numéro de téléphone Bénin corrigé sur les 23 pages publiques concernées :
@@ -592,6 +634,7 @@ technique/maintenance · statut `ouvert` / `en cours` / `fait`.
 | B21 | ✨ | Activer FedaPay (Mobile Money) pour le Bénin | ouvert | Proposé le 13/08/2026. Le site annonce déjà "Mobile Money arrivera prochainement" (guide, `adhesion.html`) mais aucune clé FedaPay (test ou live) n'est configurée à ce jour — seul Stripe (carte bancaire) fonctionne. Frein réel au paiement pour les sympathisants sans carte bancaire française, notamment autour de Savè. Code déjà prêt côté `liensCulturels-payment` (prévu dès l'origine, jamais branché en pratique) — il manque un compte marchand FedaPay réel au nom de l'association et ses clés API. |
 | B23 | 🐛 | Finaliser la vérification de B10 (pack famille) par un paiement réel | ouvert | Proposé le 13/08/2026, complète B10 (déjà "fait" ci-dessous mais explicitement non vérifié de bout en bout). À faire dès qu'une carte réelle est disponible en session : un vrai paiement pack famille, confirmation de la création des comptes famille. |
 | B24 | 🐛 | Compte Stripe suspendu — vérification KYC en cours | bloquant | Ouvert le 16/08/2026. Stripe bloque la collecte de paiements (cotisations/dons/bourse scolaire) tant que le dossier de conformité n'est pas validé. Questionnaire d'activité déjà répondu (voir détail ci-dessus). Point bloquant restant : pièce d'identité expirée de Judicaël Sènan BONI (Président) — Stripe exige passeport + récépissé de renouvellement de titre de séjour, en attente que ces documents soient transmis par l'intéressé. |
+| B25 | ✨ | Fiches de poste + recrutement (page publique, avec candidature en ligne) | ouvert | Demandé le 01/09/2026 : transformer les 6 postes du document stratégique ("Comment s'investir dans l'association") en fiches de poste individuelles avec possibilité de postuler. Bloqué par la pause de développement (B24 n'est pas la cause — c'est le contrat RMS↔Association non signé, voir section ci-dessus) : l'utilisateur a choisi d'attendre plutôt que de faire une exception. Recommandation déjà actée pour la reprise : page **publique** (pas espace membre — l'objectif est d'élargir le recrutement au-delà des membres actuels, cohérent avec le message des flyers événementiels), une fiche par poste, formulaire de candidature simple (nom/e-mail/message/poste) sur le modèle du formulaire de contact/adhésion existant. |
 
 ### Fait
 
