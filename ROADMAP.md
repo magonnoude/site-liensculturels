@@ -22,6 +22,17 @@
   **Volontairement laissés vides** : tableau budgétaire (aucun devis réel disponible, et le seul
   budget chiffré existant — `plan-affaires-liens-culturels.pdf` — est un budget annuel excédentaire,
   pas un budget d'action équilibré), montant sollicité, signature et date (jamais fabriqués).
+- **Documents stratégiques (hors dépôt, `~/tmp_lc_docs/` + `~/Downloads/`) adaptés au projet de
+  local associatif** : `strategie-vision-roadmap.pdf` (Vision & Feuille de route 2026-2027,
+  nouvelle entrée "Local associatif équipé" dans la feuille de route), `qui-sommes-nous-liens-
+  culturels-v3.docx` (nouvelle puce dans "Nos projets en préparation", v2 conservée pour
+  historique), `plan-affaires-liens-culturels.pdf`/`.docx` et sa version synthèse CA (nouvelle
+  ligne "Local associatif" à 0 € — confirmé mis à disposition gracieusement par la mairie de
+  Nogent-l'Artaud — et "Équipement informatique du local" en "à chiffrer", non inclus dans le
+  total tant qu'aucun devis n'existe). **Bug d'infra trouvé et corrigé au passage** :
+  `~/tmp_lc_docs/print_kit/render_pdf.js` pointait vers un chemin Playwright périmé
+  (`~/RMS_Projects/www.liensculturels.org/node_modules/playwright`, dossier d'avant le
+  déplacement du projet vers `Customers_Projects/`) — corrigé vers le chemin réel du dépôt.
 
 ## 🎪 Kit de communication imprimé + corrections de contenu + photos bureau, 26 août – 14 septembre 2026
 
