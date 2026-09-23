@@ -62,7 +62,7 @@ développement et le backlog des points ouverts.
 * **Frontend** : HTML5 / CSS3 / JavaScript vanilla (aucun framework, aucun build),
   Font Awesome, Lightbox2.
 * **Backend serverless** (AWS, non versionné dans ce dépôt — voir
-  `DOCUMENTATION-TECHNIQUE.md`) : API Gateway (HTTP API), 13 fonctions Lambda
+  `DOCUMENTATION-TECHNIQUE.md`) : API Gateway (HTTP API), 14 fonctions Lambda
   (Python 3.11), DynamoDB, Amazon Cognito (authentification), Amazon SES (e-mails
   transactionnels), Stripe (paiements), EventBridge (rappel de cotisation planifié).
 * **PWA** : manifest + service worker (`sw.js`), installable sur PC/Android/iOS.

@@ -66,21 +66,11 @@ cert. Any future ACM/DNS work on this domain still needs the user present for th
   vended-logs delivery. Security headers come from the Response Headers Policy
   `liensculturels-security-headers` attached to the default cache behavior.
 
-## 8. On the member/admin/secretary/treasurer portals (requested, not yet built)
+## 8. Member/admin/secretary/treasurer/gouvernance/communication/escales portals
 
-This site was a pure static brochure with two Lambda contact forms until 2026-08-07, when
-the association asked for four new areas: a member space, an admin space (documents, photo
-library, video library, agenda, member management, newsletter), a secretary space (meeting
-planning, minutes, decisions), and a treasurer space. **Do not build any of this by
-improvising an architecture inline.** It requires real authentication, a member database,
-and — for the treasurer space — actual financial/accounting data, on a repo that is
-currently **public**. Get explicit answers on auth approach (Cognito is the natural AWS-native
-fit), where sensitive backend code/data lives (likely needs to NOT be in this public repo, or
-the repo's visibility needs to change first), and data model/security review before writing
-any code. This is exactly the kind of task this file's Plan Mode criteria (AWS infra, PII,
-financial data) were written for — treat it accordingly even under an "auto commit and go"
-instruction; that instruction covers execution speed once the plan is agreed, not skipping
-the plan.
+Built and live (Cognito auth, DynamoDB, per-role Lambdas) — see `DOCUMENTATION-TECHNIQUE.md`
+for the full architecture, and this file's §6 for the security/infra rules that still apply
+to any change in this area.
 
 ## 7. Content & File Hygiene
 
