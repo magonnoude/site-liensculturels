@@ -1,5 +1,38 @@
 # ROADMAP — www.liensculturels.org
 
+## 💰 Gestion des adhésions/cotisations + correctif `tresorerie-api`, 4 octobre 2026
+
+- **Nouvelles adhésions suivies** (Achade, Thae, Mangot, Lollia, Eloundou Medjo, famille
+  Fournage/Levasseur) et plusieurs paiements en espèces enregistrés manuellement
+  (Pognon 50€/05-09, Achade 30€/04-10) après vérification des e-mails (correction
+  `.com`→`.fr` pour Mme Achade, Cognito + DynamoDB) et des mots de passe temporaires
+  (régénérés et renvoyés par e-mail pour Achade et Christian Fournage, dont le compte
+  n'avait jamais été activé depuis le 01/09).
+- **Cases "Espèces" et "FedaPay (en cours)" ajoutées sur `adhesion.html`** — purement
+  informatif pour l'instant (n'alimente pas le Lambda `adhesion-form`, pas de notification
+  automatique au Trésorier).
+- **Doublon corrigé** : "Nadège Fournage" (ancienne fiche + compte Cognito, créée le 01/09
+  via l'adhésion initiale) et "Nadège Levasseur" (fiche créée automatiquement le 04/10 par
+  le Lambda `liensCulturels-payment` lors du vrai paiement Stripe pack famille de Christian
+  Fournage, avec son nom et e-mail corrects) étaient la même personne. Ancienne fiche +
+  compte Cognito supprimés, liste `familyMembers` de Christian corrigée pour pointer vers
+  la bonne fiche.
+- **Bug réel trouvé et corrigé — `liensCulturels-tresorerie-api`** : le formulaire "Enregistrer
+  un paiement de cotisation" (espace Trésorerie) créait des lignes dans
+  `liensculturels-cotisations` sans jamais renseigner le champ `type` (contrairement aux
+  lignes créées par le webhook Stripe/FedaPay) — `COTISATION_FIELDS` ne listait pas `type`.
+  Corrigé : `create_cotisation()` fixe désormais `type: "cotisation"` sur toute ligne créée
+  par ce formulaire (cet endpoint ne sert qu'aux cotisations, jamais aux dons). Déployé et
+  vérifié par un appel réel du Lambda (`aws lambda invoke`, paiement factice nettoyé après
+  coup). **Effet de bord découvert pendant le test, non corrigé** : `create_cotisation` fait
+  un `update_item` sur `liensculturels-members` sans vérifier que le `memberId` existe — un
+  identifiant invalide crée une fiche membre fantôme au lieu d'échouer proprement (risque
+  faible en pratique, le formulaire utilise un menu déroulant de membres existants).
+- **Bug réel confirmé — `liensCulturels-payment`** : `_process_family_members()` ne met
+  jamais à jour le `statutCotisation` des membres de la famille (seul le payeur principal
+  l'est, via `_record_cotisation`). Reproductible à la lecture du code ; pas encore corrigé
+  (les cas réels rencontrés ont été corrigés manuellement). Rejoint B23.
+
 ## 🖋️ Changement de Président (mentions légales) + brouillon subvention FAC, 23 septembre 2026
 
 - **`mentions-legales.html` (FR+EN) mis à jour** : "Directeur de la publication" — Judicaël
