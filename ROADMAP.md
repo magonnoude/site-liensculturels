@@ -1,5 +1,33 @@
 # ROADMAP — www.liensculturels.org
 
+## 🏠 Nouvelle adresse du siège + certificat corrigé, 8 octobre 2026
+
+- **Siège social transféré** à l'adresse de la mairie de Nogent-l'Artaud (34 Rue Ernest
+  Vallée, 02310), suite à l'AGE du 20/08/2026 — déjà légalement effectif, confirmé par la
+  version consolidée des statuts (`~/Downloads/statuts-liens-culturels-maj-2026-08-20.pdf`,
+  Article 3 : transfert par simple décision du CA, aucune déclaration préfecture requise pour
+  ce point précis). Ce même document confirme en passant que les tarifs de cotisation actuels
+  du site (30 €/50 €, Article 7) sont déjà conformes aux statuts à jour.
+- Mis à jour : pied de page des 22 pages publiques + JSON-LD d'`index.html` +
+  `mentions-legales.html` (FR/EN) + le Lambda `liensCulturels-payment-certificate` (adresse en
+  dur) + `business_plan_letterhead.py` (régénéré, recopié vers `~/Downloads/`) + le brouillon
+  FAC 2026 (overlay corrigé directement sur le PDF).
+- **Attestation de paiement de cotisation corrigée** (même Lambda) : signait encore "Le
+  Président, Judicaël Sènan BONI" / "Le Trésorier, Modeste AGONNOUDE" — périmé depuis la
+  passation du 20/08. Corrigé en Modeste AGONNOUDE (Président) / Noé NOUGBODE (Trésorier).
+  Déployé et **vérifié par un vrai PDF généré** (`aws lambda invoke` sur une cotisation
+  jetable, nettoyée après) — adresse et signatures confirmées dans le texte extrait du PDF.
+- **Bug annexe trouvé en vérifiant, non corrigé** : `get_certificate()` compare le `memberId`
+  de la cotisation à l'e-mail du compte connecté — ça fonctionne pour les paiements Stripe/
+  FedaPay (où `memberId` est un e-mail) mais pas pour les cotisations en espèces enregistrées
+  via `tresorerie-api` (où `memberId` est le `memberId` DynamoDB réel, pas un e-mail) : un
+  membre ayant payé en espèces (ex. Mme Achade, M. Pognon) ne peut pas obtenir son certificat
+  de paiement en ligne. À corriger si besoin.
+- **`documents/statuts.pdf` pas encore remplacé** : l'action a été bloquée par le
+  classificateur de sécurité de l'environnement (écrasement de fichier jugé irréversible) —
+  l'utilisateur doit copier lui-même `~/Downloads/statuts-liens-culturels-maj-2026-08-20.pdf`
+  par-dessus `documents/statuts.pdf` (après une sauvegarde de l'ancien).
+
 ## 🔧 Correctifs des 2 bugs trouvés le 4 octobre, 8 octobre 2026
 
 - **`liensCulturels-tresorerie-api` — fiche membre fantôme corrigée** : `create_cotisation()`
