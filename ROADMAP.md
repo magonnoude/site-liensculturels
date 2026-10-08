@@ -1,5 +1,35 @@
 # ROADMAP — www.liensculturels.org
 
+## 📝 Avenant n°1 au contrat RMS↔Association — tarif décomposé, 8 octobre 2026
+
+Rédigé à la demande de l'utilisateur, hors dépôt Git
+(`www.liensculturels.org-administratif/avenant-1-contrat-RMS-LiensCulturels-2026.md`), suite à
+une discussion sur le tarif de la redevance mensuelle (75 €/mois, jugé opaque). Décompose
+désormais ce même montant total en deux postes justifiés :
+- **Hébergement cloud (AWS) : 50 €/mois** — avec une description en langage non-technique de
+  ce que l'infrastructure fait tourner concrètement (site public, paiements, 6 espaces de
+  gestion internes, sauvegardes, surveillance), pour que le Bureau (profanes IT) puisse
+  valider en connaissance de cause.
+- **Maintenance technique de base : 25 €/mois** — suggestion de l'IA (le Trésorier avait
+  initialement proposé 15 €, jugé trop bas au regard du volume réel de travail constaté cette
+  session ; 25 €/mois en base, **toute nouvelle fonctionnalité faisant désormais l'objet d'un
+  devis séparé validé par le Bureau avant développement** — formalise ce qui n'était qu'" à
+  discuter au cas par cas" dans le contrat initial).
+- **Total inchangé (75 €/mois)** — ce qui change, c'est la transparence de la décomposition et
+  la clarification du processus pour les futures évolutions.
+
+**Point de gouvernance respecté** : le contrat initial prévoit déjà une double validation
+(Noé Nougbodé, Trésorier, **et** Elie Smith, Vice-Président) pour toute décision où
+M. Agonnoudé est partie liée — l'utilisateur n'avait mentionné que Noé pour cet avenant ;
+gardé la double validation déjà actée plutôt que de la réduire à une seule personne.
+Utilise la clause de révision tarifaire déjà prévue à l'Article 3 du contrat initial (préavis
+30 jours), pas besoin d'un tout nouveau contrat.
+
+**Incohérence à surveiller, pas corrigée avant signature** : `plan-affaires-liens-culturels.pdf`
+liste encore séparément "Redevance RMS 900 €/an" + "Hébergement AWS 150 €/an" (1 050 €/an
+combiné) — à mettre à jour vers la nouvelle décomposition (900 €/an combiné) une fois l'avenant
+signé, pas avant.
+
 ## 📊 Plan d'affaires — charges détaillées + colonne mensuelle, 8 octobre 2026
 
 `plan-affaires-liens-culturels.pdf` (document officiel hors dépôt) mis à jour pour refléter le
