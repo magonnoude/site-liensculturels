@@ -283,6 +283,100 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
+    // ---- Notes de frais ----
+    const NF_STATUT_LABELS = {
+        en_attente: { fr: "🟡 En attente", en: "🟡 Pending" },
+        validee: { fr: "🟢 Validée", en: "🟢 Approved" },
+        remboursee: { fr: "✅ Remboursée", en: "✅ Reimbursed" },
+        refusee: { fr: "🔴 Refusée", en: "🔴 Rejected" },
+    };
+
+    async function loadNotesFrais() {
+        const tableEl = document.getElementById("nf-table");
+        const emptyEl = document.getElementById("nf-empty");
+        try {
+            const resp = await window.LCAuth.apiFetch("/me/notes-frais");
+            if (!resp.ok) throw new Error("Erreur");
+            const items = await resp.json();
+            if (!Array.isArray(items) || !items.length) {
+                tableEl.style.display = "none";
+                emptyEl.style.display = "block";
+                return;
+            }
+            emptyEl.style.display = "none";
+            tableEl.style.display = "table";
+            const tbody = tableEl.querySelector("tbody");
+            tbody.innerHTML = "";
+            items.forEach((n) => {
+                const tr = document.createElement("tr");
+                const statutLabel = NF_STATUT_LABELS[n.statut] || { fr: n.statut, en: n.statut };
+                tr.innerHTML = `
+                    <td>${n.date || ""}</td>
+                    <td>${n.categorie || ""}</td>
+                    <td>${n.description || ""}</td>
+                    <td>${n.montant} €</td>
+                    <td><span class="lang-fr">${statutLabel.fr}</span><span class="lang-en">${statutLabel.en}</span></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (e) {
+            // reste sur l'état "aucune note de frais" par défaut
+        }
+    }
+
+    document.getElementById("nf-submit-btn").addEventListener("click", async () => {
+        const feedbackEl = document.getElementById("nf-feedback");
+        const date = document.getElementById("nf-date").value;
+        const categorie = document.getElementById("nf-categorie").value;
+        const montant = document.getElementById("nf-montant").value;
+        const description = document.getElementById("nf-description").value.trim();
+        const fileInput = document.getElementById("nf-file");
+        const file = fileInput.files[0];
+        if (!date || !categorie || !montant) {
+            feedbackEl.textContent = "Date, catégorie et montant sont requis.";
+            feedbackEl.className = "form-feedback error";
+            return;
+        }
+        const btn = document.getElementById("nf-submit-btn");
+        btn.disabled = true;
+        try {
+            let justificatifKey = null;
+            if (file) {
+                const urlResp = await window.LCAuth.apiFetch("/me/notes-frais-upload-url", {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ contentType: file.type }),
+                });
+                if (!urlResp.ok) throw new Error("Impossible d'obtenir l'URL d'envoi.");
+                const { uploadUrl, justificatifKey: key } = await urlResp.json();
+                const putResp = await fetch(uploadUrl, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
+                if (!putResp.ok) throw new Error("Échec de l'envoi du justificatif.");
+                justificatifKey = key;
+            }
+            const payload = { date, categorie, montant: Number(montant), description };
+            if (justificatifKey) payload.justificatifKey = justificatifKey;
+            const resp = await window.LCAuth.apiFetch("/me/notes-frais", {
+                method: "POST", headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            });
+            if (!resp.ok) throw new Error("Échec de l'envoi de la demande.");
+            feedbackEl.textContent = "Demande envoyée, le Trésorier va l'examiner.";
+            feedbackEl.className = "form-feedback success";
+            document.getElementById("nf-date").value = "";
+            document.getElementById("nf-categorie").value = "";
+            document.getElementById("nf-montant").value = "";
+            document.getElementById("nf-description").value = "";
+            fileInput.value = "";
+            await loadNotesFrais();
+        } catch (e) {
+            feedbackEl.textContent = "Une erreur est survenue lors de l'envoi de votre demande.";
+            feedbackEl.className = "form-feedback error";
+        } finally {
+            btn.disabled = false;
+        }
+    });
+
+    loadNotesFrais();
+
     // ---- Export RGPD (mes données) ----
     document.getElementById("portal-export-btn").addEventListener("click", async () => {
         const btn = document.getElementById("portal-export-btn");

@@ -221,9 +221,68 @@ document.addEventListener("DOMContentLoaded", async () => {
         } catch (e) { showMessage(e.message, "error"); }
     });
 
+    // ---- notes de frais ----
+    const STATUT_LABELS = {
+        en_attente: "🟡 En attente",
+        validee: "🟢 Validée",
+        remboursee: "✅ Remboursée",
+        refusee: "🔴 Refusée",
+    };
+
+    async function loadNotesFrais() {
+        const items = await api("/tresorerie/notes-frais");
+        const tbody = document.querySelector("#notes-frais-table tbody");
+        tbody.innerHTML = "";
+        items.forEach((n) => {
+            const tr = document.createElement("tr");
+            const justif = n.justificatifUrl ? `<a href="${n.justificatifUrl}" target="_blank">Voir</a>` : "—";
+            let actions = "";
+            if (n.statut === "en_attente") {
+                actions = `<button class="admin-btn small" data-valider="${n.noteFraisId}">Valider</button> <button class="admin-btn danger small" data-refuser="${n.noteFraisId}">Refuser</button>`;
+            } else if (n.statut === "validee") {
+                actions = `<button class="admin-btn small" data-rembourser="${n.noteFraisId}">Rembourser</button> <button class="admin-btn danger small" data-refuser="${n.noteFraisId}">Refuser</button>`;
+            }
+            tr.innerHTML = `
+                <td>${n.date}</td>
+                <td>${n.nom || n.email || n.memberId}</td>
+                <td>${n.categorie || ""}</td>
+                <td>${n.description || ""}</td>
+                <td>${eur(n.montant)}</td>
+                <td>${justif}</td>
+                <td>${STATUT_LABELS[n.statut] || n.statut}${n.commentaireTresorier ? `<br><span style="font-size:0.8rem; color:#888;">${n.commentaireTresorier}</span>` : ""}</td>
+                <td>${actions}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        async function setStatut(id, statut, extra) {
+            try {
+                await api(`/tresorerie/notes-frais/${id}`, {
+                    method: "PUT", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ statut, ...extra }),
+                });
+                showMessage("Note de frais mise à jour.", "success");
+                await loadNotesFrais();
+            } catch (e) { showMessage(e.message, "error"); }
+        }
+
+        tbody.querySelectorAll("button[data-valider]").forEach((btn) => {
+            btn.addEventListener("click", () => setStatut(btn.dataset.valider, "validee", {}));
+        });
+        tbody.querySelectorAll("button[data-rembourser]").forEach((btn) => {
+            btn.addEventListener("click", () => setStatut(btn.dataset.rembourser, "remboursee", { dateRemboursement: new Date().toISOString().slice(0, 10) }));
+        });
+        tbody.querySelectorAll("button[data-refuser]").forEach((btn) => {
+            btn.addEventListener("click", () => {
+                const commentaire = prompt("Motif du refus (optionnel) :", "") || "";
+                setStatut(btn.dataset.refuser, "refusee", { commentaireTresorier: commentaire });
+            });
+        });
+    }
+
     try {
         await loadMembersDropdown();
-        await Promise.all([loadSummary(), loadCotisations(), loadDepenses()]);
+        await Promise.all([loadSummary(), loadCotisations(), loadDepenses(), loadNotesFrais()]);
     } catch (e) {
         showMessage(e.message, "error");
     }

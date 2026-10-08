@@ -86,6 +86,7 @@
             <div class="admin-tabs">
                 <button class="admin-tab active" data-tab="cotisations">Cotisations</button>
                 <button class="admin-tab" data-tab="depenses">Dépenses</button>
+                <button class="admin-tab" data-tab="notes-frais">Notes de frais</button>
             </div>
 
             <div class="admin-msg" id="tres-msg"></div>
@@ -157,6 +158,18 @@
                     <h3>Historique des dépenses</h3>
                     <table class="admin-table" id="depenses-table">
                         <thead><tr><th>Date</th><th>Libellé</th><th>Montant</th><th>Catégorie</th><th>Justificatif</th><th></th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- NOTES DE FRAIS -->
+            <div class="admin-panel" id="panel-notes-frais">
+                <div class="admin-card">
+                    <h3>Demandes de remboursement des membres</h3>
+                    <p style="font-size:0.85rem; color:#888;">Les membres soumettent leurs notes de frais depuis leur espace membre ; validez, refusez ou marquez-les remboursées ici.</p>
+                    <table class="admin-table" id="notes-frais-table">
+                        <thead><tr><th>Date</th><th>Membre</th><th>Catégorie</th><th>Motif</th><th>Montant</th><th>Justificatif</th><th>Statut</th><th>Actions</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
