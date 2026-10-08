@@ -1,5 +1,29 @@
 # ROADMAP — www.liensculturels.org
 
+## 📊 Plan d'affaires — charges détaillées + colonne mensuelle, 8 octobre 2026
+
+`plan-affaires-liens-culturels.pdf` (document officiel hors dépôt) mis à jour pour refléter le
+même oubli corrigé côté FAC : la redevance mensuelle RMS (900 €/an) manquait du tableau
+Charges. Reconstruit en détail, poste par poste, avec une nouvelle colonne "Mensuel" en plus
+d'"Annuel" (`~/tmp_lc_docs/business_plan_letterhead.py`) :
+
+Redevance RMS 75 €/mois (900 €/an, connu), Hébergement AWS ~13 €/mois (150 €/an,
+estimation), Frais bancaires Qonto 11 €/mois (135 €/an, connu), Assurance RC 160 €/an (à
+contracter), Nom de domaine Gandi 40 €/an (facture réelle 38,38 €), E-mail Zoho 15 €/an
+(facture réelle 12,28 €), Frais Stripe (variable, non isolable), FedaPay (0 €, pas activé),
+Équipement informatique du local 500 € (ponctuel, pas dans la colonne mensuelle), Local
+associatif/Salaires (0 €). **Total charges : ≈99 €/mois de postes récurrents, ≈1 900 €/an.**
+
+**Solde prévisionnel recalculé en conséquence** (impact direct, pas optionnel : l'ancien total
+charges de 410-580 €/an était sous-évalué) : scénario prudent ≈1 100-1 400 € (au lieu de
+2 400-2 900 €), scénario optimiste ≈3 100 € (au lieu de 4 400-4 600 €) — toujours positif dans
+les deux cas, mais marge bien plus réduite qu'estimé jusqu'ici. Régénéré, vérifié visuellement
+(3 pages, aucun débordement), recopié vers `~/Downloads/`.
+
+**Non touché à ce stade** : le tableau Produits (hypothèses de 50-60 / ~100 membres) alors que
+l'utilisateur indique ~30 membres réels actuellement — écart à signaler, pas corrigé sans
+confirmation explicite (changerait aussi les scénarios de cotisations).
+
 ## 💶 Budget FAC détaillé poste par poste — 1000 € demandés, 8 octobre 2026
 
 Nouvelle révision du budget du brouillon FAC (remplace la précédente ci-dessous, 800€) :
