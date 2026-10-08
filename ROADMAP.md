@@ -1,5 +1,23 @@
 # ROADMAP — www.liensculturels.org
 
+## 🔧 Correctifs des 2 bugs trouvés le 4 octobre, 8 octobre 2026
+
+- **`liensCulturels-tresorerie-api` — fiche membre fantôme corrigée** : `create_cotisation()`
+  vérifie désormais que le `memberId` correspond à un membre existant (`get_item` avant tout
+  `put_item`/`update_item`) et renvoie une 400 explicite sinon, au lieu de laisser DynamoDB
+  créer silencieusement une fiche incomplète. Déployé et **vérifié par deux appels réels du
+  Lambda** (`aws lambda invoke`) : un `memberId` inexistant est bien rejeté sans rien créer,
+  un `memberId` réel (compte technique jetable) fonctionne toujours normalement — données de
+  test nettoyées après coup.
+- **`liensCulturels-payment` — statut famille corrigé** : `_process_family_members()` marque
+  maintenant `statutCotisation: "a_jour"` pour chaque membre de la famille (recherche par
+  e-mail + `update_item`, même schéma que `_record_cotisation`), que son compte vienne d'être
+  créé ou qu'il existait déjà. Déployé. **Non vérifié par un appel réel** cette fois : le test
+  d'intégration local a été bloqué par le classificateur de sécurité de l'environnement
+  (créerait de vrais comptes Cognito + enverrait de vrais e-mails) — la logique reprend
+  cependant à l'identique un schéma déjà prouvé en production ailleurs dans le même fichier.
+  **À confirmer au prochain vrai paiement pack famille.**
+
 ## 💰 Gestion des adhésions/cotisations + correctif `tresorerie-api`, 4 octobre 2026
 
 - **Nouvelles adhésions suivies** (Achade, Thae, Mangot, Lollia, Eloundou Medjo, famille
