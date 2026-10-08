@@ -1,6 +1,30 @@
 # ROADMAP — www.liensculturels.org
 
-## 🧾 Nouvelle fonctionnalité "Note de frais", 8 octobre 2026
+## 💶 Budget chiffré dans le brouillon FAC 2026, 8 octobre 2026
+
+Le tableau "Budget prévisionnel de l'action 2026" du brouillon FAC (resté vide depuis sa
+création) a été rempli à la demande de l'utilisateur, avec des montants équilibrés et sourcés
+sur le plan d'affaires existant (`plan-affaires-liens-culturels.pdf`) :
+
+- **Dépenses (500 €)** : Achats/informatique-plateforme 250 € (estimation), Charges externes/
+  assurance RC 115 € (estimation), Autres/frais bancaires Qonto 135 €.
+- **Recettes (500 €)** : Fonds propres (cotisations) 100 € (20 % — respecte le minimum),
+  Subvention Département — Fonds associatif cantonal **400 €** (80 % — respecte le maximum,
+  c'est le montant sollicité de cette demande).
+- **Volontairement exclu** : le coût de l'équipement informatique du local reste "à chiffrer"
+  (pas de devis réel) — ce budget couvre le fonctionnement courant déjà connu, pas
+  l'équipement, qui pourra faire l'objet d'une demande complémentaire une fois costé.
+
+**Incident pendant la correction d'une coquille, corrigé** : en replaçant le montant sollicité
+mal positionné, un rectangle de recouvrement trop large a effacé une partie du texte imprimé
+du formulaire original (ligne "l'Aisne sur le canton de"). Le brouillon a été **entièrement
+reconstruit depuis l'original intact** (`Demande subvention FAC.pdf`, jamais modifié) plutôt
+que rafistolé davantage — tous les champs déjà remplis (identité, SIRET, objet, description,
+adresse, budget) ont été rejoués dans un script unique et revérifiés visuellement page par
+page. Aucune perte de contenu dans le résultat final. Repéré au passage : le caractère "€"
+tapé directement (hors glyphes déjà imprimés sur le formulaire) ne s'affiche pas correctement
+avec la police de base `helv` de PyMuPDF (s'affiche "·") — toujours réutiliser le "€" déjà
+imprimé sur le formulaire plutôt que d'en insérer un soi-même.
 
 Demandée pour permettre le remboursement des frais engagés par les membres du bureau (repas,
 indemnités kilométriques, billets de train...). Workflow choisi avec l'utilisateur : **les
