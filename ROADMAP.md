@@ -1,6 +1,37 @@
 # ROADMAP — www.liensculturels.org
 
-## 💶 Budget chiffré dans le brouillon FAC 2026, 8 octobre 2026
+## 💶 Budget FAC détaillé poste par poste — 1000 € demandés, 8 octobre 2026
+
+Nouvelle révision du budget du brouillon FAC (remplace la précédente ci-dessous, 800€) :
+l'utilisateur a demandé un breakdown détaillé des charges, ce qui a fait ressortir un poste
+réel significatif **oublié dans toutes les versions précédentes : la redevance mensuelle RMS
+(75 €/mois = 900 €/an, contrat réel)**. En l'intégrant, le total des dépenses réelles passe de
+1000 € à **1900 €**, ce qui permet mécaniquement une demande bien plus importante tout en
+respectant les règles du formulaire (fonds propres ≥ 20 %, subvention ≤ 80 %) :
+
+| Poste (Dépenses) | Montant | Nature |
+|---|---|---|
+| Équipement informatique du local (PC/portable 350 € + imprimante 150 €) | 500 € | Estimation réelle |
+| Assurance RC associative | 160 € | À contracter — estimation |
+| Hébergement AWS | 150 € | Estimation (mutualisé entre projets) |
+| Redevance mensuelle RMS (75 €/mois) | 900 € | Connu — contrat réel |
+| Nom de domaine (Gandi) | 40 € | Connu — facture réelle 38,38 € |
+| E-mail (Zoho) | 15 € | Connu — facture réelle 12,28 € |
+| Frais bancaires (Qonto, 11 €/mois) | 135 € | Connu |
+| **Total dépenses** | **1900 €** | |
+
+Frais Stripe (variables selon volume) et FedaPay (pas encore activé) : non isolables en
+montant fixe, 0 € porté nulle part. Mappé sur les 4 lignes à € du formulaire (Achats =
+équipement 500 € ; Charges externes = assurance 160 + AWS 150 = 310 € ; Services extérieurs =
+redevance RMS 900 € ; Autres = domaine 40 + Zoho 15 + Qonto 135 = 190 €).
+
+**Recettes** : Fonds propres **900 €** (cotisations réelles, ~30 membres x 30 €/an — le
+montant réel complet, plus besoin de ne montrer que le minimum 20 % comme dans la version
+précédente) ; **Subvention Département — Fonds associatif cantonal : 1000 €** (52,6 % du
+total, largement sous le plafond de 80 %). Le dossier reconstruit, vérifié visuellement page
+par page (aucun chevauchement), prêt pour signature.
+
+## 💶 Budget chiffré dans le brouillon FAC 2026 (première version, remplacée ci-dessus), 8 octobre 2026
 
 Le tableau "Budget prévisionnel de l'action 2026" du brouillon FAC (resté vide depuis sa
 création) a été rempli à la demande de l'utilisateur, avec des montants équilibrés et sourcés
