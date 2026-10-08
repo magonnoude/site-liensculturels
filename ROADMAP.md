@@ -1,5 +1,40 @@
 # ROADMAP — www.liensculturels.org
 
+## 🧾 Nouvelle fonctionnalité "Note de frais", 8 octobre 2026
+
+Demandée pour permettre le remboursement des frais engagés par les membres du bureau (repas,
+indemnités kilométriques, billets de train...). Workflow choisi avec l'utilisateur : **les
+membres soumettent eux-mêmes** leur demande (pas une simple saisie par le Trésorier comme pour
+les Dépenses), avec un statut que le Trésorier fait évoluer.
+
+- **Nouvelle table `liensculturels-notes-frais`** (PITR activé, cohérent avec members/
+  cotisations/depenses).
+- **`liensCulturels-member-profile`** : nouvelles routes `POST/GET /me/notes-frais`,
+  `POST /me/notes-frais-upload-url` (justificatif, même schéma présigné S3 que la photo de
+  profil, vers le bucket `liensculturels-tresorerie-docs` déjà utilisé par les dépenses).
+- **`liensCulturels-tresorerie-api`** : nouvelles routes `GET /tresorerie/notes-frais`,
+  `PUT /tresorerie/notes-frais/{id}` (changement de statut : validée/remboursée/refusée,
+  avec vérification que l'identifiant existe — même garde-fou que le correctif anti-fiche-
+  fantôme de `create_cotisation`).
+- **Frontend** : nouvelle carte "Mes notes de frais" dans `espace-membre.html` (formulaire +
+  historique personnel), nouvel onglet "Notes de frais" dans `tresorerie.html` (liste de
+  toutes les demandes + actions Valider/Rembourser/Refuser), même pattern visuel que
+  Cotisations/Dépenses. Vérifié visuellement (rendu isolé avec données factices, Playwright)
+  — le test en conditions réelles avec l'authentification Cognito n'a pas pu être fait en
+  local (le vrai `auth.js` écrase tout stub de `window.LCAuth`).
+- **5 routes API Gateway créées** + permissions Lambda ajoutées pour les 2 nouvelles routes
+  `/me/notes-frais*` (le Lambda `tresorerie-api` avait déjà une permission "wildcard"
+  `/tresorerie/*` couvrant les 2 nouvelles routes côté Trésorier, rien à ajouter là).
+- **IAM — 2 policies en attente, bloquées par le classificateur de sécurité** (changement de
+  permissions jugé sensible) : `liensculturels-member-profile-notes-frais` (accès à la
+  nouvelle table + upload S3) et `liensculturels-tresorerie-notes-frais` (accès à la nouvelle
+  table). Fichiers JSON prêts dans le scratchpad de session, à appliquer par l'utilisateur via
+  `aws iam put-role-policy` avant que la fonctionnalité soit opérationnelle de bout en bout.
+- **Vérification de bout en bout reportée** tant que les 2 policies IAM ne sont pas posées —
+  prévu : `aws lambda invoke` synthétique (soumission, liste, changement de statut) sur le
+  compte technique jetable `Test Design`, données nettoyées après coup, même méthode que les
+  correctifs `tresorerie-api`/`payment-certificate` déjà vérifiés cette session.
+
 ## 🏠 Nouvelle adresse du siège + certificat corrigé, 8 octobre 2026
 
 - **Siège social transféré** à l'adresse de la mairie de Nogent-l'Artaud (34 Rue Ernest
