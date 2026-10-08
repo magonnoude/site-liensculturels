@@ -25,15 +25,16 @@ les Dépenses), avec un statut que le Trésorier fait évoluer.
 - **5 routes API Gateway créées** + permissions Lambda ajoutées pour les 2 nouvelles routes
   `/me/notes-frais*` (le Lambda `tresorerie-api` avait déjà une permission "wildcard"
   `/tresorerie/*` couvrant les 2 nouvelles routes côté Trésorier, rien à ajouter là).
-- **IAM — 2 policies en attente, bloquées par le classificateur de sécurité** (changement de
-  permissions jugé sensible) : `liensculturels-member-profile-notes-frais` (accès à la
-  nouvelle table + upload S3) et `liensculturels-tresorerie-notes-frais` (accès à la nouvelle
-  table). Fichiers JSON prêts dans le scratchpad de session, à appliquer par l'utilisateur via
-  `aws iam put-role-policy` avant que la fonctionnalité soit opérationnelle de bout en bout.
-- **Vérification de bout en bout reportée** tant que les 2 policies IAM ne sont pas posées —
-  prévu : `aws lambda invoke` synthétique (soumission, liste, changement de statut) sur le
-  compte technique jetable `Test Design`, données nettoyées après coup, même méthode que les
-  correctifs `tresorerie-api`/`payment-certificate` déjà vérifiés cette session.
+- **IAM posées par l'utilisateur** (`liensculturels-member-profile-notes-frais` et
+  `liensculturels-tresorerie-notes-frais`) — bloquées pour moi par le classificateur de
+  sécurité (changement de permissions jugé sensible), fichiers JSON préparés dans
+  `~/tmp_lc_docs/` (le scratchpad de session n'est pas accessible depuis le shell de
+  l'utilisateur, piège déjà rencontré pour l'envoi d'e-mail — voir mémoire).
+- **Vérifié de bout en bout par `aws lambda invoke`** sur le compte technique jetable
+  `Test Design`, données nettoyées après coup : création d'une note de frais (`en_attente`),
+  lecture côté membre et côté Trésorier, passage `validee` → `remboursee`, rejet d'un
+  identifiant invalide (404), génération de l'URL présignée pour le justificatif. Tout
+  fonctionne.
 
 ## 🏠 Nouvelle adresse du siège + certificat corrigé, 8 octobre 2026
 
