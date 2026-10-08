@@ -6,14 +6,23 @@ Le tableau "Budget prévisionnel de l'action 2026" du brouillon FAC (resté vide
 création) a été rempli à la demande de l'utilisateur, avec des montants équilibrés et sourcés
 sur le plan d'affaires existant (`plan-affaires-liens-culturels.pdf`) :
 
-- **Dépenses (500 €)** : Achats/informatique-plateforme 250 € (estimation), Charges externes/
-  assurance RC 115 € (estimation), Autres/frais bancaires Qonto 135 €.
-- **Recettes (500 €)** : Fonds propres (cotisations) 100 € (20 % — respecte le minimum),
-  Subvention Département — Fonds associatif cantonal **400 €** (80 % — respecte le maximum,
-  c'est le montant sollicité de cette demande).
-- **Volontairement exclu** : le coût de l'équipement informatique du local reste "à chiffrer"
-  (pas de devis réel) — ce budget couvre le fonctionnement courant déjà connu, pas
-  l'équipement, qui pourra faire l'objet d'une demande complémentaire une fois costé.
+**Révisé le même jour** après que l'utilisateur a transmis des chiffres réels : ~30 adhérents
+à 30 €/an (≈900 € de cotisations réelles) et une estimation de l'équipement informatique du
+local (PC/portable 350 € + imprimante 150 € = 500 €). Le formulaire imposant Dépenses =
+Recettes avec Fonds propres ≥ 20 % et Subvention Département ≤ 80 % du total, le montant
+sollicité dépend mécaniquement du total des dépenses réelles — **deux scénarios chiffrés et
+présentés à l'utilisateur**, qui a choisi l'option maximisant la demande :
+- **Retenu — sans le kit imprimé** (kakémonos/affiches ~500 €, déjà payés/offerts par le
+  Trésorier, donc hors périmètre d'une demande prospective) : total dépenses **1000 €**
+  (informatique/plateforme 250 € + équipement du local 500 € + assurance RC 115 € + frais
+  bancaires 135 €), fonds propres **200 €** (20 % — volontairement le minimum requis, pas les
+  900 € réels disponibles, pour maximiser la part sollicitée), **subvention demandée 800 €**
+  (80 % du total).
+- Écarté — avec le kit en "dons en nature" : total 1500 €, mais la subvention maximale
+  n'aurait été que de 700 € (le don en nature compte aussi comme une recette à compenser).
+- Pour atteindre les 1000 € initialement espérés par l'utilisateur, il manquerait encore
+  ~250 € de dépenses réelles supplémentaires à justifier (ex. frais de stand/déplacement pour
+  un événement) — non inventés, laissés de côté faute de montant réel transmis.
 
 **Incident pendant la correction d'une coquille, corrigé** : en replaçant le montant sollicité
 mal positionné, un rectangle de recouvrement trop large a effacé une partie du texte imprimé
