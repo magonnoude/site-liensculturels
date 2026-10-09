@@ -1,5 +1,27 @@
 # ROADMAP — www.liensculturels.org
 
+## 🎓 Decks de présentation + Guide du Bureau, 9 octobre 2026
+
+En complément de la page publique ci-dessous : deux decks de présentation (Claude Artifact,
+hors dépôt, liens privés non commités — voir mémoire de session pour les retrouver) et un
+document interne pour le Bureau.
+
+- **Deck "Comment ça marche" (membres)** : 6 diapositives — rejoindre, activer son espace, ce
+  qu'on peut y faire, FAQ, contact. Reprend la même structure que `comment-ca-marche.html`,
+  pensé pour être joint au message de bienvenue ou présenté en AG.
+- **Deck "Vue d'ensemble Bureau"** : 6 diapositives — les 6 espaces, accès et rôles, carte des
+  3 documents de référence, un exemple de règle de gouvernance (double validation RMS), contact.
+- **`Guide-Bureau-FAQ-Howto-2026.md`** (nouveau, dans `-administratif/`, hors dépôt Git) :
+  orientation et gouvernance pour le Bureau — qui attribue les rôles, Admin ≠ Gouvernance
+  (volontaire), où sont les documents officiels vs. les contrats/factures, la règle de double
+  validation du contrat RMS comme exemple concret. Volontairement complémentaire de
+  `DOCUMENTATION-TECHNIQUE.md` (technique) et `guide-utilisation.html` (mode d'emploi pas à
+  pas) — pas de redite entre les trois, chacun l'indique en tête.
+
+Les deux decks utilisent la même palette (bleu indigo `#1B4B6B`, doré `#C68A1F`, vert forêt
+`#35583F` — repris des variables CSS du site) et les mêmes polices (Domine + Nunito Sans) pour
+rester cohérents entre eux et avec le site.
+
 ## ❓ Nouvelle page publique "Comment ça marche ?" (Howto + FAQ), 9 octobre 2026
 
 Nouvelle page `comment-ca-marche.html`, publique et bilingue (FR/EN), pensée pour un nouvel
