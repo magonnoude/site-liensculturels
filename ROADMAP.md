@@ -1,5 +1,42 @@
 # ROADMAP — www.liensculturels.org
 
+## ❓ Nouvelle page publique "Comment ça marche ?" (Howto + FAQ), 9 octobre 2026
+
+Nouvelle page `comment-ca-marche.html`, publique et bilingue (FR/EN), pensée pour un nouvel
+adhérent qui vient de recevoir le message de bienvenue et n'a pas encore de compte : rejoindre
+l'association, activer son espace membre (premier mot de passe / mot de passe oublié), ce qu'on
+peut y faire (cotisation, attestation, profil, notes de frais), puis une FAQ publique (tarifs,
+qui peut adhérer, perte de mot de passe, contact). Volontairement **complémentaire**, pas
+dupliquée, de `guide-utilisation.html` (déjà existant, réservé aux membres connectés, FAQ de
+7 questions côté usage avancé de chaque espace) — cette nouvelle page renvoie vers elle en fin
+de page pour le détail complet une fois connecté.
+
+CSS de l'accordéon FAQ (`.faq-item`) et du bloc sommaire (`.guide-toc`), jusqu'ici en style
+inline propre à `guide-utilisation.html`, promu dans `assets/css/style.css` pour être partagé
+entre les deux pages sans duplication. Lien ajouté dans la colonne "Navigation" du pied de page
+sur les 23 autres pages publiques (même mécanique de remplacement que le changement d'adresse),
+entrée ajoutée dans `sitemap.xml`. Vérifié en local (FR et EN) via capture d'écran avant commit.
+
+## ✍️ Dossier FAC signé + tampon de l'association, 8 octobre 2026
+
+Trois propositions de tampon livrées sur un canvas Design partagé (lien privé, jamais commité) :
+A) sceau classique rond monochrome (tampon encreur physique), B) cachet numérique rond complet
+en couleur, C) rectangulaire — **retenue**, logo réel en couleur + mentions (nom, "Association
+loi 1901 — Nogent-l'Artaud", SIREN 988 913 364, RNA W021005524, site web, e-mail de contact).
+
+Signature manuscrite réelle fournie par l'utilisateur (`~/Downloads/signature-modeste.jpg`) —
+jamais fabriquée par l'IA, règle absolue de ce projet. Fond nettoyé (seuil de luminance,
+export PNG avec transparence) et incrustée, avec le tampon rectangulaire (raster via Inkscape),
+sur la page 2 du dossier final (`Subventions/Demande subvention FAC - BROUILLON A COMPLETER.pdf`,
+version 1900 €/1000 € à jour), dans l'encadré "Le responsable de la structure", sous le libellé
+imprimé "Signature (obligatoire)" — deux fichiers de sortie produits dans le même dossier, hors
+dépôt Git :
+- `Demande subvention FAC - SIGNEE (signature seule).pdf`
+- `Demande subvention FAC - SIGNEE (signature + tampon).pdf`
+
+Chaque version rendue en PNG et relue avant livraison (pas de placement à l'aveugle sur un
+document officiel).
+
 ## 📝 Avenant n°1 au contrat RMS↔Association — tarif décomposé, 8 octobre 2026
 
 Rédigé à la demande de l'utilisateur, hors dépôt Git
@@ -25,10 +62,12 @@ gardé la double validation déjà actée plutôt que de la réduire à une seul
 Utilise la clause de révision tarifaire déjà prévue à l'Article 3 du contrat initial (préavis
 30 jours), pas besoin d'un tout nouveau contrat.
 
-**Incohérence à surveiller, pas corrigée avant signature** : `plan-affaires-liens-culturels.pdf`
-liste encore séparément "Redevance RMS 900 €/an" + "Hébergement AWS 150 €/an" (1 050 €/an
-combiné) — à mettre à jour vers la nouvelle décomposition (900 €/an combiné) une fois l'avenant
-signé, pas avant.
+**⏳ À appliquer après signature de l'avenant seulement — décision confirmée le 08/10/2026** :
+`plan-affaires-liens-culturels.pdf` liste encore séparément "Redevance RMS 900 €/an" +
+"Hébergement AWS 150 €/an" (1 050 €/an combiné) — à corriger vers la nouvelle décomposition
+(900 €/an combiné, cohérent avec l'avenant) **une fois l'avenant signé par Noé Nougbodé et Elie
+Smith, pas avant**. Volontairement gardé en réserve : le document officiel ne doit refléter que
+des montants déjà actés, jamais un projet en cours de validation.
 
 ## 📊 Plan d'affaires — charges détaillées + colonne mensuelle, 8 octobre 2026
 
