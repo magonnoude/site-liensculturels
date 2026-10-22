@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const API_BASE = "https://8igk1o6vw4.execute-api.eu-west-3.amazonaws.com";
+    const API_BASE = "https://api.liensculturels.org";
 
     const VILLES = ["nogent-artaud", "save", "caraibes"]; // ordre fixe
     const VILLE_PHOTO_CLASS = {

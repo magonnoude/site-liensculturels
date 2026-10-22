@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const modalDescription = document.getElementById('modalDescription');
     const closeModal = document.querySelector('.modal-close');
 
-    const API_BASE = 'https://8igk1o6vw4.execute-api.eu-west-3.amazonaws.com';
+    const API_BASE = 'https://api.liensculturels.org';
     const today = new Date().toISOString().slice(0, 10);
 
     let events = [];

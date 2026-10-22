@@ -1,14 +1,15 @@
 /*
- * Cognito Hosted UI auth helper (authorization code + PKCE), shared by every
+ * Keycloak auth helper (authorization code + PKCE), shared by every
  * gated portal page (espace-membre, admin, secretariat, tresorerie).
  * No build step on this site, so this is a plain global: window.LCAuth.
  */
 (function () {
     const CONFIG = {
-        domain: "https://liensculturels-membres.auth.eu-west-3.amazoncognito.com",
-        clientId: "757mjbo05rlabup4kkai470d86",
-        region: "eu-west-3",
-        apiBase: "https://8igk1o6vw4.execute-api.eu-west-3.amazonaws.com",
+        // Bascule de secours (compte AWS suspendu) : Keycloak à la place de Cognito, API reconstruite hors AWS.
+        // Retour à AWS : remettre les anciennes valeurs Cognito / API Gateway (voir SECOURS.md).
+        domain: "https://auth-secours.grouperms.com/realms/liensculturels/protocol/openid-connect",
+        clientId: "lc-site",
+        apiBase: "https://api.liensculturels.org",
         scope: "openid email profile",
     };
 
@@ -81,7 +82,7 @@
             code_challenge: challenge,
             code_challenge_method: "S256",
         });
-        window.location.href = `${CONFIG.domain}/oauth2/authorize?${params.toString()}`;
+        window.location.href = `${CONFIG.domain}/auth?${params.toString()}`;
     }
 
     async function exchangeCodeForTokens(code) {
@@ -93,7 +94,7 @@
             redirect_uri: redirectUri(),
             code_verifier: verifier || "",
         });
-        const resp = await fetch(`${CONFIG.domain}/oauth2/token`, {
+        const resp = await fetch(`${CONFIG.domain}/token`, {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: body.toString(),
@@ -111,6 +112,8 @@
         await exchangeCodeForTokens(code);
         url.searchParams.delete("code");
         url.searchParams.delete("state");
+        url.searchParams.delete("session_state");
+        url.searchParams.delete("iss");
         window.history.replaceState({}, document.title, url.pathname);
         return true;
     }
@@ -131,10 +134,14 @@
         return t ? t.claims : null;
     }
 
-    function hasGroup(name) {
+    // Groupes de l'association = rôles du realm Keycloak (`realm_access.roles` dans l'ID token).
+    function getGroups() {
         const claims = getClaims();
-        const groups = (claims && claims["cognito:groups"]) || [];
-        return groups.includes(name);
+        return (claims && claims.realm_access && claims.realm_access.roles) || [];
+    }
+
+    function hasGroup(name) {
+        return getGroups().includes(name);
     }
 
     function getDisplayName() {
@@ -143,12 +150,14 @@
     }
 
     function logout() {
+        const t = getTokens();
         sessionStorage.removeItem(STORAGE_KEY);
         sessionStorage.removeItem(VERIFIER_KEY);
         const params = new URLSearchParams({
             client_id: CONFIG.clientId,
-            logout_uri: redirectUri(),
+            post_logout_redirect_uri: redirectUri(),
         });
+        if (t && t.id_token) params.set("id_token_hint", t.id_token);
         window.location.href = `${CONFIG.domain}/logout?${params.toString()}`;
     }
 
@@ -173,6 +182,7 @@
         getIdToken,
         getClaims,
         hasGroup,
+        getGroups,
         getDisplayName,
         apiFetch,
     };

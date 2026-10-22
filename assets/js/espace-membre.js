@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
     setAvatar(null);
 
-    const groups = (claims && claims["cognito:groups"]) || [];
+    const groups = window.LCAuth.getGroups();
     const isAdmin = groups.includes("admin");
     // Mirrors each Lambda's own authorization check (secretaire OR admin,
     // tresorier OR admin) — an admin can reach every space via direct URL
@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const listEl = document.getElementById("portal-agenda-list");
         const emptyEl = document.getElementById("portal-agenda-empty");
         try {
-            const resp = await fetch("https://8igk1o6vw4.execute-api.eu-west-3.amazonaws.com/agenda");
+            const resp = await fetch("https://api.liensculturels.org/agenda");
             const items = await resp.json();
             const today = new Date().toISOString().slice(0, 10);
             const upcoming = (Array.isArray(items) ? items : [])

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     // URL de base de votre API Gateway
-    const API_BASE_URL = 'https://8igk1o6vw4.execute-api.eu-west-3.amazonaws.com'
+    const API_BASE_URL = 'https://api.liensculturels.org'
 
     // --- Gestion du formulaire Newsletter (AWS SES, double opt-in) ---
     const newsletterForm = document.getElementById('newsletterForm');

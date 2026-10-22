@@ -1,5 +1,7 @@
 # CLAUDE.md — www.liensculturels.org
 
+> **Bascule de secours en cours (depuis le 22/10/2026)** : le compte AWS est suspendu ; l'API et l'authentification sont reconstruites hors AWS (Keycloak, `api.liensculturels.org`). Voir `SECOURS.md`. Les sections ci-dessous décrivent l'architecture AWS d'origine.
+
 Guidance for Claude Code when working in this repository. This file follows the same
 working-rules pattern as `academy.grouperms.com/CLAUDE.md`, adapted to this site's much
 smaller scope (static brochure site, no backend codebase, two Lambda functions owned

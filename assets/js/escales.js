@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     async function loadFiches() {
         const ville = filterSelect.value;
         const qs = ville ? `?ville=${encodeURIComponent(ville)}` : "";
-        const resp = await fetch(`https://8igk1o6vw4.execute-api.eu-west-3.amazonaws.com/escales${qs}`);
+        const resp = await fetch(`https://api.liensculturels.org/escales${qs}`);
         const items = await resp.json();
         grid.innerHTML = "";
         items.forEach((fiche) => {

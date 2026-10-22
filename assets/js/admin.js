@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // ---- agenda ----
     async function loadAgenda() {
-        const events = await fetch("https://8igk1o6vw4.execute-api.eu-west-3.amazonaws.com/agenda").then((r) => r.json());
+        const events = await fetch("https://api.liensculturels.org/agenda").then((r) => r.json());
         const tbody = document.querySelector("#agenda-table tbody");
         tbody.innerHTML = "";
         events.forEach((e) => {
@@ -251,8 +251,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ---- galerie ----
     async function loadGallery() {
         const [photos, videos] = await Promise.all([
-            fetch("https://8igk1o6vw4.execute-api.eu-west-3.amazonaws.com/gallery?type=photo").then((r) => r.json()),
-            fetch("https://8igk1o6vw4.execute-api.eu-west-3.amazonaws.com/gallery?type=video").then((r) => r.json()),
+            fetch("https://api.liensculturels.org/gallery?type=photo").then((r) => r.json()),
+            fetch("https://api.liensculturels.org/gallery?type=video").then((r) => r.json()),
         ]);
         const grid = document.getElementById("gallery-admin-grid");
         grid.innerHTML = "";

@@ -13,7 +13,7 @@
  * Lambda liensCulturels-payment, ces UI s'activent automatiquement.
  */
 window.LCPayment = (function () {
-    const API_BASE_URL = "https://8igk1o6vw4.execute-api.eu-west-3.amazonaws.com";
+    const API_BASE_URL = "https://api.liensculturels.org";
     let configPromise = null;
 
     function getConfig() {
