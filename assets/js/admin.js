@@ -83,8 +83,50 @@ document.addEventListener("DOMContentLoaded", async () => {
                     </select>
                 </td>
                 <td>${m.accountStatus === "connecte" ? '<span title="A défini son propre mot de passe">✅ Connecté</span>' : '<span title="Toujours sur le mot de passe temporaire initial" style="color:#888;">⏳ Invitation en attente</span>'}</td>
+                <td>
+                    ${m.ficheAdhesionUrl ? `<a href="${m.ficheAdhesionUrl}" target="_blank">Voir</a> <button class="admin-btn danger small" data-fiche-del="${m.memberId}">Supprimer</button>`
+                        : `<button class="admin-btn small" data-fiche-add="${m.memberId}">Ajouter</button>`}
+                    <input type="file" accept="application/pdf,image/jpeg,image/png" data-fiche-input="${m.memberId}" style="display:none;">
+                </td>
             `;
             tbody.appendChild(tr);
+        });
+        tbody.querySelectorAll("button[data-fiche-add]").forEach((btn) => {
+            btn.addEventListener("click", () => tbody.querySelector(`input[data-fiche-input="${btn.dataset.ficheAdd}"]`).click());
+        });
+        tbody.querySelectorAll("input[data-fiche-input]").forEach((input) => {
+            input.addEventListener("change", async () => {
+                const memberId = input.dataset.ficheInput;
+                const file = input.files[0];
+                if (!file) return;
+                try {
+                    const { uploadUrl, ficheAdhesionKey } = await api(`/admin/members/${memberId}/fiche-upload-url`, {
+                        method: "POST", headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ contentType: file.type }),
+                    });
+                    const putResp = await fetch(uploadUrl, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
+                    if (!putResp.ok) throw new Error("Échec du téléversement de la fiche.");
+                    await api(`/admin/members/${memberId}/fiche-adhesion`, {
+                        method: "PUT", headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ ficheAdhesionKey }),
+                    });
+                    showMessage("Fiche d'adhésion enregistrée.", "success");
+                    await loadMembers();
+                } catch (e) {
+                    showMessage(e.message, "error");
+                    input.value = "";
+                }
+            });
+        });
+        tbody.querySelectorAll("button[data-fiche-del]").forEach((btn) => {
+            btn.addEventListener("click", async () => {
+                if (!confirm("Supprimer la fiche d'adhésion de ce membre ?")) return;
+                try {
+                    await api(`/admin/members/${btn.dataset.ficheDel}/fiche-adhesion`, { method: "DELETE" });
+                    showMessage("Fiche d'adhésion supprimée.", "success");
+                    await loadMembers();
+                } catch (e) { showMessage(e.message, "error"); }
+            });
         });
         tbody.querySelectorAll("select[data-member]").forEach((sel) => {
             sel.addEventListener("change", async () => {
