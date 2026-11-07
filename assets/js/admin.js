@@ -236,6 +236,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // ---- agenda ----
+    let editingEventId = null;
+
+    function resetEventForm() {
+        editingEventId = null;
+        ["event-title", "event-start", "event-end", "event-time", "event-location", "event-description", "event-file"].forEach(
+            (id) => (document.getElementById(id).value = "")
+        );
+        document.getElementById("event-form-title").textContent = "Ajouter un événement";
+        document.getElementById("event-add-btn").textContent = "Ajouter l'événement";
+        document.getElementById("event-cancel-edit-btn").style.display = "none";
+    }
+
     async function loadAgenda() {
         const events = await fetch("https://api.liensculturels.org/agenda").then((r) => r.json());
         const tbody = document.querySelector("#agenda-table tbody");
@@ -246,9 +258,26 @@ document.addEventListener("DOMContentLoaded", async () => {
                 <td>${e.start}${e.end ? " → " + e.end : ""}</td>
                 <td>${e.title}</td>
                 <td>${e.location || ""}</td>
-                <td><button class="admin-btn danger small" data-event="${e.eventId}">Supprimer</button></td>
+                <td>${e.fileUrl ? `<a href="${e.fileUrl}" target="_blank">Voir</a>` : "—"}</td>
+                <td>
+                    <button class="admin-btn small" data-edit-event="${e.eventId}">Modifier</button>
+                    <button class="admin-btn danger small" data-event="${e.eventId}">Supprimer</button>
+                </td>
             `;
             tbody.appendChild(tr);
+            tr.querySelector("[data-edit-event]").addEventListener("click", () => {
+                editingEventId = e.eventId;
+                document.getElementById("event-title").value = e.title || "";
+                document.getElementById("event-start").value = e.start || "";
+                document.getElementById("event-end").value = e.end || "";
+                document.getElementById("event-time").value = e.time || "";
+                document.getElementById("event-location").value = e.location || "";
+                document.getElementById("event-description").value = e.description || "";
+                document.getElementById("event-form-title").textContent = `Modifier : ${e.title}`;
+                document.getElementById("event-add-btn").textContent = "Enregistrer les modifications";
+                document.getElementById("event-cancel-edit-btn").style.display = "inline-block";
+                document.getElementById("panel-agenda").scrollIntoView({ behavior: "smooth" });
+            });
         });
         tbody.querySelectorAll("button[data-event]").forEach((btn) => {
             btn.addEventListener("click", async () => {
@@ -256,6 +285,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 try {
                     await api(`/admin/agenda/${btn.dataset.event}`, { method: "DELETE" });
                     showMessage("Événement supprimé.", "success");
+                    if (editingEventId === btn.dataset.event) resetEventForm();
                     await loadAgenda();
                 } catch (e) {
                     showMessage(e.message, "error");
@@ -263,6 +293,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         });
     }
+
+    document.getElementById("event-cancel-edit-btn").addEventListener("click", resetEventForm);
 
     document.getElementById("event-add-btn").addEventListener("click", async () => {
         const title = document.getElementById("event-title").value.trim();
@@ -272,18 +304,30 @@ document.addEventListener("DOMContentLoaded", async () => {
         const location = document.getElementById("event-location").value.trim();
         const description = document.getElementById("event-description").value.trim();
         if (!title || !start) { showMessage("Titre et date de début requis.", "error"); return; }
-        const payload = { title, start, time, location, description };
-        if (end) payload.end = end;
+        const payload = { title, start, time, location, description, end: end || null };
         try {
-            await api("/admin/agenda", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
-            });
-            showMessage("Événement ajouté.", "success");
-            ["event-title", "event-start", "event-end", "event-time", "event-location", "event-description"].forEach(
-                (id) => (document.getElementById(id).value = "")
-            );
+            const file = document.getElementById("event-file").files[0];
+            if (file) {
+                const { uploadUrl, fileKey } = await api("/admin/agenda/upload-url", {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ contentType: file.type }),
+                });
+                const putResp = await fetch(uploadUrl, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
+                if (!putResp.ok) throw new Error("Échec du téléversement du fichier.");
+                payload.fileKey = fileKey;
+            }
+            if (editingEventId) {
+                await api(`/admin/agenda/${editingEventId}`, {
+                    method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload),
+                });
+                showMessage("Événement modifié.", "success");
+            } else {
+                await api("/admin/agenda", {
+                    method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload),
+                });
+                showMessage("Événement ajouté.", "success");
+            }
+            resetEventForm();
             await loadAgenda();
         } catch (e) {
             showMessage(e.message, "error");

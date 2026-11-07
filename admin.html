@@ -153,7 +153,7 @@
             <!-- AGENDA -->
             <div class="admin-panel" id="panel-agenda">
                 <div class="admin-card">
-                    <h3>Ajouter un événement</h3>
+                    <h3 id="event-form-title">Ajouter un événement</h3>
                     <div class="admin-form-row">
                         <input type="text" id="event-title" placeholder="Titre">
                         <input type="date" id="event-start" title="Date de début">
@@ -164,12 +164,17 @@
                     <div class="admin-form-row">
                         <textarea id="event-description" placeholder="Description" style="flex:1; min-height:60px;"></textarea>
                     </div>
+                    <div class="admin-form-row">
+                        <input type="file" id="event-file" accept="application/pdf,image/jpeg,image/png,image/webp">
+                        <span style="font-size:0.85rem; color:#666;">Programme, flyer... (PDF ou image, optionnel)</span>
+                    </div>
                     <button class="admin-btn" id="event-add-btn">Ajouter l'événement</button>
+                    <button class="admin-btn" id="event-cancel-edit-btn" style="display:none;">Annuler la modification</button>
                 </div>
                 <div class="admin-card">
                     <h3>Événements à venir et passés</h3>
                     <table class="admin-table" id="agenda-table">
-                        <thead><tr><th>Date</th><th>Titre</th><th>Lieu</th><th></th></tr></thead>
+                        <thead><tr><th>Date</th><th>Titre</th><th>Lieu</th><th>Fichier</th><th></th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>

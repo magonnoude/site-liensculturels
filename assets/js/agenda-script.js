@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const modalTime = document.getElementById('modalTime');
     const modalLocation = document.getElementById('modalLocation');
     const modalDescription = document.getElementById('modalDescription');
+    const modalFile = document.getElementById('modalFile');
     const closeModal = document.querySelector('.modal-close');
 
     const API_BASE = 'https://api.liensculturels.org';
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             description: e.description,
             time: e.time,
             location: e.location,
+            fileUrl: e.fileUrl,
             classNames: e.start < today ? ['event-past'] : [],
         }));
     } catch (err) {
@@ -45,6 +47,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             modalTime.textContent = info.event.extendedProps.time || 'Toute la journée';
             modalLocation.textContent = info.event.extendedProps.location || 'Non spécifié';
             modalDescription.textContent = info.event.extendedProps.description || 'Aucune description disponible.';
+            const fileUrl = info.event.extendedProps.fileUrl;
+            modalFile.innerHTML = fileUrl ? `<a href="${fileUrl}" target="_blank" rel="noopener"><span class="lang-fr">Voir le programme / document</span><span class="lang-en">View the program / document</span></a>` : '';
             modal.style.display = "block";
         }
     });
