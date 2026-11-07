@@ -45,7 +45,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (modal && iframe) {
                     div.querySelector(".video-thumbnail").addEventListener("click", (e) => {
                         e.preventDefault();
-                        iframe.setAttribute("src", item.videoUrl + "?autoplay=1");
+                        // Fichier hébergé directement (MP4) : le navigateur affiche son propre lecteur dans l'iframe,
+                        // "?autoplay=1" n'a de sens que pour un lien YouTube.
+                        iframe.setAttribute("src", item.direct ? item.videoUrl : item.videoUrl + "?autoplay=1");
                         modal.style.display = "block";
                     });
                 }

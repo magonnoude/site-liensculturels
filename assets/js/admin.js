@@ -391,16 +391,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("video-add-btn").addEventListener("click", async () => {
         const title = document.getElementById("video-title").value.trim();
         const videoUrl = document.getElementById("video-url").value.trim();
-        if (!title || !videoUrl) { showMessage("Titre et lien requis.", "error"); return; }
+        const fileInput = document.getElementById("video-file");
+        const file = fileInput.files[0];
+        if (!title || (!videoUrl && !file)) { showMessage("Titre et lien YouTube ou fichier MP4 requis.", "error"); return; }
+        if (videoUrl && file) { showMessage("Un lien YouTube ou un fichier, pas les deux.", "error"); return; }
         try {
-            await api("/admin/gallery", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ title, mediaType: "video", videoUrl }),
-            });
+            if (file) {
+                const created = await api("/admin/gallery", {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ title, mediaType: "video", filename: file.name, contentType: file.type }),
+                });
+                const putResp = await fetch(created.uploadUrl, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
+                if (!putResp.ok) throw new Error("Échec du téléversement.");
+            } else {
+                await api("/admin/gallery", {
+                    method: "POST", headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ title, mediaType: "video", videoUrl }),
+                });
+            }
             showMessage("Vidéo ajoutée.", "success");
             document.getElementById("video-title").value = "";
             document.getElementById("video-url").value = "";
+            fileInput.value = "";
             await loadGallery();
         } catch (e) {
             showMessage(e.message, "error");
