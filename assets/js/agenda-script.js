@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             time: e.time,
             location: e.location,
             fileUrl: e.fileUrl,
-            classNames: e.start < today ? ['event-past'] : [],
+            classNames: [e.start < today ? 'event-past' : 'event-upcoming'],
         }));
     } catch (err) {
         console.error('Impossible de charger l\'agenda :', err);
