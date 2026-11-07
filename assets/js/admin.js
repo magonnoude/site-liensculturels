@@ -388,6 +388,34 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
+    // Capture une image de la vidéo (vers 1 s, ou le milieu si elle est plus courte) directement dans le
+    // navigateur — pas de traitement serveur : on évite ainsi de dépendre de ffmpeg côté API.
+    function captureVideoThumbnail(file) {
+        return new Promise((resolve) => {
+            const video = document.createElement("video");
+            video.muted = true;
+            video.preload = "metadata";
+            video.src = URL.createObjectURL(file);
+            const cleanup = () => URL.revokeObjectURL(video.src);
+            video.addEventListener("loadedmetadata", () => {
+                video.currentTime = Math.min(1, (video.duration || 2) / 2);
+            });
+            video.addEventListener("seeked", () => {
+                try {
+                    const canvas = document.createElement("canvas");
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    canvas.getContext("2d").drawImage(video, 0, 0);
+                    canvas.toBlob((blob) => { cleanup(); resolve(blob); }, "image/jpeg", 0.8);
+                } catch (e) {
+                    cleanup(); resolve(null);
+                }
+            });
+            video.addEventListener("error", () => { cleanup(); resolve(null); });
+            setTimeout(() => resolve(null), 8000); // n'attend pas indéfiniment si la vidéo est illisible
+        });
+    }
+
     document.getElementById("video-add-btn").addEventListener("click", async () => {
         const title = document.getElementById("video-title").value.trim();
         const videoUrl = document.getElementById("video-url").value.trim();
@@ -397,12 +425,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (videoUrl && file) { showMessage("Un lien YouTube ou un fichier, pas les deux.", "error"); return; }
         try {
             if (file) {
+                const thumbBlob = await captureVideoThumbnail(file);
+                const payload = { title, mediaType: "video", filename: file.name, contentType: file.type };
+                if (thumbBlob) payload.thumbnailContentType = thumbBlob.type;
                 const created = await api("/admin/gallery", {
                     method: "POST", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ title, mediaType: "video", filename: file.name, contentType: file.type }),
+                    body: JSON.stringify(payload),
                 });
                 const putResp = await fetch(created.uploadUrl, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
                 if (!putResp.ok) throw new Error("Échec du téléversement.");
+                if (thumbBlob && created.thumbnailUploadUrl) {
+                    await fetch(created.thumbnailUploadUrl, { method: "PUT", headers: { "Content-Type": thumbBlob.type }, body: thumbBlob });
+                }
             } else {
                 await api("/admin/gallery", {
                     method: "POST", headers: { "Content-Type": "application/json" },
