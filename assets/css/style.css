@@ -932,6 +932,35 @@ details.faq-item p { margin: 0.7rem 0 0; color: #444; font-size: 0.95rem; }
     display: block;
 }
 
+/* --- Filtres de catégorie (photothèque) --- */
+.gallery-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+    justify-content: center;
+}
+
+.gallery-filter-btn {
+    border: 1px solid var(--primary-color, #E05A00);
+    background: transparent;
+    color: var(--primary-color, #E05A00);
+    border-radius: 999px;
+    padding: 0.4rem 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.gallery-filter-btn:hover {
+    background: rgba(224, 90, 0, 0.1);
+}
+
+.gallery-filter-btn.active {
+    background: var(--primary-color, #E05A00);
+    color: #fff;
+}
+
 /* --- Galerie Vidéo (vidéothèque) --- */
 .gallery-grid {
     display: grid;

@@ -11,12 +11,42 @@ document.addEventListener("DOMContentLoaded", async () => {
                 items.forEach((item) => {
                     const div = document.createElement("div");
                     div.className = "photo-item";
+                    div.dataset.category = item.title;
                     div.innerHTML = `
                         <a href="${item.imageUrl}" data-lightbox="gallery" data-title="${item.title}">
                             <img src="${item.imageUrl}" alt="${item.title}" loading="lazy">
                         </a>`;
                     photoContainer.appendChild(div);
                 });
+
+                // Filtres par catégorie (= le titre donné au lot de photos, ex. un album/événement).
+                const categories = [...new Set(items.map((item) => item.title))];
+                const filtersEl = document.getElementById("gallery-filters");
+                if (filtersEl && categories.length > 1) {
+                    filtersEl.style.display = "flex";
+                    const allBtn = document.createElement("button");
+                    allBtn.type = "button";
+                    allBtn.className = "gallery-filter-btn active";
+                    allBtn.textContent = "Tous";
+                    filtersEl.appendChild(allBtn);
+                    categories.forEach((cat) => {
+                        const btn = document.createElement("button");
+                        btn.type = "button";
+                        btn.className = "gallery-filter-btn";
+                        btn.textContent = cat;
+                        filtersEl.appendChild(btn);
+                    });
+                    filtersEl.addEventListener("click", (e) => {
+                        const btn = e.target.closest(".gallery-filter-btn");
+                        if (!btn) return;
+                        filtersEl.querySelectorAll(".gallery-filter-btn").forEach((b) => b.classList.remove("active"));
+                        btn.classList.add("active");
+                        const cat = btn === allBtn ? null : btn.textContent;
+                        photoContainer.querySelectorAll(".photo-item").forEach((div) => {
+                            div.style.display = !cat || div.dataset.category === cat ? "" : "none";
+                        });
+                    });
+                }
             }
         } catch (e) {
             console.error("Impossible de charger la galerie :", e);

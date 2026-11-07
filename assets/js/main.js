@@ -259,8 +259,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 // --- Gestion de la Vidéothèque ---
+    // La modale est aussi nécessaire sans miniature statique au chargement : gallery-dynamic.js
+    // ajoute les vidéos de la médiathèque après coup et réutilise cette même modale.
     const videoThumbnails = document.querySelectorAll('.video-thumbnail');
-    if (videoThumbnails.length > 0) {
+    if (videoThumbnails.length > 0 || document.getElementById('dynamic-video-gallery')) {
         const videoModal = document.createElement('div');
         videoModal.className = 'modal';
         videoModal.innerHTML = `
